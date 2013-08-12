@@ -44,19 +44,6 @@ public class BeanUtilTestFixture {
 
 	}
 
-	public static class Thrower {
-
-		int property = 0;
-
-		public void setProperty(final int property) {
-			throw new RuntimeException();
-		}
-
-		public int getProperty() {
-			throw new RuntimeException();
-		}
-	}
-
 	public static class AllTypes {
 
 		public static enum EnumValues {
@@ -362,17 +349,6 @@ public class BeanUtilTestFixture {
 		}
 	}
 
-	public static class SetterWithNotArgs {
-
-		public void setProperty() {
-
-		}
-
-		public String getProperty() {
-			return "";
-		}
-	}
-
 	public class NoDefaultConstructor {
 
 		private String value;
@@ -389,53 +365,6 @@ public class BeanUtilTestFixture {
 			this.value = value;
 		}
 
-	}
-
-	public static class GetterWithArgs {
-
-		public void setProperty(final String value) {
-
-		}
-
-		public String getProperty(final String value) {
-			return value;
-		}
-	}
-
-	public static class TypeMismatch {
-
-		public void setProperty(final String value) {
-
-		}
-
-		public Boolean getProperty() {
-			return true;
-		}
-	}
-
-	public static class OverloadedSetter {
-
-		public void setProperty(final String propery) {
-
-		}
-
-		public void setProperty(final Boolean propery) {
-
-		}
-
-		public String getProperty() {
-			return "";
-		}
-	}
-
-	public static class NameMismatch {
-
-		public void setPropertyCalledOneThing(final String property) {
-		}
-
-		public String getPropertyCalledAnother() {
-			return "";
-		}
 	}
 
 	public static class Person {
