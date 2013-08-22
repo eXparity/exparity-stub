@@ -41,7 +41,7 @@ public class BeanBuilderTest {
 		AllTypes allTypes = aRandomInstanceOf(AllTypes.class).build();
 		bean(allTypes).visit(new BeanVisitor() {
 
-			public void visit(final BeanPropertyInstance property, final Object current, final BeanPropertyPath path, final Object[] stack) {
+			public void visit(final BeanProperty property, final Object current, final BeanPropertyPath path, final Object[] stack) {
 				assertThat("Expected " + property + " to not be null", property.getValue(), notNullValue());
 			}
 		});
@@ -52,7 +52,7 @@ public class BeanBuilderTest {
 		AllTypes allTypes = anInstanceOf(AllTypes.class).build();
 		bean(allTypes).visit(new BeanVisitor() {
 
-			public void visit(final BeanPropertyInstance property, final Object current, final BeanPropertyPath path, final Object[] stack) {
+			public void visit(final BeanProperty property, final Object current, final BeanPropertyPath path, final Object[] stack) {
 				if (!property.isPrimitive()) {
 					assertThat("Expected " + property + " to not be null", property.getValue(), nullValue());
 				}
@@ -65,7 +65,7 @@ public class BeanBuilderTest {
 		AllTypes allTypes = anEmptyInstanceOf(AllTypes.class).build();
 		bean(allTypes).visit(new BeanVisitor() {
 
-			public void visit(final BeanPropertyInstance property, final Object current, final BeanPropertyPath path, final Object[] stack) {
+			public void visit(final BeanProperty property, final Object current, final BeanPropertyPath path, final Object[] stack) {
 				if (!property.isCollection() && !property.isMap() && !property.isPrimitive() && !property.isArray() && !property.isEnum()) {
 					assertThat("Expected " + property + " to not be null", property.getValue(), nullValue());
 				}

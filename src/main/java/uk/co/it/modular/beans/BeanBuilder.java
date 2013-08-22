@@ -17,8 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static java.lang.System.identityHashCode;
 import static org.apache.commons.lang.math.RandomUtils.nextInt;
-import static uk.co.it.modular.beans.Type.type;
 import static uk.co.it.modular.beans.InstanceFactories.*;
+import static uk.co.it.modular.beans.Type.type;
 
 /**
  * Builder object for instantiating and populating objects which follow the Java beans standards conventions for getter/setters
@@ -38,8 +38,7 @@ public class BeanBuilder<T> {
 	 * <pre>
 	 * BeanUtils.anInstanceOf(Person.class).build();
 	 * </pre>
-	 * @param type
-	 *            the type to return the {@link BeanBuilder} for
+	 * @param type the type to return the {@link BeanBuilder} for
 	 */
 	public static <T> BeanBuilder<T> anInstanceOf(final Class<T> type) {
 		return new BeanBuilder<T>(type, BeanBuilderType.NULL);
@@ -51,8 +50,7 @@ public class BeanBuilder<T> {
 	 * <pre>
 	 * BeanUtils.anEmptyInstanceOf(Person.class).build();
 	 * </pre>
-	 * @param type
-	 *            the type to return the {@link BeanBuilder} for
+	 * @param type the type to return the {@link BeanBuilder} for
 	 */
 	public static <T> BeanBuilder<T> anEmptyInstanceOf(final Class<T> type) {
 		return new BeanBuilder<T>(type, BeanBuilderType.EMPTY);
@@ -64,8 +62,7 @@ public class BeanBuilder<T> {
 	 * <pre>
 	 * BeanUtils.aRandomInstanceOf(Person.class).build();
 	 * </pre>
-	 * @param type
-	 *            the type to return the {@link BeanBuilder} for
+	 * @param type the type to return the {@link BeanBuilder} for
 	 */
 	public static <T> BeanBuilder<T> aRandomInstanceOf(final Class<T> type) {
 		return new BeanBuilder<T>(type, BeanBuilderType.RANDOM);
@@ -168,7 +165,7 @@ public class BeanBuilder<T> {
 
 	private <I> I populate(final I instance, final BeanPropertyPath path, final Stack stack) {
 		if (instance != null) {
-			for (BeanProperty property : type(instance).propertyList()) {
+			for (TypeProperty property : type(instance).propertyList()) {
 				populateProperty(instance, property, path.append(property.getName()), stack);
 			}
 			return instance;
@@ -177,7 +174,7 @@ public class BeanBuilder<T> {
 		}
 	}
 
-	private void populateProperty(final Object instance, final BeanProperty property, final BeanPropertyPath path, final Stack stack) {
+	private void populateProperty(final Object instance, final TypeProperty property, final BeanPropertyPath path, final Stack stack) {
 
 		if (isExcludedPath(path) || isExcludedProperty(property)) {
 			LOG.trace("Ignore [{}]. Explicity excluded", path);
@@ -207,7 +204,7 @@ public class BeanBuilder<T> {
 		}
 	}
 
-	private boolean isPropertySet(final Object instance, final BeanProperty property) {
+	private boolean isPropertySet(final Object instance, final TypeProperty property) {
 		if (property.getValue(instance) == null) {
 			return false;
 		} else if (property.isCollection()) {
@@ -219,7 +216,7 @@ public class BeanBuilder<T> {
 		}
 	}
 
-	private boolean isOverflowing(final BeanProperty property, final BeanPropertyPath path, final Stack stack) {
+	private boolean isOverflowing(final TypeProperty property, final BeanPropertyPath path, final Stack stack) {
 		if (stack.contains(property.getType())) {
 			LOG.trace("Ignore {}. Avoids stack overflow caused by type {}", path, property.getTypeSimpleName());
 			return true;
@@ -234,7 +231,7 @@ public class BeanBuilder<T> {
 		return false;
 	}
 
-	public InstanceFactory factoryForPath(final BeanProperty property, final BeanPropertyPath path) {
+	public InstanceFactory factoryForPath(final TypeProperty property, final BeanPropertyPath path) {
 		InstanceFactory factory = paths.get(path.fullPath());
 		if (factory == null) {
 			factory = paths.get(path.fullPathWithNoIndexes());
@@ -245,7 +242,7 @@ public class BeanBuilder<T> {
 		return factory;
 	}
 
-	public boolean isExcludedProperty(final BeanProperty property) {
+	public boolean isExcludedProperty(final TypeProperty property) {
 		return excludedProperties.contains(property.getName());
 	}
 
@@ -263,7 +260,7 @@ public class BeanBuilder<T> {
 		return false;
 	}
 
-	private void assignValue(final Object instance, final BeanProperty property, final BeanPropertyPath path, final Object value, final Stack stack) {
+	private void assignValue(final Object instance, final TypeProperty property, final BeanPropertyPath path, final Object value, final Stack stack) {
 		if (value != null) {
 			LOG.trace("Assign {} value [{}:{}]", new Object[] {
 					path, value.getClass().getSimpleName(), identityHashCode(value)
