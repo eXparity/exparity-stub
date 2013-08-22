@@ -3,7 +3,7 @@
 
 	<groupId>uk.co.modular-it</groupId>
 	<artifactId>bean-builder</artifactId>
-	<version>0.9.0-SNAPSHOT</version>
+	<version>0.9.0</version>
 
 	<name>Bean Builder</name>
 	<url>https://github.com/modularit/bean-builder</url>
