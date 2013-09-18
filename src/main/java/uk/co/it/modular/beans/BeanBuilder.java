@@ -16,6 +16,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static java.lang.System.identityHashCode;
+import static org.apache.commons.lang.StringUtils.lowerCase;
 import static org.apache.commons.lang.math.RandomUtils.nextInt;
 import static uk.co.it.modular.beans.InstanceFactories.*;
 import static uk.co.it.modular.beans.Type.type;
@@ -110,12 +111,12 @@ public class BeanBuilder<T> {
 	}
 
 	public BeanBuilder<T> withProperty(final String propertyName, final InstanceFactory<?> factory) {
-		properties.put(propertyName, factory);
+		properties.put(lowerCase(propertyName), factory);
 		return this;
 	}
 
 	public BeanBuilder<T> excludeProperty(final String propertyName) {
-		this.excludedProperties.add(propertyName);
+		this.excludedProperties.add(lowerCase(propertyName));
 		return this;
 	}
 
@@ -132,12 +133,12 @@ public class BeanBuilder<T> {
 	}
 
 	public BeanBuilder<T> withPath(final String path, final InstanceFactory<?> factory) {
-		this.paths.put(path, factory);
+		this.paths.put(lowerCase(path), factory);
 		return this;
 	}
 
 	public BeanBuilder<T> excludePath(final String path) {
-		this.excludedPaths.add(path);
+		this.excludedPaths.add(lowerCase(path));
 		return this;
 	}
 
@@ -165,7 +166,7 @@ public class BeanBuilder<T> {
 
 	private <I> I populate(final I instance, final BeanPropertyPath path, final Stack stack) {
 		if (instance != null) {
-			for (TypeProperty property : type(instance).propertyList()) {
+			for (TypeProperty property : type(instance).setNamingStrategy(new LowerCaseNamingStrategy()).propertyList()) {
 				populateProperty(instance, property, path.append(property.getName()), stack);
 			}
 			return instance;

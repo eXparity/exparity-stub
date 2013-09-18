@@ -88,6 +88,13 @@ public class BeanBuilderTest {
 		assertThat(car.getEngine().getCapacity(), comparesEqualTo(overrideValue));
 	}
 
+	@Test
+	public void canSetAnOverridePropertyWithMixedCase() {
+		BigDecimal overrideValue = new BigDecimal("4.0");
+		Car car = aRandomInstanceOf(Car.class).with("Capacity", overrideValue).build();
+		assertThat(car.getEngine().getCapacity(), comparesEqualTo(overrideValue));
+	}
+
 	@Test(expected = BeanPropertyException.class)
 	public void canSetAnOverridePropertyIncorrectly() {
 		aRandomInstanceOf(Car.class).with("capacity", 1234L).build();
@@ -154,9 +161,23 @@ public class BeanBuilderTest {
 	}
 
 	@Test
+	public void canSetAnOverridePropertyByPathWithMixedCase() {
+		BigDecimal overrideValue = new BigDecimal("4.0");
+		Car car = aRandomInstanceOf(Car.class).with("car.EngIne.CAPacity", overrideValue).build();
+		assertThat(car.getEngine().getCapacity(), comparesEqualTo(overrideValue));
+	}
+
+	@Test
 	public void canSetAnOverridePropertyByIndexedPath() {
 		int overrideDiameter = 1234;
 		Car car = aRandomInstanceOf(Car.class).aCollectionSizeOf(4).with("car.wheels[1].diameter", overrideDiameter).build();
+		assertThat(car.getWheels().get(1).getDiameter(), equalTo(overrideDiameter));
+	}
+
+	@Test
+	public void canSetAnOverridePropertyByIndexedPathUsingMixedCase() {
+		int overrideDiameter = 1234;
+		Car car = aRandomInstanceOf(Car.class).aCollectionSizeOf(4).with("CAR.wHeels[1].diAmeter", overrideDiameter).build();
 		assertThat(car.getWheels().get(1).getDiameter(), equalTo(overrideDiameter));
 	}
 
@@ -174,8 +195,20 @@ public class BeanBuilderTest {
 	}
 
 	@Test
+	public void canExcludeAPropertyUsingMixedCase() {
+		Car car = aRandomInstanceOf(Car.class).excludeProperty("Capacity").build();
+		assertThat(car.getEngine().getCapacity(), nullValue());
+	}
+
+	@Test
 	public void canExcludeAPath() {
 		Car car = aRandomInstanceOf(Car.class).excludePath("car.engine.capacity").build();
+		assertThat(car.getEngine().getCapacity(), nullValue());
+	}
+
+	@Test
+	public void canExcludeAPathUseMixedCase() {
+		Car car = aRandomInstanceOf(Car.class).excludePath("CaR.EnGine.capacity").build();
 		assertThat(car.getEngine().getCapacity(), nullValue());
 	}
 
