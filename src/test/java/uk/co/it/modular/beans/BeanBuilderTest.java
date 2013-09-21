@@ -230,4 +230,9 @@ public class BeanBuilderTest {
 		aRandomInstanceOf(NoDefaultConstructor.class).build();
 	}
 
+	@Test
+	public void canCreateBigDecimalsWithAPrecisionLessThan10() {
+		Engine engine = aRandomInstanceOf(Engine.class).build();
+		assertThat(engine.getCapacity().precision(), lessThanOrEqualTo(10));
+	}
 }

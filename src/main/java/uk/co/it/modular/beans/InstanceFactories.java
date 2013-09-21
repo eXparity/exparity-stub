@@ -6,11 +6,14 @@ package uk.co.it.modular.beans;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import org.apache.commons.lang.math.RandomUtils;
 import static org.apache.commons.lang.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang.RandomStringUtils.randomAlphanumeric;
 import static org.apache.commons.lang.math.RandomUtils.*;
@@ -121,7 +124,7 @@ public abstract class InstanceFactories {
 		return new InstanceFactory<BigDecimal>() {
 
 			public BigDecimal createValue() {
-				return BigDecimal.valueOf(nextDouble());
+				return BigDecimal.valueOf(nextInt()).round(new MathContext(10, RoundingMode.HALF_UP)).movePointLeft(nextInt(5));
 			}
 		};
 	}
