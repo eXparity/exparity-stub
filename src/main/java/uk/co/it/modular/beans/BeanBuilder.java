@@ -15,6 +15,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.co.it.modular.beans.naming.LowerCaseNamingStrategy;
 import static java.lang.System.identityHashCode;
 import static org.apache.commons.lang.StringUtils.lowerCase;
 import static org.apache.commons.lang.math.RandomUtils.nextInt;
