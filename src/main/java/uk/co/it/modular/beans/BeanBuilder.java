@@ -15,6 +15,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.co.it.modular.beans.naming.ForceRootNameNamingStrategy;
 import uk.co.it.modular.beans.naming.LowerCaseNamingStrategy;
 import static java.lang.System.identityHashCode;
 import static org.apache.commons.lang.StringUtils.lowerCase;
@@ -43,7 +44,20 @@ public class BeanBuilder<T> {
 	 * @param type the type to return the {@link BeanBuilder} for
 	 */
 	public static <T> BeanBuilder<T> anInstanceOf(final Class<T> type) {
-		return new BeanBuilder<T>(type, BeanBuilderType.NULL);
+		return new BeanBuilder<T>(type, BeanBuilderType.NULL, new LowerCaseNamingStrategy());
+	}
+
+	/**
+	 * Return an instance of a {@link BeanBuilder} for the given type which can then be populated with values either manually or automatically. For example:
+	 * 
+	 * <pre>
+	 * BeanUtils.anInstanceOf(Person.class, &quot;person&quot;).build();
+	 * </pre>
+	 * @param type the type to return the {@link BeanBuilder} for
+	 * @param rootName the name give to the root entity when referencing paths
+	 */
+	public static <T> BeanBuilder<T> anInstanceOf(final Class<T> type, final String rootName) {
+		return new BeanBuilder<T>(type, BeanBuilderType.NULL, new ForceRootNameNamingStrategy(new LowerCaseNamingStrategy(), rootName));
 	}
 
 	/**
@@ -55,7 +69,20 @@ public class BeanBuilder<T> {
 	 * @param type the type to return the {@link BeanBuilder} for
 	 */
 	public static <T> BeanBuilder<T> anEmptyInstanceOf(final Class<T> type) {
-		return new BeanBuilder<T>(type, BeanBuilderType.EMPTY);
+		return new BeanBuilder<T>(type, BeanBuilderType.EMPTY, new LowerCaseNamingStrategy());
+	}
+
+	/**
+	 * Return an instance of a {@link BeanBuilder} for the given type which is populated with empty objects but collections, maps, etc which have empty objects. For example:
+	 * 
+	 * <pre>
+	 * BeanUtils.anEmptyInstanceOf(Person.class).build();
+	 * </pre>
+	 * @param type the type to return the {@link BeanBuilder} for
+	 * @param rootName the name give to the root entity when referencing paths
+	 */
+	public static <T> BeanBuilder<T> anEmptyInstanceOf(final Class<T> type, final String rootName) {
+		return new BeanBuilder<T>(type, BeanBuilderType.EMPTY, new ForceRootNameNamingStrategy(new LowerCaseNamingStrategy(), rootName));
 	}
 
 	/**
@@ -67,7 +94,19 @@ public class BeanBuilder<T> {
 	 * @param type the type to return the {@link BeanBuilder} for
 	 */
 	public static <T> BeanBuilder<T> aRandomInstanceOf(final Class<T> type) {
-		return new BeanBuilder<T>(type, BeanBuilderType.RANDOM);
+		return new BeanBuilder<T>(type, BeanBuilderType.RANDOM, new LowerCaseNamingStrategy());
+	}
+
+	/**
+	 * Return an instance of a {@link BeanBuilder} for the given type which is populated with random values. For example:
+	 * 
+	 * <pre>
+	 * BeanUtils.aRandomInstanceOf(Person.class).build();
+	 * </pre>
+	 * @param type the type to return the {@link BeanBuilder} for
+	 */
+	public static <T> BeanBuilder<T> aRandomInstanceOf(final Class<T> type, final String rootName) {
+		return new BeanBuilder<T>(type, BeanBuilderType.RANDOM, new ForceRootNameNamingStrategy(new LowerCaseNamingStrategy(), rootName));
 	}
 
 	private final Set<String> excludedProperties = new HashSet<String>();
@@ -77,11 +116,13 @@ public class BeanBuilder<T> {
 	private final Map<Class<?>, InstanceFactory> types = new HashMap<Class<?>, InstanceFactory>();
 	private final Class<T> type;
 	private final BeanBuilderType builderType;
-	private int collectionMin = 1, collectionMax = 5;;
+	private final BeanNamingStrategy naming;;
+	private int collectionMin = 1, collectionMax = 5;
 
-	private BeanBuilder(final Class<T> type, final BeanBuilderType builderType) {
+	private BeanBuilder(final Class<T> type, final BeanBuilderType builderType, final BeanNamingStrategy naming) {
 		this.type = type;
 		this.builderType = builderType;
+		this.naming = naming;
 	}
 
 	public BeanBuilder<T> with(final String propertyOrPathName, final Object value) {
@@ -167,7 +208,7 @@ public class BeanBuilder<T> {
 
 	private <I> I populate(final I instance, final BeanPropertyPath path, final Stack stack) {
 		if (instance != null) {
-			for (TypeProperty property : type(instance).setNamingStrategy(new LowerCaseNamingStrategy()).propertyList()) {
+			for (TypeProperty property : type(instance).setNamingStrategy(naming).propertyList()) {
 				populateProperty(instance, property, path.append(property.getName()), stack);
 			}
 			return instance;
