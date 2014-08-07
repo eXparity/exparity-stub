@@ -2,7 +2,7 @@
  * Copyright (c) Modular IT Limited.
  */
 
-package uk.co.it.modular.beans.testutils;
+package org.exparity.test.builder;
 
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -403,5 +403,9 @@ public class BeanUtilTestFixture {
 		public void setSiblings(final List<Person> siblings) {
 			this.siblings = siblings;
 		}
+	}
+
+	public static enum FuelType {
+		DIESEL, PETROL, LPG
 	}
 }

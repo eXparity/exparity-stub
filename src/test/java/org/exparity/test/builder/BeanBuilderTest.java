@@ -2,7 +2,7 @@
  * Copyright (c) Modular IT Limited.
  */
 
-package uk.co.it.modular.beans;
+package org.exparity.test.builder;
 
 import java.math.BigDecimal;
 import org.exparity.test.builder.BeanUtilTestFixture.AllTypes;
@@ -13,19 +13,23 @@ import org.exparity.test.builder.BeanUtilTestFixture.Manager;
 import org.exparity.test.builder.BeanUtilTestFixture.NoDefaultConstructor;
 import org.exparity.test.builder.BeanUtilTestFixture.Person;
 import org.exparity.test.builder.BeanUtilTestFixture.Wheel;
+import org.exparity.test.builder.InstanceBuilder.InstanceFactory;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import uk.co.it.modular.beans.BeanProperty;
+import uk.co.it.modular.beans.BeanPropertyException;
+import uk.co.it.modular.beans.BeanPropertyPath;
+import uk.co.it.modular.beans.BeanVisitor;
+import static org.exparity.test.builder.BeanBuilder.aRandomInstanceOf;
+import static org.exparity.test.builder.BeanBuilder.anEmptyInstanceOf;
+import static org.exparity.test.builder.BeanBuilder.anInstanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static uk.co.it.modular.beans.Bean.bean;
-import static uk.co.it.modular.beans.BeanBuilder.aRandomInstanceOf;
-import static uk.co.it.modular.beans.BeanBuilder.anEmptyInstanceOf;
-import static uk.co.it.modular.beans.BeanBuilder.anInstanceOf;
 
 /**
  * @author Stewart.Bissett
  */
-@SuppressWarnings("deprecation")
 public class BeanBuilderTest {
 
 	@Test
