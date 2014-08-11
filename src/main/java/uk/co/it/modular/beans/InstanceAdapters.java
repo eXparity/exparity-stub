@@ -14,7 +14,7 @@ import org.exparity.test.builder.InstanceBuilder.InstanceArrayFactory;
  * 
  * @author Stewart Bissett
  */
-@SuppressWarnings("deprecation")
+@Deprecated
 abstract class InstanceAdapters {
 
 	static <T> InstanceFactory<T> adapt(final org.exparity.test.builder.InstanceBuilder.InstanceFactory<T> from) {

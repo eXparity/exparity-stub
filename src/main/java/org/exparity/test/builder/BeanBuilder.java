@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import org.apache.commons.lang.StringUtils;
+import org.exparity.test.builder.InstanceBuilder.InstanceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.co.it.modular.beans.BeanNamingStrategy;
@@ -23,7 +25,6 @@ import uk.co.it.modular.beans.naming.ForceRootNameNamingStrategy;
 import uk.co.it.modular.beans.naming.LowerCaseNamingStrategy;
 import static java.lang.System.identityHashCode;
 import static org.apache.commons.lang.StringUtils.lowerCase;
-import static org.apache.commons.lang.math.RandomUtils.nextInt;
 import static org.exparity.test.builder.InstanceBuilder.*;
 import static uk.co.it.modular.beans.Type.type;
 
@@ -121,7 +122,9 @@ public class BeanBuilder<T> {
 	private final Class<T> type;
 	private final BeanBuilderType builderType;
 	private final BeanNamingStrategy naming;;
-	private int collectionMin = 1, collectionMax = 5;
+	private CollectionSize defaultCollectionSize = new CollectionSize(1, 5);
+	private final Map<String, CollectionSize> collectionSizeForPaths = new HashMap<String, CollectionSize>();
+	private final Map<String, CollectionSize> collectionSizeForProperties = new HashMap<String, CollectionSize>();
 
 	private BeanBuilder(final Class<T> type, final BeanBuilderType builderType, final BeanNamingStrategy naming) {
 		this.type = type;
@@ -193,8 +196,25 @@ public class BeanBuilder<T> {
 	}
 
 	public BeanBuilder<T> aCollectionSizeRangeOf(final int min, final int max) {
-		this.collectionMin = min;
-		this.collectionMax = max;
+		this.defaultCollectionSize = new CollectionSize(min, max);
+		return this;
+	}
+
+	public BeanBuilder<T> aCollectionSizeRangeForPropertyOf(final String property, final int min, final int max) {
+		this.collectionSizeForProperties.put(property, new CollectionSize(min, max));
+		return this;
+	}
+
+	public BeanBuilder<T> aCollectionSizeForPropertyOf(final String property, final int size) {
+		return aCollectionSizeRangeForPropertyOf(property, size, size);
+	}
+
+	public BeanBuilder<T> aCollectionSizeForPathOf(final String path, final int size) {
+		return aCollectionSizeRangeForPathOf(path, size, size);
+	}
+
+	public BeanBuilder<T> aCollectionSizeRangeForPathOf(final String path, final int min, final int max) {
+		this.collectionSizeForPaths.put(path, new CollectionSize(min, max));
 		return this;
 	}
 
@@ -241,11 +261,11 @@ public class BeanBuilder<T> {
 		if (property.isArray()) {
 			property.setValue(instance, createArray(property.getType().getComponentType(), path, stack));
 		} else if (property.isMap()) {
-			property.setValue(instance, createMap(property.getTypeParameter(0), property.getTypeParameter(1), collectionSize(), path, stack));
+			property.setValue(instance, createMap(property.getTypeParameter(0), property.getTypeParameter(1), collectionSize(path), path, stack));
 		} else if (property.isSet()) {
-			property.setValue(instance, createSet(property.getTypeParameter(0), collectionSize(), path, stack));
+			property.setValue(instance, createSet(property.getTypeParameter(0), collectionSize(path), path, stack));
 		} else if (property.isList() || property.isCollection()) {
-			property.setValue(instance, createList(property.getTypeParameter(0), collectionSize(), path, stack));
+			property.setValue(instance, createList(property.getTypeParameter(0), collectionSize(path), path, stack));
 		} else {
 			assignValue(instance, property, path, createValue(property.getType()), stack);
 		}
@@ -278,22 +298,15 @@ public class BeanBuilder<T> {
 		return false;
 	}
 
-	public InstanceFactory factoryForPath(final TypeProperty property, final BeanPropertyPath path) {
-		InstanceFactory factory = paths.get(path.fullPath());
-		if (factory == null) {
-			factory = paths.get(path.fullPathWithNoIndexes());
-			if (factory == null) {
-				factory = properties.get(property.getName());
-			}
-		}
-		return factory;
+	private InstanceFactory factoryForPath(final TypeProperty property, final BeanPropertyPath path) {
+		return selectNotNull(paths.get(path.fullPath()), paths.get(path.fullPathWithNoIndexes()), properties.get(property.getName()));
 	}
 
-	public boolean isExcludedProperty(final TypeProperty property) {
+	private boolean isExcludedProperty(final TypeProperty property) {
 		return excludedProperties.contains(property.getName());
 	}
 
-	public boolean isExcludedPath(final BeanPropertyPath path) {
+	private boolean isExcludedPath(final BeanPropertyPath path) {
 		return excludedPaths.contains(path.fullPath()) || excludedPaths.contains(path.fullPathWithNoIndexes());
 	}
 
@@ -363,7 +376,7 @@ public class BeanBuilder<T> {
 		switch (builderType) {
 			case EMPTY:
 			case RANDOM:
-				Object array = Array.newInstance(type, collectionSize());
+				Object array = Array.newInstance(type, collectionSize(path));
 				for (int i = 0; i < Array.getLength(array); ++i) {
 					Array.set(array, i, populate(createValue(type), path.appendIndex(i), stack.append(type)));
 				}
@@ -434,17 +447,15 @@ public class BeanBuilder<T> {
 		}
 	}
 
-	private int collectionSize() {
-		int min = collectionMin, max = collectionMax;
-		if (min == max) {
-			return min;
-		} else {
-			int size = Integer.MIN_VALUE;
-			while (size < min) {
-				size = nextInt(max);
-			}
-			return size;
-		}
+	private int collectionSize(final BeanPropertyPath path) {
+		return selectNotNull(collectionSizeForPaths.get(path.fullPath()),
+				collectionSizeForPaths.get(path.fullPathWithNoIndexes()),
+				collectionSizeForProperties.get(propertyName(path)),
+				defaultCollectionSize).aRandomSize();
+	}
+
+	private String propertyName(final BeanPropertyPath path) {
+		return StringUtils.substringAfterLast(path.fullPathWithNoIndexes(), ".");
 	}
 
 	private <X> List<InstanceFactory<X>> createInstanceOfFactoriesForTypes(final Class<? extends X>... subtypes) {
@@ -461,7 +472,7 @@ public class BeanBuilder<T> {
 
 		private Stack(final Type type) {
 			this(new Type[] {
-				type
+					type
 			});
 		}
 
@@ -492,8 +503,28 @@ public class BeanBuilder<T> {
 		}
 	}
 
+	private static class CollectionSize {
+
+		private final int min, max;
+
+		public CollectionSize(final int min, final int max) {
+			this.min = min;
+			this.max = max;
+		}
+
+		public int aRandomSize() {
+			if (min == max) {
+				return min;
+			} else {
+				return RandomBuilder.aRandomInteger(min, max);
+			}
+		}
+	}
+
 	@SuppressWarnings("serial")
-	private static final Map<Class<?>, InstanceFactory> RANDOM_FACTORIES = new HashMap<Class<?>, InstanceFactory>() {{
+	private static final Map<Class<?>, InstanceFactory> RANDOM_FACTORIES = new HashMap<Class<?>, InstanceFactory>() {
+
+		{
 			put(Short.class, aRandomShort());
 			put(short.class, aRandomShort());
 			put(Integer.class, aRandomInteger());
@@ -545,6 +576,15 @@ public class BeanBuilder<T> {
 
 	private static enum BeanBuilderType {
 		RANDOM, EMPTY, NULL
+	}
+
+	private <T> T selectNotNull(final T... options) {
+		for (T option : options) {
+			if (option != null) {
+				return option;
+			}
+		}
+		return null;
 	}
 
 }

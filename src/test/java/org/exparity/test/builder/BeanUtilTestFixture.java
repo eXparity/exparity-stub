@@ -5,6 +5,7 @@
 package org.exparity.test.builder;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -332,6 +333,7 @@ public class BeanUtilTestFixture {
 	public static class Wheel {
 
 		private Integer diameter;
+		private List<Nut> nuts = new ArrayList<Nut>();
 
 		public Wheel(final Integer diameter) {
 			this.diameter = diameter;
@@ -346,6 +348,34 @@ public class BeanUtilTestFixture {
 
 		public void setDiameter(final Integer diameter) {
 			this.diameter = diameter;
+		}
+
+		public List<Nut> getNuts() {
+			return nuts;
+		}
+
+		public void setNuts(final List<Nut> nuts) {
+			this.nuts = nuts;
+		}
+	}
+
+	public static class Nut {
+
+		private boolean locking;
+
+		public Nut(final boolean locking) {
+			this.locking = locking;
+		}
+
+		public Nut() {
+		}
+
+		public void setLocking(final boolean locking) {
+			this.locking = locking;
+		}
+
+		public boolean isLocking() {
+			return locking;
 		}
 	}
 
