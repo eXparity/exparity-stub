@@ -1,4 +1,4 @@
-Test Object Builder  [![Build Status](https://travis-ci.org/eXparity/test-object-builder.svg?branch=master)](https://travis-ci.org/eXparity/test-object-builder) [![Coverage Status](https://coveralls.io/repos/eXparity/hamcrest-date/badge.png?branch=master)](https://coveralls.io/r/eXparity/test-object-builder?branch=master)
+Test Object Builder  [![Build Status](https://travis-ci.org/eXparity/test-object-builder.svg?branch=master)](https://travis-ci.org/eXparity/test-object-builder) [![Coverage Status](https://coveralls.io/repos/eXparity/test-object-builder/badge.png?branch=master)](https://coveralls.io/r/eXparity/test-object-builder?branch=master)
 =============
 A Java library to support configurable instantiation and creation of random objects to use as test dummy's for model objects
 
