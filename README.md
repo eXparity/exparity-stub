@@ -15,27 +15,29 @@ The Test Obect Builders are exposed as static methods on the RandomBuilder class
 
 The RandomBuilder can be used to create random values for primitives, for arrays, and for complete object graphs where the classes follow the Java Beans naming standard for getters and settter. For example
 
-	  String randomName = RandomBuilder.aRandomString();
-	  Gender raGender = RandomBuilder.aRandomEnum(Gender.class);
-	  Person aPerson = RandomBuilder.aRandomInstanceOf(Person.class);
-	  Person []  aCrowd = RandomBuilder.aRandomArrayOf(Person.class);
-	  List<Person>  aCrowd = RandomBuilder.aRandomListOf(Person.class);
+	String randomName = RandomBuilder.aRandomString();
+	Gender raGender = RandomBuilder.aRandomEnum(Gender.class);
+	Person aPerson = RandomBuilder.aRandomInstanceOf(Person.class);
+	Person []  aCrowd = RandomBuilder.aRandomArrayOf(Person.class);
+	List<Person>  aCrowd = RandomBuilder.aRandomListOf(Person.class);
 
 The RandomBuilder can be configured to restrict how certain properties, types, paths, subtypes, and collections are built. For example.
 
-   Person aPerson = RandomBuilder.aRandomInstanceOf(Person.class, RandomBuilder.path("person.siblings.firstName","Bob"));
-   Person aPerson = RandomBuilder.aRandomInstanceOf(Person.class, RandomBuilder.property("firstName","Bob"));
-   Person aPersonWithBrothersAndSisters = RandomBuilder.aRandomInstanceOf(Person.class, RandomBuilder.collectionSizeForPath("person.sibling",2,5));
+	Person aPerson = RandomBuilder.aRandomInstanceOf(Person.class,
+	RandomBuilder.path("person.siblings.firstName","Bob"));
+	Person aPerson = RandomBuilder.aRandomInstanceOf(Person.class, RandomBuilder.property("firstName","Bob"));
+	Person aPersonWithBrothersAndSisters = RandomBuilder.aRandomInstanceOf(Person.class,
+	RandomBuilder.collectionSizeForPath("person.sibling",2,5));
 	  
 or after static importing
 
-   Person aPerson = aRandomInstanceOf(Person.class, path("person.siblings.firstName","Bob"));
-   Person aPerson = aRandomInstanceOf(Person.class, property("firstName","Bob"));
-   Person aPersonWithBrothersAndSisters = aRandomInstanceOf(Person.class, collectionSizeForPath("person.sibling",2,5));
+	Person aPerson = aRandomInstanceOf(Person.class, path("person.siblings.firstName","Bob"));
+	Person aPerson = aRandomInstanceOf(Person.class, property("firstName","Bob"));
+	Person aPersonWithBrothersAndSisters = aRandomInstanceOf(Person.class, collectionSizeForPath("person.sibling",2,5));
 
 Multiple restrictions can be applied at the same time. For example
 
-   Person aPerson = aRandomInstanceOf(Person.class, collectionSizeForPath("person.sibling",2), path("person.siblings.firstName","Bob"));
+	Person aPerson = aRandomInstanceOf(Person.class, collectionSizeForPath("person.sibling",2), path("person.siblings.firstName","Bob"));
 
 The RandomBuilder class includes includes factory methods for:
 
