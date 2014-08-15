@@ -1,6 +1,3 @@
-/*
- * Copyright (c) Modular IT Limited.
- */
 
 package org.exparity.test.builder;
 
@@ -18,7 +15,7 @@ import static org.apache.commons.lang.math.RandomUtils.nextInt;
  * 
  * @author Stewart Bissett
  */
-public abstract class InstanceBuilder {
+public abstract class InstanceFactories {
 
 	/**
 	 * Interface to be implemented by classes which can provide values to a {@link BeanBuilder}
@@ -245,7 +242,7 @@ public abstract class InstanceBuilder {
 			public E createValue() {
 				E[] enumerationValues = enumType.getEnumConstants();
 				if (enumerationValues.length == 0) {
-					return null;
+					throw new InstanceFactoryException("Enumeration " + enumType.getName() + "has no values");
 				} else {
 					return enumerationValues[nextInt(enumerationValues.length)];
 				}
@@ -264,10 +261,8 @@ public abstract class InstanceBuilder {
 			@SuppressWarnings("unchecked")
 			public A[] createValue(final Class<A> type, final int size) {
 				Object array = Array.newInstance(type, size);
-				if (array != null) {
-					for (int i = 0; i < size; ++i) {
-						Array.set(array, i, typeFactory.createValue());
-					}
+				for (int i = 0; i < size; ++i) {
+					Array.set(array, i, typeFactory.createValue());
 				}
 				return (A[]) array;
 			}
@@ -286,7 +281,7 @@ public abstract class InstanceBuilder {
 				try {
 					return type.newInstance();
 				} catch (Exception e) {
-					throw new InstanceBuilderException("Failed to instantiate instance of '" + type.getCanonicalName() + "'", e);
+					throw new InstanceFactoryException("Failed to instantiate instance of '" + type.getCanonicalName() + "'", e);
 				}
 			}
 		};
@@ -316,4 +311,19 @@ public abstract class InstanceBuilder {
 			}
 		};
 	}
+
+	/**
+	 * Creates an {@link InstanceFactory} which randomly returns one of the supplied instances.
+	 * @param instances the instances to select from when creating the random value
+	 * @return an {@link InstanceFactory} which randomly returns one of the supplied instances.
+	 */
+	public static <T> InstanceFactory<T> oneOf(final T... instances) {
+		return new InstanceFactory<T>() {
+
+			public T createValue() {
+				return instances[nextInt(instances.length)];
+			}
+		};
+	}
+
 }

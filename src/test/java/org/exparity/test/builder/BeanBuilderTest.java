@@ -1,7 +1,3 @@
-/*
- * Copyright (c) Modular IT Limited.
- */
-
 package org.exparity.test.builder;
 
 import java.math.BigDecimal;
@@ -13,7 +9,7 @@ import org.exparity.test.builder.BeanUtilTestFixture.Manager;
 import org.exparity.test.builder.BeanUtilTestFixture.NoDefaultConstructor;
 import org.exparity.test.builder.BeanUtilTestFixture.Person;
 import org.exparity.test.builder.BeanUtilTestFixture.Wheel;
-import org.exparity.test.builder.InstanceBuilder.InstanceFactory;
+import org.exparity.test.builder.InstanceFactories.InstanceFactory;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import uk.co.it.modular.beans.BeanProperty;
@@ -149,7 +145,7 @@ public class BeanBuilderTest {
 
 	@Test
 	public void canRandomlyFillAGraphWithoutOverflow() {
-		Person person = aRandomInstanceOf(Person.class).aCollectionSizeOf(1).build();
+		Person person = aRandomInstanceOf(Person.class).collectionSizeOf(1).build();
 		assertThat(person.getFirstname(), notNullValue());
 		assertThat(person.getSurname(), notNullValue());
 		assertThat(person.getSiblings(), hasSize(1));
@@ -175,14 +171,14 @@ public class BeanBuilderTest {
 	@Test
 	public void canSetAnOverridePropertyByIndexedPath() {
 		int overrideDiameter = 1234;
-		Car car = aRandomInstanceOf(Car.class).aCollectionSizeOf(4).with("car.wheels[1].diameter", overrideDiameter).build();
+		Car car = aRandomInstanceOf(Car.class).collectionSizeOf(4).with("car.wheels[1].diameter", overrideDiameter).build();
 		assertThat(car.getWheels().get(1).getDiameter(), equalTo(overrideDiameter));
 	}
 
 	@Test
 	public void canSetAnOverridePropertyByIndexedPathUsingMixedCase() {
 		int overrideDiameter = 1234;
-		Car car = aRandomInstanceOf(Car.class).aCollectionSizeOf(4).with("CAR.wHeels[1].diAmeter", overrideDiameter).build();
+		Car car = aRandomInstanceOf(Car.class).collectionSizeOf(4).with("CAR.wHeels[1].diAmeter", overrideDiameter).build();
 		assertThat(car.getWheels().get(1).getDiameter(), equalTo(overrideDiameter));
 	}
 
@@ -220,13 +216,13 @@ public class BeanBuilderTest {
 	@Test
 	public void canSetCollectionSize() {
 		int expectedSize = 1;
-		Car car = aRandomInstanceOf(Car.class).aCollectionSizeOf(expectedSize).build();
+		Car car = aRandomInstanceOf(Car.class).collectionSizeOf(expectedSize).build();
 		assertThat(car.getWheels(), hasSize(expectedSize));
 	}
 
 	@Test
 	public void canSetSubTypes() {
-		Employee employee = aRandomInstanceOf(Employee.class).usingType(Person.class, Manager.class).build();
+		Employee employee = aRandomInstanceOf(Employee.class).subtype(Person.class, Manager.class).build();
 		assertThat(employee.getManager(), instanceOf(Manager.class));
 	}
 

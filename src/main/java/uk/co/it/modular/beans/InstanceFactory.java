@@ -1,7 +1,3 @@
-/*
- * Copyright (c) Modular IT Limited.
- */
-
 package uk.co.it.modular.beans;
 
 /**
@@ -9,13 +5,13 @@ package uk.co.it.modular.beans;
  * 
  * @author Stewart Bissett
  * 
- * @deprecated Moved to {@link org.exparity.test.builder.InstanceBuilder.InstanceFactory}
+ * @deprecated Moved to {@link org.exparity.test.builder.InstanceFactories.InstanceFactory}
  */
 @Deprecated
 public interface InstanceFactory<T> {
 
 	/*
-	 * @deprecated Moved to {@link org.exparity.test.builder.InstanceBuilder.InstanceFactory}
+	 * @deprecated Moved to {@link org.exparity.test.builder.InstanceFactories.InstanceFactory}
 	 */
 	@Deprecated
 	public T createValue();

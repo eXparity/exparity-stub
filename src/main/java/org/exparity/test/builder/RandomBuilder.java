@@ -1,7 +1,3 @@
-/*
- * Copyright (c) Modular IT Limited.
- */
-
 package org.exparity.test.builder;
 
 import java.math.BigDecimal;
@@ -13,7 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.exparity.test.builder.InstanceBuilder.InstanceFactory;
+import org.exparity.test.builder.InstanceFactories.InstanceFactory;
 import static org.apache.commons.lang.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang.RandomStringUtils.randomAlphanumeric;
 import static org.apache.commons.lang.math.RandomUtils.*;
@@ -44,25 +40,25 @@ public abstract class RandomBuilder {
 	private static final Map<Class, InstanceFactory> RANDOM_FACTORIES = new HashMap<Class, InstanceFactory>() {
 
 		{
-			put(Short.class, InstanceBuilder.aRandomShort());
-			put(short.class, InstanceBuilder.aRandomShort());
-			put(Integer.class, InstanceBuilder.aRandomInteger());
-			put(int.class, InstanceBuilder.aRandomInteger());
-			put(Long.class, InstanceBuilder.aRandomLong());
-			put(long.class, InstanceBuilder.aRandomLong());
-			put(Double.class, InstanceBuilder.aRandomDouble());
-			put(double.class, InstanceBuilder.aRandomDouble());
-			put(Float.class, InstanceBuilder.aRandomFloat());
-			put(float.class, InstanceBuilder.aRandomFloat());
-			put(Boolean.class, InstanceBuilder.aRandomBoolean());
-			put(boolean.class, InstanceBuilder.aRandomBoolean());
-			put(Byte.class, InstanceBuilder.aRandomByte());
-			put(byte.class, InstanceBuilder.aRandomByte());
-			put(Character.class, InstanceBuilder.aRandomChar());
-			put(char.class, InstanceBuilder.aRandomChar());
-			put(String.class, InstanceBuilder.aRandomString());
-			put(BigDecimal.class, InstanceBuilder.aRandomDecimal());
-			put(Date.class, InstanceBuilder.aRandomDate());
+			put(Short.class, InstanceFactories.aRandomShort());
+			put(short.class, InstanceFactories.aRandomShort());
+			put(Integer.class, InstanceFactories.aRandomInteger());
+			put(int.class, InstanceFactories.aRandomInteger());
+			put(Long.class, InstanceFactories.aRandomLong());
+			put(long.class, InstanceFactories.aRandomLong());
+			put(Double.class, InstanceFactories.aRandomDouble());
+			put(double.class, InstanceFactories.aRandomDouble());
+			put(Float.class, InstanceFactories.aRandomFloat());
+			put(float.class, InstanceFactories.aRandomFloat());
+			put(Boolean.class, InstanceFactories.aRandomBoolean());
+			put(boolean.class, InstanceFactories.aRandomBoolean());
+			put(Byte.class, InstanceFactories.aRandomByte());
+			put(byte.class, InstanceFactories.aRandomByte());
+			put(Character.class, InstanceFactories.aRandomChar());
+			put(char.class, InstanceFactories.aRandomChar());
+			put(String.class, InstanceFactories.aRandomString());
+			put(BigDecimal.class, InstanceFactories.aRandomDecimal());
+			put(Date.class, InstanceFactories.aRandomDate());
 		}
 	};
 
@@ -75,7 +71,11 @@ public abstract class RandomBuilder {
 	private static final int SECONDS_IN_A_YEAR = MINUTES_PER_HOUR * HOURS_PER_DAY * DAYS_PER_YEAR;
 
 	/**
-	 * Build a random {@link String} containing alphanumeric characters.
+	 * Build a random {@link String} containing alphanumeric characters. For example
+	 * <p/>
+	 * <code>
+	 * String aRandomName = RandomBuilder.aRandomString();
+	 * </code>
 	 * @return a random {@link String}.
 	 */
 	public static String aRandomString() {
@@ -83,7 +83,23 @@ public abstract class RandomBuilder {
 	}
 
 	/**
-	 * Build a random {@link Integer}.
+	 * Build a random {@link String} containing alphanumeric characters of the specfied size. For example
+	 * <p/>
+	 * <code>
+	 * String aRandomName = RandomBuilder.aRandomString(10);
+	 * </code>
+	 * @return a random {@link String}.
+	 */
+	public static String aRandomString(final int length) {
+		return randomAlphanumeric(length);
+	}
+
+	/**
+	 * Build a random {@link Integer}. For example
+	 * <p/>
+	 * <code>
+	 * Integer aRandomAge = RandomBuilder.aRandomInteger();
+	 * </code>
 	 * @return a random {@link Integer}.
 	 */
 	public static Integer aRandomInteger() {
@@ -91,7 +107,11 @@ public abstract class RandomBuilder {
 	}
 
 	/**
-	 * Build a random {@link Integer} within the supplied minumum and maximum range.
+	 * Build a random {@link Integer} within the supplied minumum and maximum range. For example
+	 * <p/>
+	 * <code>
+	 * Integer aRandomAge = RandomBuilder.aRandomInteger(1,100);
+	 * </code>
 	 * @param min the minimum value can be
 	 * @param max the maximum value can be
 	 * @return a random {@link Integer} within the supplied minumum and maximum range.
@@ -105,7 +125,11 @@ public abstract class RandomBuilder {
 	}
 
 	/**
-	 * Build a random {@link Short}.
+	 * Build a random {@link Short}. For example
+	 * <p/>
+	 * <code>
+	 * Short aRandomAge = RandomBuilder.aRandomShort();
+	 * </code>.
 	 * @return a random {@link Short}.
 	 */
 	public static Short aRandomShort() {
@@ -113,7 +137,11 @@ public abstract class RandomBuilder {
 	}
 
 	/**
-	 * Build a random {@link Short} within the supplied minumum and maximum range.
+	 * Build a random {@link Short} within the supplied minumum and maximum range. For example
+	 * <p/>
+	 * <code>
+	 * Short aRandomAge = RandomBuilder.aRandomShort(1,100);
+	 * </code>
 	 * @param min the minimum value can be
 	 * @param max the maximum value can be
 	 * @return a random {@link Short} within the supplied minumum and maximum range.
@@ -127,7 +155,11 @@ public abstract class RandomBuilder {
 	}
 
 	/**
-	 * Build a random {@link Long}.
+	 * Build a random {@link Long}. For example
+	 * <p/>
+	 * <code>
+	 * Long aRandomAge = RandomBuilder.aRandomLong(1,100);
+	 * </code>
 	 * @return a random {@link Long}.
 	 */
 	public static Long aRandomLong() {
@@ -135,7 +167,11 @@ public abstract class RandomBuilder {
 	}
 
 	/**
-	 * Build a random {@link Long} within the supplied minumum and maximum range.
+	 * Build a random {@link Long} within the supplied minumum and maximum range. For example
+	 * <p/>
+	 * <code>
+	 * Long aRandomAge = RandomBuilder.aRandomLong(1,100L);
+	 * </code>
 	 * @param min the minimum value can be
 	 * @param max the maximum value can be
 	 * @return a random {@link Long} within the supplied minumum and maximum range.
@@ -149,7 +185,11 @@ public abstract class RandomBuilder {
 	}
 
 	/**
-	 * Build a random {@link Double}.
+	 * Build a random {@link Double}. For example
+	 * <p/>
+	 * <code>
+	 * Double aRandomHeight = RandomBuilder.aRandomDouble();
+	 * </code>
 	 * @return a random {@link Double}.
 	 */
 	public static Double aRandomDouble() {
@@ -157,7 +197,11 @@ public abstract class RandomBuilder {
 	}
 
 	/**
-	 * Build a random {@link Float}.
+	 * Build a random {@link Float}. For example
+	 * <p/>
+	 * <code>
+	 * Float aRandomHeight = RandomBuilder.aRandomFloat();
+	 * </code>
 	 * @return a random {@link Float}.
 	 */
 	public static Float aRandomFloat() {
@@ -165,7 +209,11 @@ public abstract class RandomBuilder {
 	}
 
 	/**
-	 * Build a random {@link Boolean}.
+	 * Build a random {@link Boolean}. For example
+	 * <p/>
+	 * <code>
+	 * Boolean aRandomHasSibilings = RandomBuilder.aRandomBoolean();
+	 * </code>
 	 * @return a random {@link Boolean}.
 	 */
 	public static Boolean aRandomBoolean() {
@@ -173,7 +221,11 @@ public abstract class RandomBuilder {
 	}
 
 	/**
-	 * Build a random {@link Date} with an year either side of today.
+	 * Build a random {@link Date} with an year either side of today. For example
+	 * <p/>
+	 * <code>
+	 * Date aRandomBirthday = RandomBuilder.aRandomDate();
+	 * </code>
 	 * @return a random {@link Date} with an year either side of today.
 	 */
 	public static Date aRandomDate() {
@@ -181,7 +233,11 @@ public abstract class RandomBuilder {
 	}
 
 	/**
-	 * Build a random {@link BigDecimal}.
+	 * Build a random {@link BigDecimal}. For example
+	 * <p/>
+	 * <code>
+	 * BigDecimal aRandomWeight = RandomBuilder.aRandomDecimal();
+	 * </code>
 	 * @return a random {@link BigDecimal}.
 	 */
 	public static BigDecimal aRandomDecimal() {
@@ -189,7 +245,11 @@ public abstract class RandomBuilder {
 	}
 
 	/**
-	 * Build a random {@link Byte}.
+	 * Build a random {@link Byte}. For example
+	 * <p/>
+	 * <code>
+	 * BigDecimal aRandomByte = RandomBuilder.aRandomByte();
+	 * </code>
 	 * @return a random {@link Byte}.
 	 */
 	public static Byte aRandomByte() {
@@ -197,7 +257,11 @@ public abstract class RandomBuilder {
 	}
 
 	/**
-	 * Build a random array of bytes
+	 * Build a random array of bytes. For example
+	 * <p/>
+	 * <code>
+	 * byte [] aRandomID = RandomBuilder.aRandomByteArray();
+	 * </code>
 	 * @return a random array of bytes
 	 */
 	public static byte[] aRandomByteArray() {
@@ -209,7 +273,11 @@ public abstract class RandomBuilder {
 	}
 
 	/**
-	 * Build a random {@link Character}.
+	 * Build a random {@link Character}. For example
+	 * <p/>
+	 * <code>
+	 * Character aRandomInitial = RandomBuilder.aRandomCharacter();
+	 * </code>
 	 * @return a random {@link Character}.
 	 */
 	public static Character aRandomChar() {
@@ -217,21 +285,29 @@ public abstract class RandomBuilder {
 	}
 
 	/**
-	 * Build a random instance of the supplied enumeration
+	 * Build a random instance of the supplied enumeration. For example
+	 * <p/>
+	 * <code>
+	 * Gender aRandomGender = RandomBuilder.aRandomEnum(Gender.class);
+	 * </code>
 	 * @param enumType the enumeration to create a random instance of
 	 * @return a random instance of the supplied enumeration.
 	 */
 	public static <E extends Enum<E>> E aRandomEnum(final Class<E> enumType) {
 		E[] enumerationValues = enumType.getEnumConstants();
 		if (enumerationValues.length == 0) {
-			return null;
+			throw new RandomBuilderException("Enumeration " + enumType.getName() + "has no values");
 		} else {
 			return enumerationValues[nextInt(enumerationValues.length)];
 		}
 	}
 
 	/**
-	 * Build an array of random values from the supplied enumeration.
+	 * Build an array of random values from the supplied enumeration. For example
+	 * <p/>
+	 * <code>
+	 * EyeColour [] eyeColours = RandomBuilder.aRandomArrayOfEnum(EyeColour.class);
+	 * </code>
 	 * @param enumType the enumeration to create an array of
 	 * @return an array of random values from the supplied enumeration.
 	 */
@@ -240,18 +316,26 @@ public abstract class RandomBuilder {
 	}
 
 	/**
-	 * Build an array of random values from the supplied enumeration of a given size
+	 * Build an array of random values from the supplied enumeration of a given size. For example
+	 * <p/>
+	 * <code>
+	 * EyeColour [] eyeColours = RandomBuilder.aRandomArrayOfEnum(EyeColour.class, 2, 5);
+	 * </code>
 	 * @param enumType the enumeration to create an array of
 	 * @param min the minimum size the array can be
 	 * @param max the maxiumum size the array can be
 	 * @return an array of random values from the supplied enumeration.
 	 */
 	public static <E extends Enum<E>> E[] aRandomArrayOfEnum(final Class<E> enumType, final int min, final int max) {
-		return InstanceBuilder.aRandomArrayOf(InstanceBuilder.aRandomEnum(enumType)).createValue(enumType, aRandomInteger(min, max));
+		return InstanceFactories.aRandomArrayOf(InstanceFactories.aRandomEnum(enumType)).createValue(enumType, aRandomInteger(min, max));
 	}
 
 	/**
-	 * Build an array of randomly populated instances of the supplied type
+	 * Build an array of randomly populated instances of the supplied type. For example
+	 * <p/>
+	 * <code>
+	 * Person [] aRandomCrowd = RandomBuilder.aRandomArrayOf(Person.class);
+	 * </code>
 	 * @param type the type to create an array of
 	 * @return an array of randomly populated instances of the supplied type
 	 */
@@ -260,18 +344,26 @@ public abstract class RandomBuilder {
 	}
 
 	/**
-	 * Build an array of randomly populated instances of the supplied type if a given size
+	 * Build an array of randomly populated instances of the supplied type if a given size. For example
+	 * <p/>
+	 * <code>
+	 * Person [] aRandomCrowd = RandomBuilder.aRandomArrayOf(Person.class,10,50);
+	 * </code>
 	 * @param type the type to create an array of
 	 * @param min the minimum size the array can be
 	 * @param max the maxiumum size the array can be
 	 * @return an array of randomly populated instances of the supplied type
 	 */
 	public static <T> T[] aRandomArrayOf(final Class<T> type, final int min, final int max) {
-		return InstanceBuilder.aRandomArrayOf(instanceFactoryFor(type)).createValue(type, aRandomInteger(min, max));
+		return InstanceFactories.aRandomArrayOf(instanceFactoryFor(type)).createValue(type, aRandomInteger(min, max));
 	}
 
 	/**
-	 * Build a collection of randomly populated instances of the supplied type
+	 * Build a collection of randomly populated instances of the supplied type. For example
+	 * <p/>
+	 * <code>
+	 * Collection<Person> aRandomCrowd = RandomBuilder.aRandomCollectionOf(Person.class);
+	 * </code>
 	 * @param type the type to create a collection of
 	 * @return a collection of randomly populated instances of the supplied type
 	 */
@@ -280,7 +372,11 @@ public abstract class RandomBuilder {
 	}
 
 	/**
-	 * Build a collection of randomly populated instances of the supplied type if a given size
+	 * Build a collection of randomly populated instances of the supplied type if a given size. For example
+	 * <p/>
+	 * <code>
+	 * Collection<Person> aRandomCrowd = RandomBuilder.aRandomCollectionOf(Person.class,10,50);
+	 * </code>
 	 * @param type the type to create a collection of
 	 * @param min the minimum size the collection can be
 	 * @param max the maxiumum size the collection can be
@@ -291,7 +387,11 @@ public abstract class RandomBuilder {
 	}
 
 	/**
-	 * Build a list of randomly populated instances of the supplied type
+	 * Build a list of randomly populated instances of the supplied type. For example
+	 * <p/>
+	 * <code>
+	 * List<Person> aRandomCrowd = RandomBuilder.aRandomListOf(Person.class);
+	 * </code>
 	 * @param type the type to create a list of
 	 * @return a list of randomly populated instances of the supplied type
 	 */
@@ -300,7 +400,11 @@ public abstract class RandomBuilder {
 	}
 
 	/**
-	 * Build a random list of randomly populated instances of the supplied type if a given size
+	 * Build a random list of randomly populated instances of the supplied type if a given size. For example
+	 * <p/>
+	 * <code>
+	 * List<Person> aRandomCrowd = RandomBuilder.aRandomListOf(Person.class);
+	 * </code>
 	 * @param type the type to create a random list of
 	 * @param min the minimum size the list can be
 	 * @param max the maxiumum size the list can be
@@ -311,7 +415,28 @@ public abstract class RandomBuilder {
 	}
 
 	/**
-	 * Build a random instance of the supplied type. An array of restrictions can be supplied as arguments if control is required over how some of the properties are populated
+	 * Build a random instance of the supplied type. An array of restrictions can be supplied as arguments if control is required over how some of the properties are populated. For
+	 * example
+	 * <p/>
+	 * <code>
+	 * Person aRandomPerson = RandomBuilder.aRandomInstanceOf(Person.class);
+	 * </code>
+	 * </p>
+	 * For examples on how to use restrictions to define the random object See:</p>
+	 * 
+	 * <pre>
+	 * {@link RandomBuilder#path(String, Object)}
+	 * {@link RandomBuilder#property(String, Object)}
+	 * {@link RandomBuilder#excludePath(String)}
+	 * {@link RandomBuilder#excludeProperty(String)}
+	 * {@link RandomBuilder#subtype(Class, Class)}
+	 * {@link RandomBuilder#subtype(Class, Class...)}
+	 * {@link RandomBuilder#collectionSize(int)}
+	 * {@link RandomBuilder#collectionSize(int, int)}
+	 * {@link RandomBuilder#collectionSizeForPath(String, int)}
+	 * {@link RandomBuilder#collectionSizeForProperty(String, int)}
+	 * {@link RandomBuilder#collectionSizeForProperty(String, int, int)}
+	 * </pre>
 	 * @param type the type to create a random instance of
 	 * @param restrictions an array of restrictions which control how the random instance is built
 	 * @return a random instance of the supplied type
@@ -321,30 +446,45 @@ public abstract class RandomBuilder {
 	}
 
 	/**
-	 * Build a random instance of the supplied type
+	 * Build a random instance of the supplied type. A list of restrictions can be supplied as arguments if control is required over how some of the properties are populated. For
+	 * example
+	 * <p/>
+	 * <code>
+	 * List<RandomRestrictions> restrictions = new ArrayList<RandomRestrictions>();</br>
+	 * restrictions.add(RandomBuilder.path("person.surname","Smith"));</br>
+	 * restrictions.add(RandomBuilder.property("age",25));</br>
+	 * Person aRandomPerson = RandomBuilder.aRandomInstanceOf(Person.class, restrictions);
+	 * </code>
+	 * </p>
+	 * For examples on how to use restrictions to define the random object See:</p>
+	 * 
+	 * <pre>
+	 * {@link RandomBuilder#path(String, Object)}
+	 * {@link RandomBuilder#property(String, Object)}
+	 * {@link RandomBuilder#excludePath(String)}
+	 * {@link RandomBuilder#excludeProperty(String)}
+	 * {@link RandomBuilder#subtype(Class, Class)}
+	 * {@link RandomBuilder#subtype(Class, Class...)}
+	 * {@link RandomBuilder#collectionSize(int)}
+	 * {@link RandomBuilder#collectionSize(int, int)}
+	 * {@link RandomBuilder#collectionSizeForPath(String, int)}
+	 * {@link RandomBuilder#collectionSizeForProperty(String, int)}
+	 * {@link RandomBuilder#collectionSizeForProperty(String, int, int)}
+	 * </pre>
 	 * @param type the type to create a random instance of
-	 * @param restrictions a list of restrictions which control how the random instance is built
+	 * @param restrictions an array of restrictions which control how the random instance is built
 	 * @return a random instance of the supplied type
 	 */
 	public static <T> T aRandomInstanceOf(final Class<T> type, final List<RandomRestriction> restrictions) {
 		return instanceFactoryFor(type, restrictions.toArray(new RandomRestriction[0])).createValue();
 	}
 
-	@SuppressWarnings("unchecked")
-	private static <T> InstanceFactory<T> instanceFactoryFor(final Class<T> type, final RandomRestriction... restrictions) {
-		InstanceFactory<T> factory = RANDOM_FACTORIES.get(type);
-		if (factory == null) {
-			BeanBuilder<T> builder = BeanBuilder.aRandomInstanceOf(type);
-			for (RandomRestriction restriction : restrictions) {
-				restriction.applyTo(builder);
-			}
-			factory = InstanceBuilder.theValue(builder.build());
-		}
-		return factory;
-	}
-
 	/**
-	 * Build and instance of a {@link RandomRestriction} which assigns the value to the specific property
+	 * Build and instance of a {@link RandomRestriction} which assigns the value to the specific property. For example
+	 * <p/>
+	 * <code>
+	 * Person aRandomPerson = RandomBuilder.aRandomInstanceOf(Person.class, RandomBuilder.property("surname", "Smith"));
+	 * </code>
 	 * @param property the property to assign e.g. "name"
 	 * @param value the value to assign the property e.g. "Jane Doe"
 	 */
@@ -352,13 +492,17 @@ public abstract class RandomBuilder {
 		return new RandomRestriction() {
 
 			public void applyTo(final BeanBuilder<?> builder) {
-				builder.withProperty(property, value);
+				builder.property(property, value);
 			}
 		};
 	}
 
 	/**
-	 * Build and instance of a {@link RandomRestriction} which assigns an {@link InstanceFactory} derived value to the specific property
+	 * Build and instance of a {@link RandomRestriction} which assigns an {@link InstanceFactory} derived value to the specific property. For example
+	 * <p/>
+	 * <code>
+	 * Person aRandomPerson = RandomBuilder.aRandomInstanceOf(Person.class, RandomBuilder.property("surname", InstanceFactories.oneOf("Smith","Brown"));
+	 * </code>
 	 * @param property the property to assign
 	 * @param value the value to assign the property
 	 */
@@ -366,7 +510,7 @@ public abstract class RandomBuilder {
 		return new RandomRestriction() {
 
 			public void applyTo(final BeanBuilder<?> builder) {
-				builder.withProperty(property, factory);
+				builder.property(property, factory);
 			}
 		};
 	}
@@ -393,7 +537,7 @@ public abstract class RandomBuilder {
 		return new RandomRestriction() {
 
 			public void applyTo(final BeanBuilder<?> builder) {
-				builder.withPath(path, value);
+				builder.path(path, value);
 			}
 		};
 	}
@@ -407,7 +551,7 @@ public abstract class RandomBuilder {
 		return new RandomRestriction() {
 
 			public void applyTo(final BeanBuilder<?> builder) {
-				builder.withPath(path, factory);
+				builder.path(path, factory);
 			}
 		};
 	}
@@ -434,7 +578,7 @@ public abstract class RandomBuilder {
 		return new RandomRestriction() {
 
 			public void applyTo(final BeanBuilder<?> builder) {
-				builder.usingType(superType, subType);
+				builder.subtype(superType, subType);
 			}
 		};
 	}
@@ -448,7 +592,7 @@ public abstract class RandomBuilder {
 		return new RandomRestriction() {
 
 			public void applyTo(final BeanBuilder<?> builder) {
-				builder.usingType(superType, subTypes);
+				builder.subtype(superType, subTypes);
 			}
 		};
 	}
@@ -461,7 +605,7 @@ public abstract class RandomBuilder {
 		return new RandomRestriction() {
 
 			public void applyTo(final BeanBuilder<?> builder) {
-				builder.aCollectionSizeOf(size);
+				builder.collectionSizeOf(size);
 			}
 		};
 	}
@@ -475,7 +619,7 @@ public abstract class RandomBuilder {
 		return new RandomRestriction() {
 
 			public void applyTo(final BeanBuilder<?> builder) {
-				builder.aCollectionSizeRangeOf(min, max);
+				builder.collectionSizeRangeOf(min, max);
 			}
 		};
 	}
@@ -489,7 +633,7 @@ public abstract class RandomBuilder {
 		return new RandomRestriction() {
 
 			public void applyTo(final BeanBuilder<?> builder) {
-				builder.aCollectionSizeForPathOf(path, size);
+				builder.collectionSizeForPathOf(path, size);
 			}
 		};
 	}
@@ -503,7 +647,7 @@ public abstract class RandomBuilder {
 		return new RandomRestriction() {
 
 			public void applyTo(final BeanBuilder<?> builder) {
-				builder.aCollectionSizeRangeForPathOf(path, min, max);
+				builder.collectionSizeRangeForPathOf(path, min, max);
 			}
 		};
 	}
@@ -517,7 +661,7 @@ public abstract class RandomBuilder {
 		return new RandomRestriction() {
 
 			public void applyTo(final BeanBuilder<?> builder) {
-				builder.aCollectionSizeForPropertyOf(property, size);
+				builder.collectionSizeForPropertyOf(property, size);
 			}
 		};
 	}
@@ -531,9 +675,22 @@ public abstract class RandomBuilder {
 		return new RandomRestriction() {
 
 			public void applyTo(final BeanBuilder<?> builder) {
-				builder.aCollectionSizeRangeForPropertyOf(property, min, max);
+				builder.collectionSizeRangeForPropertyOf(property, min, max);
 			}
 		};
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T> InstanceFactory<T> instanceFactoryFor(final Class<T> type, final RandomRestriction... restrictions) {
+		InstanceFactory<T> factory = RANDOM_FACTORIES.get(type);
+		if (factory == null) {
+			BeanBuilder<T> builder = BeanBuilder.aRandomInstanceOf(type);
+			for (RandomRestriction restriction : restrictions) {
+				restriction.applyTo(builder);
+			}
+			factory = InstanceFactories.theValue(builder.build());
+		}
+		return factory;
 	}
 
 }

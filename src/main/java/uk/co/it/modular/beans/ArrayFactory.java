@@ -1,7 +1,3 @@
-/*
- * Copyright (c) Modular IT Limited.
- */
-
 package uk.co.it.modular.beans;
 
 /**
@@ -9,13 +5,13 @@ package uk.co.it.modular.beans;
  * 
  * @author Stewart Bissett
  * 
- * @deprecated See {@link org.exparity.test.builder.InstanceBuilder.InstanceArrayFactory}
+ * @deprecated See {@link org.exparity.test.builder.InstanceFactories.InstanceArrayFactory}
  */
 @Deprecated
 public interface ArrayFactory<T> {
 
 	/**
-	 * @deprecated See {@link org.exparity.test.builder.InstanceBuilder.InstanceArrayFactory}
+	 * @deprecated See {@link org.exparity.test.builder.InstanceFactories.InstanceArrayFactory}
 	 */
 	@Deprecated
 	public T[] createValue(final Class<T> type, final int size);

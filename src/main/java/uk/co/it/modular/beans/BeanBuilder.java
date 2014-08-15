@@ -159,7 +159,7 @@ public class BeanBuilder<T> {
 	 */
 	@Deprecated
 	public BeanBuilder<T> withProperty(final String propertyName, final InstanceFactory<?> factory) {
-		this.delegate.withProperty(propertyName, InstanceAdapters.adapt(factory));
+		this.delegate.property(propertyName, InstanceAdapters.adapt(factory));
 		return this;
 	}
 
@@ -193,7 +193,7 @@ public class BeanBuilder<T> {
 	 */
 	@Deprecated
 	public BeanBuilder<T> withPath(final String path, final InstanceFactory<?> factory) {
-		this.delegate.withPath(path, InstanceAdapters.adapt(factory));
+		this.delegate.path(path, InstanceAdapters.adapt(factory));
 		return this;
 	}
 
@@ -219,7 +219,7 @@ public class BeanBuilder<T> {
 	 */
 	@Deprecated
 	public BeanBuilder<T> aCollectionSizeRangeOf(final int min, final int max) {
-		this.delegate.aCollectionSizeRangeOf(min, max);
+		this.delegate.collectionSizeRangeOf(min, max);
 		return this;
 	}
 
@@ -228,7 +228,7 @@ public class BeanBuilder<T> {
 	 */
 	@Deprecated
 	public <X> BeanBuilder<T> usingType(final Class<X> klass, final Class<? extends X> subtypes) {
-		this.delegate.usingType(klass, subtypes);
+		this.delegate.subtype(klass, subtypes);
 		return this;
 	}
 
@@ -237,7 +237,7 @@ public class BeanBuilder<T> {
 	 */
 	@Deprecated
 	public <X> BeanBuilder<T> usingType(final Class<X> klass, final Class<? extends X>... subtypes) {
-		this.delegate.usingType(klass, subtypes);
+		this.delegate.subtype(klass, subtypes);
 		return this;
 	}
 
@@ -246,7 +246,11 @@ public class BeanBuilder<T> {
 	 */
 	@Deprecated
 	public T build() {
-		return delegate.build();
+		try {
+			return delegate.build();
+		} catch (org.exparity.test.builder.BeanBuilderException e) {
+			throw new BeanBuilderException(e.getMessage(), e);
+		}
 	}
 
 }

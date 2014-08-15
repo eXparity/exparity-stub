@@ -1,7 +1,3 @@
-/*
- * Copyright (c) Modular IT Limited.
- */
-
 package uk.co.it.modular.beans;
 
 import java.math.BigDecimal;

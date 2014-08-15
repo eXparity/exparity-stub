@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.apache.commons.lang.StringUtils;
-import org.exparity.test.builder.InstanceBuilder.InstanceFactory;
+import org.exparity.test.builder.InstanceFactories.InstanceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.co.it.modular.beans.BeanNamingStrategy;
@@ -25,7 +25,7 @@ import uk.co.it.modular.beans.naming.ForceRootNameNamingStrategy;
 import uk.co.it.modular.beans.naming.LowerCaseNamingStrategy;
 import static java.lang.System.identityHashCode;
 import static org.apache.commons.lang.StringUtils.lowerCase;
-import static org.exparity.test.builder.InstanceBuilder.*;
+import static org.exparity.test.builder.InstanceFactories.*;
 import static uk.co.it.modular.beans.Type.type;
 
 /**
@@ -142,8 +142,8 @@ public class BeanBuilder<T> {
 	}
 
 	public BeanBuilder<T> with(final String propertyOrPathName, final InstanceFactory<?> factory) {
-		withPath(propertyOrPathName, factory);
-		withProperty(propertyOrPathName, factory);
+		path(propertyOrPathName, factory);
+		property(propertyOrPathName, factory);
 		return this;
 	}
 
@@ -152,14 +152,14 @@ public class BeanBuilder<T> {
 	 */
 	@Deprecated
 	public BeanBuilder<T> withPropertyValue(final String propertyName, final Object value) {
-		return withProperty(propertyName, value);
+		return property(propertyName, value);
 	}
 
-	public BeanBuilder<T> withProperty(final String propertyName, final Object value) {
-		return withProperty(propertyName, theValue(value));
+	public BeanBuilder<T> property(final String propertyName, final Object value) {
+		return property(propertyName, theValue(value));
 	}
 
-	public BeanBuilder<T> withProperty(final String propertyName, final InstanceFactory<?> factory) {
+	public BeanBuilder<T> property(final String propertyName, final InstanceFactory<?> factory) {
 		properties.put(lowerCase(propertyName), factory);
 		return this;
 	}
@@ -169,19 +169,11 @@ public class BeanBuilder<T> {
 		return this;
 	}
 
-	/**
-	 * @deprecated See {@link #path(String, Object)}
-	 */
-	@Deprecated
-	public BeanBuilder<T> withPathValue(final String path, final Object value) {
-		return withPath(path, value);
+	public BeanBuilder<T> path(final String path, final Object value) {
+		return path(path, theValue(value));
 	}
 
-	public BeanBuilder<T> withPath(final String path, final Object value) {
-		return withPath(path, theValue(value));
-	}
-
-	public BeanBuilder<T> withPath(final String path, final InstanceFactory<?> factory) {
+	public BeanBuilder<T> path(final String path, final InstanceFactory<?> factory) {
 		this.paths.put(lowerCase(path), factory);
 		return this;
 	}
@@ -191,38 +183,38 @@ public class BeanBuilder<T> {
 		return this;
 	}
 
-	public BeanBuilder<T> aCollectionSizeOf(final int size) {
-		return aCollectionSizeRangeOf(size, size);
+	public BeanBuilder<T> collectionSizeOf(final int size) {
+		return collectionSizeRangeOf(size, size);
 	}
 
-	public BeanBuilder<T> aCollectionSizeRangeOf(final int min, final int max) {
+	public BeanBuilder<T> collectionSizeRangeOf(final int min, final int max) {
 		this.defaultCollectionSize = new CollectionSize(min, max);
 		return this;
 	}
 
-	public BeanBuilder<T> aCollectionSizeRangeForPropertyOf(final String property, final int min, final int max) {
+	public BeanBuilder<T> collectionSizeRangeForPropertyOf(final String property, final int min, final int max) {
 		this.collectionSizeForProperties.put(property, new CollectionSize(min, max));
 		return this;
 	}
 
-	public BeanBuilder<T> aCollectionSizeForPropertyOf(final String property, final int size) {
-		return aCollectionSizeRangeForPropertyOf(property, size, size);
+	public BeanBuilder<T> collectionSizeForPropertyOf(final String property, final int size) {
+		return collectionSizeRangeForPropertyOf(property, size, size);
 	}
 
-	public BeanBuilder<T> aCollectionSizeForPathOf(final String path, final int size) {
-		return aCollectionSizeRangeForPathOf(path, size, size);
+	public BeanBuilder<T> collectionSizeForPathOf(final String path, final int size) {
+		return collectionSizeRangeForPathOf(path, size, size);
 	}
 
-	public BeanBuilder<T> aCollectionSizeRangeForPathOf(final String path, final int min, final int max) {
+	public BeanBuilder<T> collectionSizeRangeForPathOf(final String path, final int min, final int max) {
 		this.collectionSizeForPaths.put(path, new CollectionSize(min, max));
 		return this;
 	}
 
-	public <X> BeanBuilder<T> usingType(final Class<X> klass, final Class<? extends X> subtypes) {
+	public <X> BeanBuilder<T> subtype(final Class<X> klass, final Class<? extends X> subtypes) {
 		return with(klass, oneOf(createInstanceOfFactoriesForTypes(subtypes)));
 	}
 
-	public <X> BeanBuilder<T> usingType(final Class<X> klass, final Class<? extends X>... subtypes) {
+	public <X> BeanBuilder<T> subtype(final Class<X> klass, final Class<? extends X>... subtypes) {
 		return with(klass, oneOf(createInstanceOfFactoriesForTypes(subtypes)));
 	}
 
