@@ -442,7 +442,14 @@ public abstract class RandomBuilder {
 	 * @return a random instance of the supplied type
 	 */
 	public static <T> T aRandomInstanceOf(final Class<T> type, final RandomRestriction... restrictions) {
-		return instanceFactoryFor(type, restrictions).createValue();
+		try {
+			return instanceFactoryFor(type, restrictions).createValue();
+		} catch (BeanBuilderException e) {
+			throw new RandomBuilderException("Failed to create a random instance of " + type.getName(), e);
+		} catch (InstanceFactoryException e) {
+			throw new RandomBuilderException("Failed to create a random instance of " + type.getName(), e);
+		}
+
 	}
 
 	/**
@@ -511,6 +518,24 @@ public abstract class RandomBuilder {
 
 			public void applyTo(final BeanBuilder<?> builder) {
 				builder.property(property, factory);
+			}
+		};
+	}
+
+	/**
+	 * Build and instance of a {@link RandomRestriction} which uses the {@link InstanceFactory} to create instances of the specified type. For example
+	 * <p/>
+	 * <code>
+	 * Shape aRandomPerson = RandomBuilder.aRandomInstanceOf(Person.class, RandomBuilder.factory(Email.class, new EmailFactory());
+	 * </code>
+	 * @param type the type to use the instance factory for
+	 * @param factory the instance factory to use
+	 */
+	public static <T> RandomRestriction factory(final Class<T> type, final InstanceFactory<T> factory) {
+		return new RandomRestriction() {
+
+			public void applyTo(final BeanBuilder<?> builder) {
+				builder.factory(type, factory);
 			}
 		};
 	}

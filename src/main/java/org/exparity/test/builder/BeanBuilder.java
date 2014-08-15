@@ -44,7 +44,7 @@ public class BeanBuilder<T> {
 	 * Return an instance of a {@link BeanBuilder} for the given type which can then be populated with values either manually or automatically. For example:
 	 * 
 	 * <pre>
-	 * BeanUtils.anInstanceOf(Person.class).build();
+	 * BeanBuilder.anInstanceOf(Person.class).build();
 	 * </pre>
 	 * @param type the type to return the {@link BeanBuilder} for
 	 */
@@ -56,7 +56,7 @@ public class BeanBuilder<T> {
 	 * Return an instance of a {@link BeanBuilder} for the given type which can then be populated with values either manually or automatically. For example:
 	 * 
 	 * <pre>
-	 * BeanUtils.anInstanceOf(Person.class, &quot;person&quot;).build();
+	 * BeanBuilder.anInstanceOf(Person.class, &quot;person&quot;).build();
 	 * </pre>
 	 * @param type the type to return the {@link BeanBuilder} for
 	 * @param rootName the name give to the root entity when referencing paths
@@ -69,7 +69,7 @@ public class BeanBuilder<T> {
 	 * Return an instance of a {@link BeanBuilder} for the given type which is populated with empty objects but collections, maps, etc which have empty objects. For example:
 	 * 
 	 * <pre>
-	 * BeanUtils.anEmptyInstanceOf(Person.class).build();
+	 * BeanBuilder.anEmptyInstanceOf(Person.class).build();
 	 * </pre>
 	 * @param type the type to return the {@link BeanBuilder} for
 	 */
@@ -81,7 +81,7 @@ public class BeanBuilder<T> {
 	 * Return an instance of a {@link BeanBuilder} for the given type which is populated with empty objects but collections, maps, etc which have empty objects. For example:
 	 * 
 	 * <pre>
-	 * BeanUtils.anEmptyInstanceOf(Person.class).build();
+	 * BeanBuilder.anEmptyInstanceOf(Person.class).build();
 	 * </pre>
 	 * @param type the type to return the {@link BeanBuilder} for
 	 * @param rootName the name give to the root entity when referencing paths
@@ -94,7 +94,7 @@ public class BeanBuilder<T> {
 	 * Return an instance of a {@link BeanBuilder} for the given type which is populated with random values. For example:
 	 * 
 	 * <pre>
-	 * BeanUtils.aRandomInstanceOf(Person.class).build();
+	 * BeanBuilder.aRandomInstanceOf(Person.class).build();
 	 * </pre>
 	 * @param type the type to return the {@link BeanBuilder} for
 	 */
@@ -106,7 +106,7 @@ public class BeanBuilder<T> {
 	 * Return an instance of a {@link BeanBuilder} for the given type which is populated with random values. For example:
 	 * 
 	 * <pre>
-	 * BeanUtils.aRandomInstanceOf(Person.class).build();
+	 * BeanBuilder.aRandomInstanceOf(Person.class).build();
 	 * </pre>
 	 * @param type the type to return the {@link BeanBuilder} for
 	 */
@@ -147,20 +147,17 @@ public class BeanBuilder<T> {
 		return this;
 	}
 
-	/**
-	 * @deprecated See {@link #property(String, Object)}
-	 */
-	@Deprecated
-	public BeanBuilder<T> withPropertyValue(final String propertyName, final Object value) {
-		return property(propertyName, value);
-	}
-
 	public BeanBuilder<T> property(final String propertyName, final Object value) {
 		return property(propertyName, theValue(value));
 	}
 
 	public BeanBuilder<T> property(final String propertyName, final InstanceFactory<?> factory) {
 		properties.put(lowerCase(propertyName), factory);
+		return this;
+	}
+
+	public <X> BeanBuilder<T> factory(final Class<X> type, final InstanceFactory<X> factory) {
+		types.put(type, factory);
 		return this;
 	}
 

@@ -10,13 +10,16 @@ import org.exparity.test.builder.BeanUtilTestFixture.AllTypes;
 import org.exparity.test.builder.BeanUtilTestFixture.Car;
 import org.exparity.test.builder.BeanUtilTestFixture.Employee;
 import org.exparity.test.builder.BeanUtilTestFixture.EmptyEnum;
+import org.exparity.test.builder.BeanUtilTestFixture.Engine;
 import org.exparity.test.builder.BeanUtilTestFixture.FuelType;
 import org.exparity.test.builder.BeanUtilTestFixture.Manager;
+import org.exparity.test.builder.BeanUtilTestFixture.NoDefaultConstructor;
 import org.exparity.test.builder.BeanUtilTestFixture.Person;
 import org.exparity.test.builder.RandomBuilder.RandomRestriction;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import static org.exparity.test.builder.InstanceFactories.oneOf;
+import static org.exparity.test.builder.InstanceFactories.theValue;
 import static org.exparity.test.builder.RandomBuilder.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -191,6 +194,11 @@ public class RandomBuilderTest {
 		assertThat(aRandomInstanceOf(AllTypes.class), any(AllTypes.class));
 	}
 
+	@Test(expected = RandomBuilderException.class)
+	public void canBuildARandomInstanceOfAndFailIfNotDefaultConstructor() {
+		assertThat(aRandomInstanceOf(NoDefaultConstructor.class), any(NoDefaultConstructor.class));
+	}
+
 	@Test
 	public void canBuildARandomInstanceAndSetProperty() {
 		BigDecimal capacity = new BigDecimal("1.8");
@@ -316,6 +324,13 @@ public class RandomBuilderTest {
 		int nuts = aRandomInteger(6, 10);
 		Car car = aRandomInstanceOf(Car.class, collectionSizeForPath("car.wheels", 4), collectionSizeForPath("car.wheels[2].nuts", nuts));
 		assertThat(car.getWheels().get(2).getNuts(), hasSize(nuts));
+	}
+
+	@Test
+	public void canBuildARandomInstanceAndUseFactoryForType() {
+		Engine engine = new Engine(new BigDecimal("4.0"));
+		Car car = aRandomInstanceOf(Car.class, factory(Engine.class, theValue(engine)));
+		assertThat(car.getEngine(), equalTo(engine));
 	}
 
 	@Test
