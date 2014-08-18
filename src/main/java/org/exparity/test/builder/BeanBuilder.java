@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.apache.commons.lang.StringUtils;
-import org.exparity.test.builder.InstanceFactories.InstanceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.co.it.modular.beans.BeanNamingStrategy;
@@ -25,7 +24,7 @@ import uk.co.it.modular.beans.naming.ForceRootNameNamingStrategy;
 import uk.co.it.modular.beans.naming.LowerCaseNamingStrategy;
 import static java.lang.System.identityHashCode;
 import static org.apache.commons.lang.StringUtils.lowerCase;
-import static org.exparity.test.builder.InstanceFactories.*;
+import static org.exparity.test.builder.ValueFactories.*;
 import static uk.co.it.modular.beans.Type.type;
 
 /**
@@ -44,7 +43,10 @@ public class BeanBuilder<T> {
 	 * Return an instance of a {@link BeanBuilder} for the given type which can then be populated with values either manually or automatically. For example:
 	 * 
 	 * <pre>
-	 * BeanBuilder.anInstanceOf(Person.class).build();
+	 * 
+	 * Person aPerson = BeanBuilder.anInstanceOf(Person.class)
+	 * 		.path("person.firstName", "Bob")
+	 * 		.build()
 	 * </pre>
 	 * @param type the type to return the {@link BeanBuilder} for
 	 */
@@ -56,7 +58,9 @@ public class BeanBuilder<T> {
 	 * Return an instance of a {@link BeanBuilder} for the given type which can then be populated with values either manually or automatically. For example:
 	 * 
 	 * <pre>
-	 * BeanBuilder.anInstanceOf(Person.class, &quot;person&quot;).build();
+	 * Person aPerson = BeanBuilder.anInstanceOf(Person.class, "instance")
+	 *                        .path("instance.firstName", "Bob")
+	 *                        .build()
 	 * </pre>
 	 * @param type the type to return the {@link BeanBuilder} for
 	 * @param rootName the name give to the root entity when referencing paths
@@ -69,7 +73,10 @@ public class BeanBuilder<T> {
 	 * Return an instance of a {@link BeanBuilder} for the given type which is populated with empty objects but collections, maps, etc which have empty objects. For example:
 	 * 
 	 * <pre>
-	 * BeanBuilder.anEmptyInstanceOf(Person.class).build();
+	 * 
+	 * Person aPerson = BeanBuilder.anEmptyInstanceOf(Person.class)
+	 * 		.path(&quot;person.firstName&quot;, &quot;Bob&quot;)
+	 * 		.build();
 	 * </pre>
 	 * @param type the type to return the {@link BeanBuilder} for
 	 */
@@ -81,7 +88,9 @@ public class BeanBuilder<T> {
 	 * Return an instance of a {@link BeanBuilder} for the given type which is populated with empty objects but collections, maps, etc which have empty objects. For example:
 	 * 
 	 * <pre>
-	 * BeanBuilder.anEmptyInstanceOf(Person.class).build();
+	 * Person aPerson = BeanBuilder.anEmptyInstanceOf(Person.class, "instance")
+	 *                        .path("instance.firstName", "Bob")
+	 *                        .build()
 	 * </pre>
 	 * @param type the type to return the {@link BeanBuilder} for
 	 * @param rootName the name give to the root entity when referencing paths
@@ -94,7 +103,9 @@ public class BeanBuilder<T> {
 	 * Return an instance of a {@link BeanBuilder} for the given type which is populated with random values. For example:
 	 * 
 	 * <pre>
-	 * BeanBuilder.aRandomInstanceOf(Person.class).build();
+	 * Person aPerson = BeanBuilder.aRandomInstanceOf(Person.class)
+	 * 		.path("person.firstName", "Bob")
+	 * 		.build()
 	 * </pre>
 	 * @param type the type to return the {@link BeanBuilder} for
 	 */
@@ -106,7 +117,9 @@ public class BeanBuilder<T> {
 	 * Return an instance of a {@link BeanBuilder} for the given type which is populated with random values. For example:
 	 * 
 	 * <pre>
-	 * BeanBuilder.aRandomInstanceOf(Person.class).build();
+	 * Person aPerson = BeanBuilder.aRandomInstanceOf(Person.class,"instance")
+	 *                        .path("instance.firstName", "Bob")
+	 *                        .build()
 	 * </pre>
 	 * @param type the type to return the {@link BeanBuilder} for
 	 */
@@ -116,9 +129,9 @@ public class BeanBuilder<T> {
 
 	private final Set<String> excludedProperties = new HashSet<String>();
 	private final Set<String> excludedPaths = new HashSet<String>();
-	private final Map<String, InstanceFactory> paths = new HashMap<String, InstanceFactory>();
-	private final Map<String, InstanceFactory> properties = new HashMap<String, InstanceFactory>();
-	private final Map<Class<?>, InstanceFactory> types = new HashMap<Class<?>, InstanceFactory>();
+	private final Map<String, ValueFactory> paths = new HashMap<String, ValueFactory>();
+	private final Map<String, ValueFactory> properties = new HashMap<String, ValueFactory>();
+	private final Map<Class<?>, ValueFactory> types = new HashMap<Class<?>, ValueFactory>();
 	private final Class<T> type;
 	private final BeanBuilderType builderType;
 	private final BeanNamingStrategy naming;;
@@ -132,89 +145,296 @@ public class BeanBuilder<T> {
 		this.naming = naming;
 	}
 
+	/**
+	 * Configure the builder to populate the given property or path with the supplied value. For example</p>
+	 * 
+	 * <pre>
+	 * Person aPerson = BeanBuilder.aRandomInstanceOf(Person.class)
+	 *                        .with("firstName", "Bob")
+	 *                        .build()
+	 * </pre>
+	 * @param propertyOrPathName the property or path name to set the value on
+	 * @param value the value to assign the property or path
+	 */
 	public BeanBuilder<T> with(final String propertyOrPathName, final Object value) {
 		return with(propertyOrPathName, theValue(value));
 	}
 
-	public <V> BeanBuilder<T> with(final Class<V> type, final InstanceFactory<V> factory) {
+	/**
+	 * Configure the builder to populate any properties of the given type with a value created by the supplied value factory. For example</p>
+	 * 
+	 * <pre>
+	 * Person aPerson = BeanBuilder.aRandomInstanceOf(Person.class)
+	 *                        .with(Date.class, ValueFactories.oneOf(APR(5,1975), APR(5,1985)))
+	 *                        .build()
+	 * </pre>
+	 * @param type the type of property to use the factory for
+	 * @param factory the factory to use to create the value
+	 */
+	public <V> BeanBuilder<T> with(final Class<V> type, final ValueFactory<V> factory) {
 		this.types.put(type, factory);
 		return this;
 	}
 
-	public BeanBuilder<T> with(final String propertyOrPathName, final InstanceFactory<?> factory) {
+	/**
+	 * Configure the builder to populate the given property or path with a value created by the supplied value factory. For example</p>
+	 * 
+	 * <pre>
+	 * Person aPerson = BeanBuilder.aRandomInstanceOf(Person.class)
+	 *                        .with("firstName", ValueFactories.oneOf("Bob", "Alice"))
+	 *                        .build()
+	 * </pre>
+	 * @param propertyOrPathName the property or path name to set the value on
+	 * @param factory the factory to use to create the value
+	 */
+	public BeanBuilder<T> with(final String propertyOrPathName, final ValueFactory<?> factory) {
 		path(propertyOrPathName, factory);
 		property(propertyOrPathName, factory);
 		return this;
 	}
 
+	/**
+	 * Configure the builder to populate the given property with the supplied value. For example</p>
+	 * 
+	 * <pre>
+	 * Person aPerson = BeanBuilder.aRandomInstanceOf(Person.class)
+	 *                        .property("firstName", "Bob")
+	 *                        .build()
+	 * </pre>
+	 * @param propertyName the property to set the value on
+	 * @param value the value to assign the property
+	 */
 	public BeanBuilder<T> property(final String propertyName, final Object value) {
 		return property(propertyName, theValue(value));
 	}
 
-	public BeanBuilder<T> property(final String propertyName, final InstanceFactory<?> factory) {
+	/**
+	 * Configure the builder to populate the given property with a value created by the supplied value factory. For example</p>
+	 * 
+	 * <pre>
+	 * Person aPerson = BeanBuilder.aRandomInstanceOf(Person.class)
+	 *                        .property("firstName", ValueFactories.oneOf("Bob", "Alice"))
+	 *                        .build()
+	 * </pre>
+	 * @param propertyName the property to set the value on
+	 * @param factory the factory to use to create the value
+	 */
+	public BeanBuilder<T> property(final String propertyName, final ValueFactory<?> factory) {
 		properties.put(lowerCase(propertyName), factory);
 		return this;
 	}
 
-	public <X> BeanBuilder<T> factory(final Class<X> type, final InstanceFactory<X> factory) {
+	/**
+	 * Configure the builder to populate any properties of the given type with a value created by the supplied value factory. For example</p>
+	 * 
+	 * <pre>
+	 * Person aPerson = BeanBuilder.aRandomInstanceOf(Person.class)
+	 *                        .factory(Date.class, ValueFactories.oneOf(APR(5,1975), APR(5,1985)))
+	 *                        .build()
+	 * </pre>
+	 * @param type the type of property to use the factory for
+	 * @param factory the factory to use to create the value
+	 */
+	public <X> BeanBuilder<T> factory(final Class<X> type, final ValueFactory<X> factory) {
 		types.put(type, factory);
 		return this;
 	}
 
+	/**
+	 * Configure the builder to exclude the given property from being populated. For example</p>
+	 * 
+	 * <pre>
+	 * Person aPerson = BeanBuilder.aRandomInstanceOf(Person.class)
+	 *                        .excludeProperty("firstName")
+	 *                        .build()
+	 * </pre>
+	 * @param propertyName the property to exclude
+	 */
 	public BeanBuilder<T> excludeProperty(final String propertyName) {
 		this.excludedProperties.add(lowerCase(propertyName));
 		return this;
 	}
 
+	/**
+	 * Configure the builder to populate the given path with the supplied value. For example</p>
+	 * 
+	 * <pre>
+	 * Person aPerson = BeanBuilder.aRandomInstanceOf(Person.class)
+	 *                        .path("person.firstName", "Bob")
+	 *                        .build()
+	 * </pre>
+	 * @param path the path to set the value on
+	 * @param value the value to assign the path
+	 */
 	public BeanBuilder<T> path(final String path, final Object value) {
 		return path(path, theValue(value));
 	}
 
-	public BeanBuilder<T> path(final String path, final InstanceFactory<?> factory) {
+	/**
+	 * Configure the builder to populate the given path with a value created by the supplied value factory. For example</p>
+	 * 
+	 * <pre>
+	 * Person aPerson = BeanBuilder.aRandomInstanceOf(Person.class)
+	 *                        .path("person.firstName", ValueFactories.oneOf("Bob", "Alice"))
+	 *                        .build()
+	 * </pre>
+	 * @param path the path to set the value on
+	 * @param factory the factory to use to create the value
+	 */
+	public BeanBuilder<T> path(final String path, final ValueFactory<?> factory) {
 		this.paths.put(lowerCase(path), factory);
 		return this;
 	}
 
+	/**
+	 * Configure the builder to exclude the given path from being populated. For example</p>
+	 * 
+	 * <pre>
+	 * Person aPerson = BeanBuilder.aRandomInstanceOf(Person.class)
+	 *                        .excludeProperty("person.firstName")
+	 *                        .build()
+	 * </pre>
+	 * @param path the path to exclude
+	 */
 	public BeanBuilder<T> excludePath(final String path) {
 		this.excludedPaths.add(lowerCase(path));
 		return this;
 	}
 
+	/**
+	 * Configure the builder to set the size of a collections. For example</p>
+	 * 
+	 * <pre>
+	 * Person aPerson = BeanBuilder.aRandomInstanceOf(Person.class)
+	 *                        .collectionSizeOf(5)
+	 *                        .build()
+	 * </pre>
+	 * @param size the size to create the collections
+	 */
 	public BeanBuilder<T> collectionSizeOf(final int size) {
 		return collectionSizeRangeOf(size, size);
 	}
 
+	/**
+	 * Configure the builder to set the size of a collections to within a given range. For example</p>
+	 * 
+	 * <pre>
+	 * Person aPerson = BeanBuilder.aRandomInstanceOf(Person.class)
+	 *                        .collectionSizeRangeOf(2,10)
+	 *                        .build()
+	 * </pre>
+	 * @param min the minimum size to create the collections
+	 * @param max the maximum size to create the collections
+	 */
 	public BeanBuilder<T> collectionSizeRangeOf(final int min, final int max) {
 		this.defaultCollectionSize = new CollectionSize(min, max);
 		return this;
 	}
 
+	/**
+	 * Configure the builder to set the size of a collection at a path to within a given range. For example</p>
+	 * 
+	 * <pre>
+	 * Person aPerson = BeanBuilder.aRandomInstanceOf(Person.class)
+	 *                        .collectionSizeRangeForPropertyOf("sublings", 1,3)
+	 *                        .build()
+	 * </pre>
+	 * @param property the name of the property to limit the collection size of
+	 * @param min the minimum size to create the collections
+	 * @param max the maximum size to create the collections
+	 */
 	public BeanBuilder<T> collectionSizeRangeForPropertyOf(final String property, final int min, final int max) {
 		this.collectionSizeForProperties.put(property, new CollectionSize(min, max));
 		return this;
 	}
 
+	/**
+	 * Configure the builder to set the size of a collection at a path. For example</p>
+	 * 
+	 * <pre>
+	 * Person aPerson = BeanBuilder.aRandomInstanceOf(Person.class)
+	 *                        .collectionSizeForPropertyOf("sublings", 3)
+	 *                        .build()
+	 * </pre>
+	 * @param property the name of the property to limit the collection size of
+	 * @param size the size to create the collection
+	 */
 	public BeanBuilder<T> collectionSizeForPropertyOf(final String property, final int size) {
 		return collectionSizeRangeForPropertyOf(property, size, size);
 	}
 
+	/**
+	 * Configure the builder to set the size of a collection for a path to within a given range. For example</p>
+	 * 
+	 * <pre>
+	 * Person aPerson = BeanBuilder.aRandomInstanceOf(Person.class)
+	 *                        .collectionSizeForPathOf("person.sublings", 1, 3)
+	 *                        .build()
+	 * </pre>
+	 * @param path the path to limit the collection size of
+	 * @param size the size to create the collection
+	 */
 	public BeanBuilder<T> collectionSizeForPathOf(final String path, final int size) {
 		return collectionSizeRangeForPathOf(path, size, size);
 	}
 
+	/**
+	 * Configure the builder to set the size of a collection at a path to within a given range. For example</p>
+	 * 
+	 * <pre>
+	 * Person aPerson = BeanBuilder.aRandomInstanceOf(Person.class)
+	 *                        .collectionSizeRangeForPathOf("person.siblings", 1,3)
+	 *                        .build()
+	 * </pre>
+	 * @param path the name of the path to limit the collection size of
+	 * @param min the minimum size to create the collection
+	 * @param max the maximum size to create the collection
+	 */
 	public BeanBuilder<T> collectionSizeRangeForPathOf(final String path, final int min, final int max) {
 		this.collectionSizeForPaths.put(path, new CollectionSize(min, max));
 		return this;
 	}
 
-	public <X> BeanBuilder<T> subtype(final Class<X> klass, final Class<? extends X> subtypes) {
-		return with(klass, oneOf(createInstanceOfFactoriesForTypes(subtypes)));
+	/**
+	 * Configure the builder to use a particular subtype when instantiating a super type. For example</p>
+	 * 
+	 * <pre>
+	 * ShapeSorter aSorter = BeanBuilder.aRandomInstanceOf(ShapeSorter.class)
+	 *                        .subtype(Shape.class, Square.class)
+	 *                        .build()
+	 * </pre>
+	 * @param supertype the type of the super type
+	 * @param subtype the subtype to use when instantiating the super type
+	 */
+	public <X> BeanBuilder<T> subtype(final Class<X> supertype, final Class<? extends X> subtype) {
+		return with(supertype, oneOf(createInstanceOfFactoriesForTypes(subtype)));
 	}
 
-	public <X> BeanBuilder<T> subtype(final Class<X> klass, final Class<? extends X>... subtypes) {
-		return with(klass, oneOf(createInstanceOfFactoriesForTypes(subtypes)));
+	/**
+	 * Configure the builder to use any of of a particular subtype when instantiating a super type. For example</p>
+	 * 
+	 * <pre>
+	 * ShapeSorter aSorter = BeanBuilder.aRandomInstanceOf(ShapeSorter.class)
+	 *                        .subtype(Shape.class, Square.class, Circle.class, Triangle.class)
+	 *                        .build()
+	 * </pre>
+	 * @param supertype the type of the super type
+	 * @param subtypes the subtypes to pick from when instantiating the super type
+	 */
+	public <X> BeanBuilder<T> subtype(final Class<X> supertype, final Class<? extends X>... subtypes) {
+		return with(supertype, oneOf(createInstanceOfFactoriesForTypes(subtypes)));
 	}
 
+	/**
+	 * Build the configured instance. For example</p>
+	 * 
+	 * <pre>
+	 * Person aPerson = BeanBuilder.aRandomInstanceOf(Person.class)
+	 *                        .path("person.firstName", "Bob")
+	 *                        .path("person.age", oneOf(25,35))
+	 *                        .build()
+	 * </pre>
+	 */
 	public T build() {
 		return populate(createNewInstance(), new BeanPropertyPath(type(type).camelName()), new Stack(type(type)));
 	}
@@ -237,7 +457,7 @@ public class BeanBuilder<T> {
 			return;
 		}
 
-		InstanceFactory factory = factoryForPath(property, path);
+		ValueFactory factory = factoryForPath(property, path);
 		if (factory != null) {
 			assignValue(instance, property, path, createValue(factory, type), stack);
 			return;
@@ -287,7 +507,7 @@ public class BeanBuilder<T> {
 		return false;
 	}
 
-	private InstanceFactory factoryForPath(final TypeProperty property, final BeanPropertyPath path) {
+	private ValueFactory factoryForPath(final TypeProperty property, final BeanPropertyPath path) {
 		return selectNotNull(paths.get(path.fullPath()), paths.get(path.fullPathWithNoIndexes()), properties.get(property.getName()));
 	}
 
@@ -322,16 +542,16 @@ public class BeanBuilder<T> {
 
 	private <E> E createValue(final Class<E> type) {
 
-		for (Entry<Class<?>, InstanceFactory> keyedFactory : types.entrySet()) {
+		for (Entry<Class<?>, ValueFactory> keyedFactory : types.entrySet()) {
 			if (type.isAssignableFrom(keyedFactory.getKey())) {
-				InstanceFactory factory = keyedFactory.getValue();
+				ValueFactory factory = keyedFactory.getValue();
 				return (E) createValue(factory, type);
 			}
 		}
 
 		switch (builderType) {
 			case RANDOM: {
-				InstanceFactory factory = RANDOM_FACTORIES.get(type);
+				ValueFactory factory = RANDOM_FACTORIES.get(type);
 				if (factory != null) {
 					return (E) createValue(factory, type);
 				} else if (type.isEnum()) {
@@ -341,7 +561,7 @@ public class BeanBuilder<T> {
 				}
 			}
 			case EMPTY: {
-				InstanceFactory factory = EMPTY_FACTORIES.get(type);
+				ValueFactory factory = EMPTY_FACTORIES.get(type);
 				if (factory != null) {
 					return (E) createValue(factory, type);
 				} else if (type.isEnum()) {
@@ -355,7 +575,7 @@ public class BeanBuilder<T> {
 		}
 	}
 
-	private <E> E createValue(final InstanceFactory<E> factory, final Class<E> type) {
+	private <E> E createValue(final ValueFactory<E> factory, final Class<E> type) {
 		E value = factory != null ? factory.createValue() : null;
 		LOG.trace("Create Value [{}] for Type [{}]", value, type(type).simpleName());
 		return value;
@@ -447,10 +667,10 @@ public class BeanBuilder<T> {
 		return StringUtils.substringAfterLast(path.fullPathWithNoIndexes(), ".");
 	}
 
-	private <X> List<InstanceFactory<X>> createInstanceOfFactoriesForTypes(final Class<? extends X>... subtypes) {
-		List<InstanceFactory<X>> factories = new ArrayList<InstanceFactory<X>>();
+	private <X> List<ValueFactory<X>> createInstanceOfFactoriesForTypes(final Class<? extends X>... subtypes) {
+		List<ValueFactory<X>> factories = new ArrayList<ValueFactory<X>>();
 		for (Class<? extends X> subtype : subtypes) {
-			factories.add((InstanceFactory<X>) aNewInstanceOf(subtype));
+			factories.add((ValueFactory<X>) aNewInstanceOf(subtype));
 		}
 		return factories;
 	}
@@ -511,7 +731,7 @@ public class BeanBuilder<T> {
 	}
 
 	@SuppressWarnings("serial")
-	private static final Map<Class<?>, InstanceFactory> RANDOM_FACTORIES = new HashMap<Class<?>, InstanceFactory>() {
+	private static final Map<Class<?>, ValueFactory> RANDOM_FACTORIES = new HashMap<Class<?>, ValueFactory>() {
 
 		{
 			put(Short.class, aRandomShort());
@@ -536,7 +756,7 @@ public class BeanBuilder<T> {
 		}
 	};
 
-	private static final Map<Class<?>, InstanceFactory> EMPTY_FACTORIES = new HashMap<Class<?>, InstanceFactory>() {
+	private static final Map<Class<?>, ValueFactory> EMPTY_FACTORIES = new HashMap<Class<?>, ValueFactory>() {
 
 		private static final long serialVersionUID = 1L;
 

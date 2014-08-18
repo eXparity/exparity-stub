@@ -437,4 +437,31 @@ public class BeanUtilTestFixture {
 
 	public static enum EmptyEnum {
 	};
+	
+	public static class ShapeSorter {
+		private Shape shape;
+		
+		public Shape getShape() {
+			return shape;
+		}
+		
+		public void setShape(final Shape shape) {
+			this.shape = shape;
+		}
+	}
+	
+	public static interface Shape {
+	}
+
+	public static class Circle implements Shape {
+		
+	}
+
+	public static class Square implements Shape {
+
+	}
+
+	public static class Triangle implements Shape {
+
+	}
 }

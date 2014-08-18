@@ -5,13 +5,13 @@ package uk.co.it.modular.beans;
  * 
  * @author Stewart Bissett
  * 
- * @deprecated See {@link org.exparity.test.builder.InstanceFactories.InstanceArrayFactory}
+ * @deprecated See {@link org.exparity.test.builder.ValueFactories.ArrayFactory}
  */
 @Deprecated
 public interface ArrayFactory<T> {
 
 	/**
-	 * @deprecated See {@link org.exparity.test.builder.InstanceFactories.InstanceArrayFactory}
+	 * @deprecated See {@link org.exparity.test.builder.ValueFactories.ArrayFactory}
 	 */
 	@Deprecated
 	public T[] createValue(final Class<T> type, final int size);

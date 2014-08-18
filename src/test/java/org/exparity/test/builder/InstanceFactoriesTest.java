@@ -8,15 +8,14 @@ import org.exparity.test.builder.BeanUtilTestFixture.Car;
 import org.exparity.test.builder.BeanUtilTestFixture.EmptyEnum;
 import org.exparity.test.builder.BeanUtilTestFixture.FuelType;
 import org.exparity.test.builder.BeanUtilTestFixture.NoDefaultConstructor;
-import org.exparity.test.builder.InstanceFactories.InstanceFactory;
 import org.hamcrest.Matcher;
 import org.junit.Test;
-import static org.exparity.test.builder.InstanceFactories.*;
+import static org.exparity.test.builder.ValueFactories.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 /**
- * Unit test for the {@link InstanceFactories} class
+ * Unit test for the {@link ValueFactories} class
  * 
  * @author Stewart Bissett
  */
@@ -28,7 +27,7 @@ public class InstanceFactoriesTest {
 		checkResult(aNewInstanceOf(Car.class), any(Car.class));
 	}
 
-	@Test(expected = InstanceFactoryException.class)
+	@Test(expected = ValueFactoryException.class)
 	public void canFailToCreateANewInstanceOfWithNoDefaultConstructir() {
 		checkResult(aNewInstanceOf(NoDefaultConstructor.class), any(NoDefaultConstructor.class));
 	}
@@ -85,7 +84,7 @@ public class InstanceFactoriesTest {
 		checkResult(aRandomEnum(FuelType.class), any(FuelType.class));
 	}
 
-	@Test(expected = InstanceFactoryException.class)
+	@Test(expected = ValueFactoryException.class)
 	public void canFailToCreateARandomEmptyEnum() {
 		checkResult(aRandomEnum(EmptyEnum.class), any(EmptyEnum.class));
 	}
@@ -135,7 +134,7 @@ public class InstanceFactoriesTest {
 		checkResult(theValue("Smith"), equalTo("Smith"));
 	}
 
-	private <T> void checkResult(final InstanceFactory<T> factory, final Matcher<T> matcher) {
+	private <T> void checkResult(final ValueFactory<T> factory, final Matcher<T> matcher) {
 		assertThat(factory.createValue(), matcher);
 	}
 }

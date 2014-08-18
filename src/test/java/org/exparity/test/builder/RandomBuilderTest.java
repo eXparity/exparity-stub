@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import org.exparity.test.builder.BeanUtilTestFixture.AllTypes;
 import org.exparity.test.builder.BeanUtilTestFixture.Car;
+import org.exparity.test.builder.BeanUtilTestFixture.Circle;
 import org.exparity.test.builder.BeanUtilTestFixture.Employee;
 import org.exparity.test.builder.BeanUtilTestFixture.EmptyEnum;
 import org.exparity.test.builder.BeanUtilTestFixture.Engine;
@@ -15,12 +16,15 @@ import org.exparity.test.builder.BeanUtilTestFixture.FuelType;
 import org.exparity.test.builder.BeanUtilTestFixture.Manager;
 import org.exparity.test.builder.BeanUtilTestFixture.NoDefaultConstructor;
 import org.exparity.test.builder.BeanUtilTestFixture.Person;
+import org.exparity.test.builder.BeanUtilTestFixture.Shape;
+import org.exparity.test.builder.BeanUtilTestFixture.ShapeSorter;
+import org.exparity.test.builder.BeanUtilTestFixture.Square;
 import org.exparity.test.builder.RandomBuilder.RandomRestriction;
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import static org.exparity.test.builder.InstanceFactories.oneOf;
-import static org.exparity.test.builder.InstanceFactories.theValue;
 import static org.exparity.test.builder.RandomBuilder.*;
+import static org.exparity.test.builder.ValueFactories.oneOf;
+import static org.exparity.test.builder.ValueFactories.theValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -63,6 +67,11 @@ public class RandomBuilderTest {
 	}
 
 	@Test
+	public void canBuildARandomShortWithSize() {
+		assertThat(aRandomShort((short) 3, (short) 3), equalTo((short) 3));
+	}
+
+	@Test
 	public void canBuildARandomLong() {
 		assertThat(aRandomLong(), isA(Long.class));
 	}
@@ -70,6 +79,11 @@ public class RandomBuilderTest {
 	@Test
 	public void canBuildARandomLongWithinRange() {
 		assertThat(aRandomLong(1, 5), isOneOf(1L, 2L, 3L, 4L, 5L));
+	}
+
+	@Test
+	public void canBuildARandomLongWithSize() {
+		assertThat(aRandomLong(7, 7), equalTo(7L));
 	}
 
 	@Test
@@ -262,6 +276,13 @@ public class RandomBuilderTest {
 	@Test
 	public void canBuildARandomInstanceSpecifySubType() {
 		assertThat(aRandomInstanceOf(Employee.class, subtype(Person.class, Manager.class)).getManager(), instanceOf(Manager.class));
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void canBuildARandomInstanceSpecifyTwoOrMoreSubType() {
+		ShapeSorter shapeSorter = aRandomInstanceOf(ShapeSorter.class, subtype(Shape.class, Square.class, Circle.class));
+		assertThat(shapeSorter.getShape(), anyOf(instanceOf(Square.class), instanceOf(Circle.class)));
 	}
 
 	@Test

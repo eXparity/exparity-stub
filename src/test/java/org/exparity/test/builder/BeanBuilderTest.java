@@ -3,13 +3,16 @@ package org.exparity.test.builder;
 import java.math.BigDecimal;
 import org.exparity.test.builder.BeanUtilTestFixture.AllTypes;
 import org.exparity.test.builder.BeanUtilTestFixture.Car;
+import org.exparity.test.builder.BeanUtilTestFixture.Circle;
 import org.exparity.test.builder.BeanUtilTestFixture.Employee;
 import org.exparity.test.builder.BeanUtilTestFixture.Engine;
 import org.exparity.test.builder.BeanUtilTestFixture.Manager;
 import org.exparity.test.builder.BeanUtilTestFixture.NoDefaultConstructor;
 import org.exparity.test.builder.BeanUtilTestFixture.Person;
+import org.exparity.test.builder.BeanUtilTestFixture.Shape;
+import org.exparity.test.builder.BeanUtilTestFixture.ShapeSorter;
+import org.exparity.test.builder.BeanUtilTestFixture.Square;
 import org.exparity.test.builder.BeanUtilTestFixture.Wheel;
-import org.exparity.test.builder.InstanceFactories.InstanceFactory;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import uk.co.it.modular.beans.BeanProperty;
@@ -19,6 +22,8 @@ import uk.co.it.modular.beans.BeanVisitor;
 import static org.exparity.test.builder.BeanBuilder.aRandomInstanceOf;
 import static org.exparity.test.builder.BeanBuilder.anEmptyInstanceOf;
 import static org.exparity.test.builder.BeanBuilder.anInstanceOf;
+import static org.exparity.test.builder.RandomBuilder.aRandomInstanceOf;
+import static org.exparity.test.builder.RandomBuilder.subtype;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static uk.co.it.modular.beans.Bean.bean;
@@ -35,6 +40,13 @@ public class BeanBuilderTest {
 		assertThat(car.getEngine().getCapacity(), Matchers.notNullValue());
 		assertThat(car.getWheels().size(), Matchers.greaterThan(0));
 		assertThat(car.getWheels().get(0).getDiameter(), Matchers.notNullValue());
+	}
+
+	@Test
+	public void canFillARandomGraphAndNameRoot() {
+		BigDecimal capacity = new BigDecimal(2.4);
+		Car car = aRandomInstanceOf(Car.class, "instance").path("instance.engine.capacity", capacity).build();
+		assertThat(car.getEngine().getCapacity(), Matchers.equalTo(capacity));
 	}
 
 	@Test
@@ -83,6 +95,13 @@ public class BeanBuilderTest {
 	}
 
 	@Test
+	public void canCreateAnEmptyGraphAndNameRoot() {
+		BigDecimal capacity = new BigDecimal(2.4);
+		Car car = anEmptyInstanceOf(Car.class, "instance").path("instance.engine.capacity", capacity).build();
+		assertThat(car.getEngine().getCapacity(), Matchers.equalTo(capacity));
+	}
+
+	@Test
 	public void canSetAnOverrideProperty() {
 		BigDecimal overrideValue = new BigDecimal("4.0");
 		Car car = aRandomInstanceOf(Car.class).with("capacity", overrideValue).build();
@@ -104,7 +123,7 @@ public class BeanBuilderTest {
 	@Test
 	public void canSetAnOverridePropertyFactory() {
 		BigDecimal overrideValue = new BigDecimal("4.0");
-		Car car = aRandomInstanceOf(Car.class).with("engine", new InstanceFactory<Engine>() {
+		Car car = aRandomInstanceOf(Car.class).with("engine", new ValueFactory<Engine>() {
 
 			public Engine createValue() {
 				return new Engine(new BigDecimal("4.0"));
@@ -116,7 +135,7 @@ public class BeanBuilderTest {
 	@Test
 	public void canSetAnOverrideTypeFactory() {
 		final Integer overrideValue = 12345;
-		Car car = aRandomInstanceOf(Car.class).with(Wheel.class, new InstanceFactory<Wheel>() {
+		Car car = aRandomInstanceOf(Car.class).with(Wheel.class, new ValueFactory<Wheel>() {
 
 			public Wheel createValue() {
 				return new Wheel(overrideValue);
@@ -224,6 +243,13 @@ public class BeanBuilderTest {
 	public void canSetSubTypes() {
 		Employee employee = aRandomInstanceOf(Employee.class).subtype(Person.class, Manager.class).build();
 		assertThat(employee.getManager(), instanceOf(Manager.class));
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	public void canSetOneOrMoreSubTypes() {
+		ShapeSorter shapeSorter = aRandomInstanceOf(ShapeSorter.class, subtype(Shape.class, Square.class, Circle.class));
+		assertThat(shapeSorter.getShape(), anyOf(instanceOf(Square.class), instanceOf(Circle.class)));
 	}
 
 	@Test(expected = BeanBuilderException.class)

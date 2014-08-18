@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.exparity.test.builder.InstanceFactories.InstanceFactory;
 import static org.apache.commons.lang.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang.RandomStringUtils.randomAlphanumeric;
 import static org.apache.commons.lang.math.RandomUtils.*;
@@ -37,28 +36,28 @@ public abstract class RandomBuilder {
 	@SuppressWarnings({
 			"rawtypes", "serial"
 	})
-	private static final Map<Class, InstanceFactory> RANDOM_FACTORIES = new HashMap<Class, InstanceFactory>() {
+	private static final Map<Class, ValueFactory> RANDOM_FACTORIES = new HashMap<Class, ValueFactory>() {
 
 		{
-			put(Short.class, InstanceFactories.aRandomShort());
-			put(short.class, InstanceFactories.aRandomShort());
-			put(Integer.class, InstanceFactories.aRandomInteger());
-			put(int.class, InstanceFactories.aRandomInteger());
-			put(Long.class, InstanceFactories.aRandomLong());
-			put(long.class, InstanceFactories.aRandomLong());
-			put(Double.class, InstanceFactories.aRandomDouble());
-			put(double.class, InstanceFactories.aRandomDouble());
-			put(Float.class, InstanceFactories.aRandomFloat());
-			put(float.class, InstanceFactories.aRandomFloat());
-			put(Boolean.class, InstanceFactories.aRandomBoolean());
-			put(boolean.class, InstanceFactories.aRandomBoolean());
-			put(Byte.class, InstanceFactories.aRandomByte());
-			put(byte.class, InstanceFactories.aRandomByte());
-			put(Character.class, InstanceFactories.aRandomChar());
-			put(char.class, InstanceFactories.aRandomChar());
-			put(String.class, InstanceFactories.aRandomString());
-			put(BigDecimal.class, InstanceFactories.aRandomDecimal());
-			put(Date.class, InstanceFactories.aRandomDate());
+			put(Short.class, ValueFactories.aRandomShort());
+			put(short.class, ValueFactories.aRandomShort());
+			put(Integer.class, ValueFactories.aRandomInteger());
+			put(int.class, ValueFactories.aRandomInteger());
+			put(Long.class, ValueFactories.aRandomLong());
+			put(long.class, ValueFactories.aRandomLong());
+			put(Double.class, ValueFactories.aRandomDouble());
+			put(double.class, ValueFactories.aRandomDouble());
+			put(Float.class, ValueFactories.aRandomFloat());
+			put(float.class, ValueFactories.aRandomFloat());
+			put(Boolean.class, ValueFactories.aRandomBoolean());
+			put(boolean.class, ValueFactories.aRandomBoolean());
+			put(Byte.class, ValueFactories.aRandomByte());
+			put(byte.class, ValueFactories.aRandomByte());
+			put(Character.class, ValueFactories.aRandomChar());
+			put(char.class, ValueFactories.aRandomChar());
+			put(String.class, ValueFactories.aRandomString());
+			put(BigDecimal.class, ValueFactories.aRandomDecimal());
+			put(Date.class, ValueFactories.aRandomDate());
 		}
 	};
 
@@ -327,7 +326,7 @@ public abstract class RandomBuilder {
 	 * @return an array of random values from the supplied enumeration.
 	 */
 	public static <E extends Enum<E>> E[] aRandomArrayOfEnum(final Class<E> enumType, final int min, final int max) {
-		return InstanceFactories.aRandomArrayOf(InstanceFactories.aRandomEnum(enumType)).createValue(enumType, aRandomInteger(min, max));
+		return ValueFactories.aRandomArrayOf(ValueFactories.aRandomEnum(enumType)).createValue(enumType, aRandomInteger(min, max));
 	}
 
 	/**
@@ -355,7 +354,7 @@ public abstract class RandomBuilder {
 	 * @return an array of randomly populated instances of the supplied type
 	 */
 	public static <T> T[] aRandomArrayOf(final Class<T> type, final int min, final int max) {
-		return InstanceFactories.aRandomArrayOf(instanceFactoryFor(type)).createValue(type, aRandomInteger(min, max));
+		return ValueFactories.aRandomArrayOf(instanceFactoryFor(type)).createValue(type, aRandomInteger(min, max));
 	}
 
 	/**
@@ -446,7 +445,7 @@ public abstract class RandomBuilder {
 			return instanceFactoryFor(type, restrictions).createValue();
 		} catch (BeanBuilderException e) {
 			throw new RandomBuilderException("Failed to create a random instance of " + type.getName(), e);
-		} catch (InstanceFactoryException e) {
+		} catch (ValueFactoryException e) {
 			throw new RandomBuilderException("Failed to create a random instance of " + type.getName(), e);
 		}
 
@@ -505,15 +504,15 @@ public abstract class RandomBuilder {
 	}
 
 	/**
-	 * Build and instance of a {@link RandomRestriction} which assigns an {@link InstanceFactory} derived value to the specific property. For example
+	 * Build and instance of a {@link RandomRestriction} which assigns an {@link ValueFactory} derived value to the specific property. For example
 	 * <p/>
 	 * <code>
-	 * Person aRandomPerson = RandomBuilder.aRandomInstanceOf(Person.class, RandomBuilder.property("surname", InstanceFactories.oneOf("Smith","Brown"));
+	 * Person aRandomPerson = RandomBuilder.aRandomInstanceOf(Person.class, RandomBuilder.property("surname", ValueFactories.oneOf("Smith","Brown"));
 	 * </code>
 	 * @param property the property to assign
 	 * @param value the value to assign the property
 	 */
-	public static RandomRestriction property(final String property, final InstanceFactory<?> factory) {
+	public static RandomRestriction property(final String property, final ValueFactory<?> factory) {
 		return new RandomRestriction() {
 
 			public void applyTo(final BeanBuilder<?> builder) {
@@ -523,7 +522,7 @@ public abstract class RandomBuilder {
 	}
 
 	/**
-	 * Build and instance of a {@link RandomRestriction} which uses the {@link InstanceFactory} to create instances of the specified type. For example
+	 * Build and instance of a {@link RandomRestriction} which uses the {@link ValueFactory} to create instances of the specified type. For example
 	 * <p/>
 	 * <code>
 	 * Shape aRandomPerson = RandomBuilder.aRandomInstanceOf(Person.class, RandomBuilder.factory(Email.class, new EmailFactory());
@@ -531,7 +530,7 @@ public abstract class RandomBuilder {
 	 * @param type the type to use the instance factory for
 	 * @param factory the instance factory to use
 	 */
-	public static <T> RandomRestriction factory(final Class<T> type, final InstanceFactory<T> factory) {
+	public static <T> RandomRestriction factory(final Class<T> type, final ValueFactory<T> factory) {
 		return new RandomRestriction() {
 
 			public void applyTo(final BeanBuilder<?> builder) {
@@ -568,11 +567,11 @@ public abstract class RandomBuilder {
 	}
 
 	/**
-	 * Build and instance of a {@link RandomRestriction} which assigns an {@link InstanceFactory} derived value to the specific path
+	 * Build and instance of a {@link RandomRestriction} which assigns an {@link ValueFactory} derived value to the specific path
 	 * @param path the path to assign e.g. "person.name"
 	 * @param value the value to assign the path
 	 */
-	public static RandomRestriction path(final String path, final InstanceFactory<?> factory) {
+	public static RandomRestriction path(final String path, final ValueFactory<?> factory) {
 		return new RandomRestriction() {
 
 			public void applyTo(final BeanBuilder<?> builder) {
@@ -706,14 +705,14 @@ public abstract class RandomBuilder {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <T> InstanceFactory<T> instanceFactoryFor(final Class<T> type, final RandomRestriction... restrictions) {
-		InstanceFactory<T> factory = RANDOM_FACTORIES.get(type);
+	private static <T> ValueFactory<T> instanceFactoryFor(final Class<T> type, final RandomRestriction... restrictions) {
+		ValueFactory<T> factory = RANDOM_FACTORIES.get(type);
 		if (factory == null) {
 			BeanBuilder<T> builder = BeanBuilder.aRandomInstanceOf(type);
 			for (RandomRestriction restriction : restrictions) {
 				restriction.applyTo(builder);
 			}
-			factory = InstanceFactories.theValue(builder.build());
+			factory = ValueFactories.theValue(builder.build());
 		}
 		return factory;
 	}

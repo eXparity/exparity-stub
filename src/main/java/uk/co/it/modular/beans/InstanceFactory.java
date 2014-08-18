@@ -5,13 +5,13 @@ package uk.co.it.modular.beans;
  * 
  * @author Stewart Bissett
  * 
- * @deprecated Moved to {@link org.exparity.test.builder.InstanceFactories.InstanceFactory}
+ * @deprecated Moved to {@link org.exparity.test.builder.ValueFactories.ValueFactory}
  */
 @Deprecated
 public interface InstanceFactory<T> {
 
 	/*
-	 * @deprecated Moved to {@link org.exparity.test.builder.InstanceFactories.InstanceFactory}
+	 * @deprecated Moved to {@link org.exparity.test.builder.ValueFactories.ValueFactory}
 	 */
 	@Deprecated
 	public T createValue();
