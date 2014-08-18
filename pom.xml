@@ -3,7 +3,7 @@
 
 	<groupId>org.exparity</groupId>
 	<artifactId>test-object-builder</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 
 	<name>Test Object Builder</name>
 	<url>https://github.com/eXparity/test-object-builder</url>
