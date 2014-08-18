@@ -436,7 +436,7 @@ public class BeanBuilder<T> {
 	 * </pre>
 	 */
 	public T build() {
-		return populate(createNewInstance(), new BeanPropertyPath(type(type).camelName()), new Stack(type(type)));
+		return populate(createNewInstance(), new BeanPropertyPath(naming.describeRoot(type)), new Stack(type(type)));
 	}
 
 	private <I> I populate(final I instance, final BeanPropertyPath path, final Stack stack) {
