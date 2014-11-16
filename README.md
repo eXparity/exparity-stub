@@ -4,6 +4,22 @@ A Java library to support creation of test stubs. The library can create complet
 
 Licensed under [BSD License][].
 
+Downloads
+---------
+You can obtain exparity-stub jar from [maven central][]. To include your project in:
+
+A maven project
+
+    <dependency>
+        <groupId>org.exparity</groupId>
+        <artifactId>exparity-stub</artifactId>
+        <version>1.0.0</version>
+    </dependency>
+
+A project which uses ivy for dependency management
+
+    <dependency org="org.exparity" name="exparity-stub" rev="1.0.0"/>
+            
 Usage
 -------------
 
