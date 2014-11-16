@@ -100,3 +100,4 @@ Developers:
   * Stewart Bissett
 
 [BSD License]: http://opensource.org/licenses/BSD-3-Clause
+[Maven central]: http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22hamcrest-date%22
