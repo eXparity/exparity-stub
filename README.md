@@ -1,4 +1,4 @@
-Exparity Stub  [![Build Status](https://travis-ci.org/eXparity/exparity-stub.svg?branch=master)](https://travis-ci.org/eXparity/exparity-stub) [![Coverage Status](https://coveralls.io/repos/eXparity/exparity-stb/badge.png?branch=master)](https://coveralls.io/r/eXparity/exparity-stub?branch=master)
+Exparity Stub  [![Build Status](https://travis-ci.org/eXparity/exparity-stub.svg?branch=master)](https://travis-ci.org/eXparity/exparity-stub) [![Coverage Status](https://img.shields.io/coveralls/eXparity/exparity-stub.svg)](https://coveralls.io/r/eXparity/exparity-stub)
 =============
 A Java library to support creation of test stubs. The library can create complete object graphs populated completely randomly, or can be populated with a mix of random and configured values.
 
