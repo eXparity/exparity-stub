@@ -1,16 +1,21 @@
 
-package org.exparity.test.builder;
+package org.exparity.stub.builder;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
-import org.exparity.test.builder.BeanUtilTestFixture.Car;
-import org.exparity.test.builder.BeanUtilTestFixture.EmptyEnum;
-import org.exparity.test.builder.BeanUtilTestFixture.FuelType;
-import org.exparity.test.builder.BeanUtilTestFixture.NoDefaultConstructor;
+
+import org.exparity.stub.builder.ValueFactories;
+import org.exparity.stub.builder.ValueFactory;
+import org.exparity.stub.builder.ValueFactoryException;
+import org.exparity.stub.builder.BeanBuilderTestTypes.Car;
+import org.exparity.stub.builder.BeanBuilderTestTypes.EmptyEnum;
+import org.exparity.stub.builder.BeanBuilderTestTypes.FuelType;
+import org.exparity.stub.builder.BeanBuilderTestTypes.NoDefaultConstructor;
 import org.hamcrest.Matcher;
 import org.junit.Test;
-import static org.exparity.test.builder.ValueFactories.*;
+
+import static org.exparity.stub.builder.ValueFactories.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 

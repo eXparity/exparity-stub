@@ -1,17 +1,13 @@
-Test Object Builder  [![Build Status](https://travis-ci.org/eXparity/test-object-builder.svg?branch=master)](https://travis-ci.org/eXparity/test-object-builder) [![Coverage Status](https://coveralls.io/repos/eXparity/test-object-builder/badge.png?branch=master)](https://coveralls.io/r/eXparity/test-object-builder?branch=master)
+Exparity Stub  [![Build Status](https://travis-ci.org/eXparity/test-object-builder.svg?branch=master)](https://travis-ci.org/eXparity/test-object-builder) [![Coverage Status](https://coveralls.io/repos/eXparity/test-object-builder/badge.png?branch=master)](https://coveralls.io/r/eXparity/test-object-builder?branch=master)
 =============
-A Java library to support configurable instantiation and creation of random objects to use as test dummy's for model objects
+A Java library to support creation of test stubs. The library can create complete object graphs populated completely randomly, or can be populated with a mix of random and configured values.
 
 Licensed under [BSD License][].
-
-What is Test Object Builder?
------------------
-What is Test Object Builder is Java library to support configurable instantiation and creation of random objects to use as test dummy's for model objects in unit, acceptance, and other forms of developer tests.
 
 Usage
 -------------
 
-The Test Obect Builders are exposed as static methods on the RandomBuilder classes.
+Stub objects can be created using the static methods exposed on either the RandomBuilder class.
 
 The RandomBuilder can be used to create random values for primitives, for arrays, and for complete object graphs where the classes follow the Java Beans naming standard for getters and settter. For example
 

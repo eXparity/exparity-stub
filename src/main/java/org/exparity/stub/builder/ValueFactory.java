@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Modular IT Limited.
  */
-package org.exparity.test.builder;
+package org.exparity.stub.builder;
 
 /**
  * Interface to be implemented by classes which can provide values to a {@link BeanBuilder}

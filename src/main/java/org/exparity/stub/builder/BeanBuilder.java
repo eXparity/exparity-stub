@@ -1,5 +1,5 @@
 
-package org.exparity.test.builder;
+package org.exparity.stub.builder;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
@@ -24,7 +24,7 @@ import uk.co.it.modular.beans.naming.ForceRootNameNamingStrategy;
 import uk.co.it.modular.beans.naming.LowerCaseNamingStrategy;
 import static java.lang.System.identityHashCode;
 import static org.apache.commons.lang.StringUtils.lowerCase;
-import static org.exparity.test.builder.ValueFactories.*;
+import static org.exparity.stub.builder.ValueFactories.*;
 import static uk.co.it.modular.beans.Type.type;
 
 /**
@@ -787,8 +787,8 @@ public class BeanBuilder<T> {
 		RANDOM, EMPTY, NULL
 	}
 
-	private <T> T selectNotNull(final T... options) {
-		for (T option : options) {
+	private <O> O selectNotNull(final O... options) {
+		for (O option : options) {
 			if (option != null) {
 				return option;
 			}

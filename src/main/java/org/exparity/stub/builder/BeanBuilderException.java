@@ -1,12 +1,9 @@
 
-package uk.co.it.modular.beans;
+package org.exparity.stub.builder;
 
 /**
  * @author Stewart Bissett
- * 
- * @deprecated Moved to {@link org.exparity.test.builder.BeanBuilderException}
  */
-@Deprecated
 public class BeanBuilderException extends RuntimeException {
 
 	private static final long serialVersionUID = 3815822809921345204L;

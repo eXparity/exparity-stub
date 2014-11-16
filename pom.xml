@@ -2,12 +2,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.exparity</groupId>
-	<artifactId>test-object-builder</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<artifactId>exparity-stub</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
 
-	<name>Test Object Builder</name>
-	<url>https://github.com/eXparity/test-object-builder</url>
-	<description>A library to support configurable instantiation and creation of random objects to use as test dummy's for model objects</description>
+	<name>Exparity Stub</name>
+	<url>https://github.com/eXparity/exparity-stub</url>
+	<description>A Java library to support creation of test stubs. The library can create complete object graphs populated completely randomly, or can be populated with a mix of random and configured values.</description>
 
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
@@ -24,9 +24,9 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:git:@github.com:eXparity/test-object-builder.git</connection>
-		<developerConnection>scm:git:git@github.com:eXparity/test-object-builder.git</developerConnection>
-		<url>git@github.com:eXparity/test-object-builder.git</url>
+		<connection>scm:git:@github.com:eXparity/exparity-stub.git</connection>
+		<developerConnection>scm:git:git@github.com:eXparity/exparity-stub.git</developerConnection>
+		<url>git@github.com:eXparity/exparity-stub.git</url>
 	</scm>
 
 	<developers>

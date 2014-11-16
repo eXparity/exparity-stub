@@ -1,4 +1,4 @@
-package org.exparity.test.builder;
+package org.exparity.stub.builder;
 
 import java.math.BigDecimal;
 import java.math.MathContext;

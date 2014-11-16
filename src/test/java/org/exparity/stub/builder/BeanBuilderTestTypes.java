@@ -1,4 +1,4 @@
-package org.exparity.test.builder;
+package org.exparity.stub.builder;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * @author Stewart.Bissett
  */
-public class BeanUtilTestFixture {
+public class BeanBuilderTestTypes {
 
 	public static class Employee extends Person {
 
