@@ -1,34 +1,30 @@
 
-package org.exparity.stub.builder;
+package org.exparity.stub.random;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-
-import org.exparity.stub.builder.RandomBuilder;
-import org.exparity.stub.builder.RandomBuilderException;
-import org.exparity.stub.builder.BeanBuilderTestTypes.AllTypes;
-import org.exparity.stub.builder.BeanBuilderTestTypes.Car;
-import org.exparity.stub.builder.BeanBuilderTestTypes.Circle;
-import org.exparity.stub.builder.BeanBuilderTestTypes.Employee;
-import org.exparity.stub.builder.BeanBuilderTestTypes.EmptyEnum;
-import org.exparity.stub.builder.BeanBuilderTestTypes.Engine;
-import org.exparity.stub.builder.BeanBuilderTestTypes.FuelType;
-import org.exparity.stub.builder.BeanBuilderTestTypes.Manager;
-import org.exparity.stub.builder.BeanBuilderTestTypes.NoDefaultConstructor;
-import org.exparity.stub.builder.BeanBuilderTestTypes.Person;
-import org.exparity.stub.builder.BeanBuilderTestTypes.Shape;
-import org.exparity.stub.builder.BeanBuilderTestTypes.ShapeSorter;
-import org.exparity.stub.builder.BeanBuilderTestTypes.Square;
-import org.exparity.stub.builder.RandomBuilder.RandomRestriction;
+import org.exparity.stub.random.RandomBuilder.RandomRestriction;
+import org.exparity.stub.testutils.BeanBuilderTestTypes.AllTypes;
+import org.exparity.stub.testutils.BeanBuilderTestTypes.Car;
+import org.exparity.stub.testutils.BeanBuilderTestTypes.Circle;
+import org.exparity.stub.testutils.BeanBuilderTestTypes.Employee;
+import org.exparity.stub.testutils.BeanBuilderTestTypes.EmptyEnum;
+import org.exparity.stub.testutils.BeanBuilderTestTypes.Engine;
+import org.exparity.stub.testutils.BeanBuilderTestTypes.FuelType;
+import org.exparity.stub.testutils.BeanBuilderTestTypes.Manager;
+import org.exparity.stub.testutils.BeanBuilderTestTypes.NoDefaultConstructor;
+import org.exparity.stub.testutils.BeanBuilderTestTypes.Person;
+import org.exparity.stub.testutils.BeanBuilderTestTypes.Shape;
+import org.exparity.stub.testutils.BeanBuilderTestTypes.ShapeSorter;
+import org.exparity.stub.testutils.BeanBuilderTestTypes.Square;
 import org.hamcrest.Matchers;
 import org.junit.Test;
-
-import static org.exparity.stub.builder.RandomBuilder.*;
-import static org.exparity.stub.builder.ValueFactories.oneOf;
-import static org.exparity.stub.builder.ValueFactories.theValue;
+import static org.exparity.stub.core.ValueFactories.oneOf;
+import static org.exparity.stub.core.ValueFactories.theValue;
+import static org.exparity.stub.random.RandomBuilder.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 

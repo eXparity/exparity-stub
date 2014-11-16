@@ -1,4 +1,4 @@
-package org.exparity.stub.builder;
+package org.exparity.stub.random;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -9,6 +9,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.exparity.stub.bean.BeanBuilder;
+import org.exparity.stub.bean.BeanBuilderException;
+import org.exparity.stub.core.ValueFactories;
+import org.exparity.stub.core.ValueFactory;
+import org.exparity.stub.core.ValueFactoryException;
 import static org.apache.commons.lang.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang.RandomStringUtils.randomAlphanumeric;
 import static org.apache.commons.lang.math.RandomUtils.*;

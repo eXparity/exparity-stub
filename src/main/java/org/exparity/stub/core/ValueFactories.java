@@ -1,5 +1,5 @@
 
-package org.exparity.stub.builder;
+package org.exparity.stub.core;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import org.exparity.stub.random.RandomBuilder;
 import static org.apache.commons.lang.math.RandomUtils.nextInt;
 
 /**

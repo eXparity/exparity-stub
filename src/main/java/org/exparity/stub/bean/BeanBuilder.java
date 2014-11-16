@@ -1,5 +1,5 @@
 
-package org.exparity.stub.builder;
+package org.exparity.stub.bean;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
@@ -14,6 +14,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.apache.commons.lang.StringUtils;
+import org.exparity.stub.core.ValueFactory;
+import org.exparity.stub.random.RandomBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.co.it.modular.beans.BeanNamingStrategy;
@@ -24,7 +26,7 @@ import uk.co.it.modular.beans.naming.ForceRootNameNamingStrategy;
 import uk.co.it.modular.beans.naming.LowerCaseNamingStrategy;
 import static java.lang.System.identityHashCode;
 import static org.apache.commons.lang.StringUtils.lowerCase;
-import static org.exparity.stub.builder.ValueFactories.*;
+import static org.exparity.stub.core.ValueFactories.*;
 import static uk.co.it.modular.beans.Type.type;
 
 /**

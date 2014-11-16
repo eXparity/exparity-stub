@@ -1,5 +1,5 @@
 
-package org.exparity.stub.builder;
+package org.exparity.stub.core;
 
 /**
  * @author Stewart Bissett

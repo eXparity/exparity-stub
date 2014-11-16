@@ -13,12 +13,12 @@ A maven project
     <dependency>
         <groupId>org.exparity</groupId>
         <artifactId>exparity-stub</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
     </dependency>
 
 A project which uses ivy for dependency management
 
-    <dependency org="org.exparity" name="exparity-stub" rev="1.0.0"/>
+    <dependency org="org.exparity" name="exparity-stub" rev="1.1.0"/>
             
 Usage
 -------------

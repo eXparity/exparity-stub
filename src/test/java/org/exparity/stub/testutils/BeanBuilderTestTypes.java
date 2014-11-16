@@ -1,4 +1,4 @@
-package org.exparity.stub.builder;
+package org.exparity.stub.testutils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

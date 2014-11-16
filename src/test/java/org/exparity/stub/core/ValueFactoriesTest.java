@@ -1,21 +1,18 @@
 
-package org.exparity.stub.builder;
+package org.exparity.stub.core;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
-
-import org.exparity.stub.builder.ValueFactories;
-import org.exparity.stub.builder.ValueFactory;
-import org.exparity.stub.builder.ValueFactoryException;
-import org.exparity.stub.builder.BeanBuilderTestTypes.Car;
-import org.exparity.stub.builder.BeanBuilderTestTypes.EmptyEnum;
-import org.exparity.stub.builder.BeanBuilderTestTypes.FuelType;
-import org.exparity.stub.builder.BeanBuilderTestTypes.NoDefaultConstructor;
+import org.exparity.stub.core.ValueFactory;
+import org.exparity.stub.core.ValueFactoryException;
+import org.exparity.stub.testutils.BeanBuilderTestTypes.Car;
+import org.exparity.stub.testutils.BeanBuilderTestTypes.EmptyEnum;
+import org.exparity.stub.testutils.BeanBuilderTestTypes.FuelType;
+import org.exparity.stub.testutils.BeanBuilderTestTypes.NoDefaultConstructor;
 import org.hamcrest.Matcher;
 import org.junit.Test;
-
-import static org.exparity.stub.builder.ValueFactories.*;
+import static org.exparity.stub.core.ValueFactories.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -25,7 +22,7 @@ import static org.hamcrest.Matchers.*;
  * @author Stewart Bissett
  */
 @SuppressWarnings("unchecked")
-public class InstanceFactoriesTest {
+public class ValueFactoriesTest {
 
 	@Test
 	public void canCreateANewInstanceOf() {
