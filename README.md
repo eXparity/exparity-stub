@@ -13,12 +13,12 @@ A maven project
     <dependency>
         <groupId>org.exparity</groupId>
         <artifactId>exparity-stub</artifactId>
-        <version>1.1.0</version>
+        <version>1.1.1</version>
     </dependency>
 
 A project which uses ivy for dependency management
 
-    <dependency org="org.exparity" name="exparity-stub" rev="1.1.0"/>
+    <dependency org="org.exparity" name="exparity-stub" rev="1.1.1"/>
             
 Usage
 -------------
@@ -45,11 +45,16 @@ or after static importing
 
 	Person aPerson = aRandomInstanceOf(Person.class, path("person.siblings.firstName","Bob"));
 	Person aPerson = aRandomInstanceOf(Person.class, property("firstName","Bob"));
-	Person aPersonWithBrothersAndSisters = aRandomInstanceOf(Person.class, collectionSizeForPath("person.sibling",2,5));
+	Person aPersonWithBrothersAndSisters = aRandomInstanceOf(Person.class, 
+			collectionSizeForPath("person.sibling",2,5)
+		);
 
 Multiple restrictions can be applied at the same time. For example
 
-	Person aPerson = aRandomInstanceOf(Person.class, collectionSizeForPath("person.sibling",2), path("person.siblings.firstName","Bob"));
+	Person aPerson = aRandomInstanceOf(Person.class, 
+			collectionSizeForPath("person.sibling",2), 
+			path("person.siblings.firstName","Bob")
+		);
 
 The RandomBuilder class includes includes factory methods for:
 
@@ -93,6 +98,11 @@ The source is structured along the lines of the maven standard folder structure 
   * Unit tests [src/test/java]
 
 The source includes a pom.xml for building with Maven 
+
+Release Notes
+-------------
+Changes 1.1.0 -> 1.1
+  * Port from uk.co.it.modular beans library to exparity-bean
 
 Acknowledgements
 ----------------
