@@ -18,16 +18,16 @@ import org.exparity.stub.core.ValueFactory;
 import org.exparity.stub.random.RandomBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.co.it.modular.beans.BeanNamingStrategy;
-import uk.co.it.modular.beans.BeanPropertyPath;
-import uk.co.it.modular.beans.Type;
-import uk.co.it.modular.beans.TypeProperty;
-import uk.co.it.modular.beans.naming.ForceRootNameNamingStrategy;
-import uk.co.it.modular.beans.naming.LowerCaseNamingStrategy;
+import org.exparity.beans.BeanNamingStrategy;
+import org.exparity.beans.BeanPropertyPath;
+import org.exparity.beans.Type;
+import org.exparity.beans.TypeProperty;
+import org.exparity.beans.naming.ForceRootNameNamingStrategy;
+import org.exparity.beans.naming.LowerCaseNamingStrategy;
 import static java.lang.System.identityHashCode;
 import static org.apache.commons.lang.StringUtils.lowerCase;
 import static org.exparity.stub.core.ValueFactories.*;
-import static uk.co.it.modular.beans.Type.type;
+import static org.exparity.beans.Type.type;
 
 /**
  * Builder object for instantiating and populating objects which follow the Java beans standards conventions for getter/setters

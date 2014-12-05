@@ -16,16 +16,16 @@ import org.exparity.stub.testutils.BeanBuilderTestTypes.Square;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.Wheel;
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import uk.co.it.modular.beans.BeanProperty;
-import uk.co.it.modular.beans.BeanPropertyException;
-import uk.co.it.modular.beans.BeanPropertyPath;
-import uk.co.it.modular.beans.BeanVisitor;
+import org.exparity.beans.BeanProperty;
+import org.exparity.beans.BeanPropertyException;
+import org.exparity.beans.BeanPropertyPath;
+import org.exparity.beans.BeanVisitor;
 import static org.exparity.stub.bean.BeanBuilder.aRandomInstanceOf;
 import static org.exparity.stub.bean.BeanBuilder.anEmptyInstanceOf;
 import static org.exparity.stub.bean.BeanBuilder.anInstanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static uk.co.it.modular.beans.Bean.bean;
+import static org.exparity.beans.Bean.bean;
 
 /**
  * @author Stewart.Bissett
