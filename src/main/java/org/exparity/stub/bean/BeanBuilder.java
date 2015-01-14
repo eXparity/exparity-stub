@@ -14,20 +14,20 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.apache.commons.lang.StringUtils;
+import org.exparity.beans.Type;
+import org.exparity.beans.core.BeanNamingStrategy;
+import org.exparity.beans.core.BeanPropertyPath;
+import org.exparity.beans.core.TypeProperty;
+import org.exparity.beans.core.naming.ForceRootNameNamingStrategy;
+import org.exparity.beans.core.naming.LowerCaseNamingStrategy;
 import org.exparity.stub.core.ValueFactory;
 import org.exparity.stub.random.RandomBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.exparity.beans.BeanNamingStrategy;
-import org.exparity.beans.BeanPropertyPath;
-import org.exparity.beans.Type;
-import org.exparity.beans.TypeProperty;
-import org.exparity.beans.naming.ForceRootNameNamingStrategy;
-import org.exparity.beans.naming.LowerCaseNamingStrategy;
 import static java.lang.System.identityHashCode;
 import static org.apache.commons.lang.StringUtils.lowerCase;
-import static org.exparity.stub.core.ValueFactories.*;
 import static org.exparity.beans.Type.type;
+import static org.exparity.stub.core.ValueFactories.*;
 
 /**
  * Builder object for instantiating and populating objects which follow the Java beans standards conventions for getter/setters
@@ -443,7 +443,7 @@ public class BeanBuilder<T> {
 
 	private <I> I populate(final I instance, final BeanPropertyPath path, final Stack stack) {
 		if (instance != null) {
-			for (TypeProperty property : type(instance).setNamingStrategy(naming).propertyList()) {
+			for (TypeProperty property : type(instance, naming).propertyList()) {
 				populateProperty(instance, property, path.append(property.getName()), stack);
 			}
 			return instance;
