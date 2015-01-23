@@ -419,6 +419,21 @@ public abstract class RandomBuilder {
 	}
 
 	/**
+	 * Build a random instance of the supplied type. For example
+	 * <p/>
+	 * <code>
+	 * Person aRandomPerson = RandomBuilder.aRandomInstanceOf(Person.class);
+	 * </code>
+	 * </p>
+	 * @param type the type to create a random instance of
+	 * @param restrictions an array of restrictions which control how the random instance is built
+	 * @return a random instance of the supplied type
+	 */
+	public static <T> T aRandomInstanceOf(final Class<T> type) {
+		return aRandomInstanceOf(type, new RandomRestriction[0]);
+	}
+
+	/**
 	 * Build a random instance of the supplied type. An array of restrictions can be supplied as arguments if control is required over how some of the properties are populated. For
 	 * example
 	 * <p/>
