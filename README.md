@@ -13,12 +13,12 @@ A maven project
     <dependency>
         <groupId>org.exparity</groupId>
         <artifactId>exparity-stub</artifactId>
-        <version>1.1.1</version>
+        <version>1.1.2</version>
     </dependency>
 
 A project which uses ivy for dependency management
 
-    <dependency org="org.exparity" name="exparity-stub" rev="1.1.1"/>
+    <dependency org="org.exparity" name="exparity-stub" rev="1.1.2"/>
             
 Usage
 -------------
@@ -101,6 +101,9 @@ The source includes a pom.xml for building with Maven
 
 Release Notes
 -------------
+Changes 1.1.1 -> 1.1.2
+  * Fix Issue #4.
+
 Changes 1.1.0 -> 1.1
   * Port from uk.co.it.modular beans library to exparity-bean
 
