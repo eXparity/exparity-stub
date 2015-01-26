@@ -632,6 +632,7 @@ public abstract class RandomBuilder {
 	 * @param superType the super type
 	 * @param subType the sub types to use when creating an instance of the super type
 	 */
+	@SuppressWarnings("unchecked")
 	public static <P> RandomRestriction subtype(final Class<P> superType, final Class<? extends P>... subTypes) {
 		return new RandomRestriction() {
 

@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.exparity.beans.core.BeanProperty;
 import org.exparity.beans.core.BeanPropertyException;
-import org.exparity.beans.core.BeanPropertyPath;
 import org.exparity.beans.core.BeanVisitor;
 import org.exparity.stub.core.ValueFactory;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.AllTypes;
@@ -54,7 +53,7 @@ public class BeanBuilderTest {
 		AllTypes allTypes = aRandomInstanceOf(AllTypes.class).build();
 		bean(allTypes).visit(new BeanVisitor() {
 
-			public void visit(final BeanProperty property, final Object current, final BeanPropertyPath path, final Object[] stack, final AtomicBoolean stop) {
+			public void visit(final BeanProperty property, final Object current, final Object[] stack, final AtomicBoolean stop) {
 				assertThat("Expected " + property + " to not be null", property.getValue(), notNullValue());
 			}
 		});
@@ -65,7 +64,7 @@ public class BeanBuilderTest {
 		AllTypes allTypes = anInstanceOf(AllTypes.class).build();
 		bean(allTypes).visit(new BeanVisitor() {
 
-			public void visit(final BeanProperty property, final Object current, final BeanPropertyPath path, final Object[] stack, final AtomicBoolean stop) {
+			public void visit(final BeanProperty property, final Object current, final Object[] stack, final AtomicBoolean stop) {
 				if (!property.isPrimitive()) {
 					assertThat("Expected " + property + " to not be null", property.getValue(), nullValue());
 				}
@@ -78,7 +77,7 @@ public class BeanBuilderTest {
 		AllTypes allTypes = anEmptyInstanceOf(AllTypes.class).build();
 		bean(allTypes).visit(new BeanVisitor() {
 
-			public void visit(final BeanProperty property, final Object current, final BeanPropertyPath path, final Object[] stack, final AtomicBoolean stop) {
+			public void visit(final BeanProperty property, final Object current, final Object[] stack, final AtomicBoolean stop) {
 				if (!property.isCollection() && !property.isMap() && !property.isPrimitive() && !property.isArray() && !property.isEnum()) {
 					assertThat("Expected " + property + " to not be null", property.getValue(), nullValue());
 				}

@@ -262,6 +262,7 @@ public abstract class ValueFactories {
 	 * @param factories the factories to select from when creating the random value
 	 * @return an {@link ValueFactory} which returns a random instance of the given type by using one of the supplied {@link ValueFactory} instances.
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> ValueFactory<T> oneOf(final ValueFactory<T>... factories) {
 		return oneOf(Arrays.asList(factories));
 	}
@@ -287,6 +288,7 @@ public abstract class ValueFactories {
 	 * @param instances the instances to select from when creating the random value
 	 * @return an {@link ValueFactory} which randomly returns one of the supplied instances.
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> ValueFactory<T> oneOf(final T... instances) {
 		return new ValueFactory<T>() {
 
