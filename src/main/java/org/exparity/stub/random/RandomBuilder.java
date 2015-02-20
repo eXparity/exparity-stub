@@ -213,6 +213,21 @@ public abstract class RandomBuilder {
 	}
 
 	/**
+	 * Return one of the specified range of values. For exampl
+	 * <p/>
+	 * <code>
+	 * String aRandomName = RandomBuilder.oneOf("Bob", "Alice", "Jane");
+	 * </code>
+	 * @param <T> the type of the value
+	 * @param rangeOfValues the range of values to pick a value from
+	 * @return one of supplied arguments
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T oneOf(final T... rangeOfValues) {
+		return rangeOfValues == null ? null : rangeOfValues[nextInt(rangeOfValues.length)];
+	}
+
+	/**
 	 * Build a random {@link Boolean}. For example
 	 * <p/>
 	 * <code>

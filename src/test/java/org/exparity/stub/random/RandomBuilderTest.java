@@ -5,7 +5,9 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.exparity.stub.random.RandomBuilder.RandomRestriction;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.AllTypes;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.Car;
@@ -360,6 +362,22 @@ public class RandomBuilderTest {
 		List<RandomRestriction> restrictions = Arrays.asList(collectionSizeForPath("car.wheels", 4), collectionSizeForPath("car.wheels[2].nuts", nuts));
 		Car car = aRandomInstanceOf(Car.class, restrictions);
 		assertThat(car.getWheels().get(2).getNuts(), hasSize(nuts));
+	}
+
+	@Test
+	public void canReturnOneOfARangeOfItems() {
+		String value1 = aRandomString(), value2 = value1 + aRandomString();
+		Set<String> usedNames = new HashSet<>();
+		for (int i = 0; i < 100; ++i) {
+			usedNames.add(RandomBuilder.oneOf(value1, value2));
+		}
+		assertThat(usedNames, Matchers.containsInAnyOrder(value1, value2));
+	}
+
+	@Test
+	public void canReturnOneOfASingleItem() {
+		String value1 = aRandomString();
+		assertThat(RandomBuilder.oneOf(value1), equalTo(value1));
 	}
 
 }
