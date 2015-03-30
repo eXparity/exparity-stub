@@ -1,5 +1,50 @@
-
 package org.exparity.stub.random;
+
+import static org.exparity.stub.core.ValueFactories.oneOf;
+import static org.exparity.stub.core.ValueFactories.theValue;
+import static org.exparity.stub.random.RandomBuilder.aRandomArrayOf;
+import static org.exparity.stub.random.RandomBuilder.aRandomArrayOfEnum;
+import static org.exparity.stub.random.RandomBuilder.aRandomBoolean;
+import static org.exparity.stub.random.RandomBuilder.aRandomByte;
+import static org.exparity.stub.random.RandomBuilder.aRandomByteArray;
+import static org.exparity.stub.random.RandomBuilder.aRandomChar;
+import static org.exparity.stub.random.RandomBuilder.aRandomCollectionOf;
+import static org.exparity.stub.random.RandomBuilder.aRandomDate;
+import static org.exparity.stub.random.RandomBuilder.aRandomDecimal;
+import static org.exparity.stub.random.RandomBuilder.aRandomDouble;
+import static org.exparity.stub.random.RandomBuilder.aRandomEnum;
+import static org.exparity.stub.random.RandomBuilder.aRandomFloat;
+import static org.exparity.stub.random.RandomBuilder.aRandomInstanceOf;
+import static org.exparity.stub.random.RandomBuilder.aRandomInteger;
+import static org.exparity.stub.random.RandomBuilder.aRandomListOf;
+import static org.exparity.stub.random.RandomBuilder.aRandomLong;
+import static org.exparity.stub.random.RandomBuilder.aRandomShort;
+import static org.exparity.stub.random.RandomBuilder.aRandomString;
+import static org.exparity.stub.random.RandomBuilder.collectionSize;
+import static org.exparity.stub.random.RandomBuilder.collectionSizeForPath;
+import static org.exparity.stub.random.RandomBuilder.collectionSizeForProperty;
+import static org.exparity.stub.random.RandomBuilder.excludePath;
+import static org.exparity.stub.random.RandomBuilder.excludeProperty;
+import static org.exparity.stub.random.RandomBuilder.factory;
+import static org.exparity.stub.random.RandomBuilder.path;
+import static org.exparity.stub.random.RandomBuilder.property;
+import static org.exparity.stub.random.RandomBuilder.subtype;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.any;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.arrayWithSize;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItemInArray;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.isA;
+import static org.hamcrest.Matchers.isOneOf;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -8,7 +53,9 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.exparity.stub.random.RandomBuilder.RandomRestriction;
+import org.exparity.stub.testutils.CollectionOfGenerics;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.AllTypes;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.Car;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.Circle;
@@ -24,11 +71,6 @@ import org.exparity.stub.testutils.BeanBuilderTestTypes.ShapeSorter;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.Square;
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import static org.exparity.stub.core.ValueFactories.oneOf;
-import static org.exparity.stub.core.ValueFactories.theValue;
-import static org.exparity.stub.random.RandomBuilder.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 
 /**
  * Unit tests for {@link RandomBuilder}
@@ -140,7 +182,9 @@ public class RandomBuilderTest {
 
 	@Test
 	public void canBuildARandomArrayOfEnums() {
-		assertThat(aRandomArrayOfEnum(FuelType.class), hasItemInArray(isOneOf(FuelType.DIESEL, FuelType.PETROL, FuelType.LPG)));
+		assertThat(
+				aRandomArrayOfEnum(FuelType.class),
+					hasItemInArray(isOneOf(FuelType.DIESEL, FuelType.PETROL, FuelType.LPG)));
 	}
 
 	@Test
@@ -232,7 +276,9 @@ public class RandomBuilderTest {
 	@Test
 	public void canBuildARandomInstanceAndSetPropertyMixedCase() {
 		BigDecimal capacity = new BigDecimal("1.8");
-		assertThat(aRandomInstanceOf(Car.class, property("Capacity", capacity)).getEngine().getCapacity(), Matchers.equalTo(capacity));
+		assertThat(
+				aRandomInstanceOf(Car.class, property("Capacity", capacity)).getEngine().getCapacity(),
+					Matchers.equalTo(capacity));
 	}
 
 	@Test
@@ -262,22 +308,30 @@ public class RandomBuilderTest {
 	@Test
 	public void canBuildARandomInstanceAndSetPathMixedCase() {
 		BigDecimal capacity = new BigDecimal("1.8");
-		assertThat(aRandomInstanceOf(Car.class, path("Car.Engine.Capacity", capacity)).getEngine().getCapacity(), Matchers.equalTo(capacity));
+		assertThat(
+				aRandomInstanceOf(Car.class, path("Car.Engine.Capacity", capacity)).getEngine().getCapacity(),
+					Matchers.equalTo(capacity));
 	}
 
 	@Test
 	public void canBuildARandomInstanceAndExcludePath() {
-		assertThat(aRandomInstanceOf(Car.class, excludePath("car.engine.capacity")).getEngine().getCapacity(), nullValue());
+		assertThat(
+				aRandomInstanceOf(Car.class, excludePath("car.engine.capacity")).getEngine().getCapacity(),
+					nullValue());
 	}
 
 	@Test
 	public void canBuildARandomInstanceAndExcludePathMixedCase() {
-		assertThat(aRandomInstanceOf(Car.class, excludePath("Car.Engine.Capacity")).getEngine().getCapacity(), nullValue());
+		assertThat(
+				aRandomInstanceOf(Car.class, excludePath("Car.Engine.Capacity")).getEngine().getCapacity(),
+					nullValue());
 	}
 
 	@Test
 	public void canBuildARandomInstanceSpecifySubType() {
-		assertThat(aRandomInstanceOf(Employee.class, subtype(Person.class, Manager.class)).getManager(), instanceOf(Manager.class));
+		assertThat(
+				aRandomInstanceOf(Employee.class, subtype(Person.class, Manager.class)).getManager(),
+					instanceOf(Manager.class));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -338,14 +392,20 @@ public class RandomBuilderTest {
 	@Test
 	public void canBuildARandomInstanceAndSetPathWithIndex() {
 		Integer diameter = aRandomInteger();
-		Car car = aRandomInstanceOf(Car.class, collectionSizeForPath("car.wheels", 4), path("car.wheels[3].diameter", diameter));
+		Car car = aRandomInstanceOf(
+				Car.class,
+					collectionSizeForPath("car.wheels", 4),
+					path("car.wheels[3].diameter", diameter));
 		assertThat(car.getWheels().get(3).getDiameter(), equalTo(diameter));
 	}
 
 	@Test
 	public void canBuildARandomInstanceAndLimitCollectionSizeForPathWithIndex() {
 		int nuts = aRandomInteger(6, 10);
-		Car car = aRandomInstanceOf(Car.class, collectionSizeForPath("car.wheels", 4), collectionSizeForPath("car.wheels[2].nuts", nuts));
+		Car car = aRandomInstanceOf(
+				Car.class,
+					collectionSizeForPath("car.wheels", 4),
+					collectionSizeForPath("car.wheels[2].nuts", nuts));
 		assertThat(car.getWheels().get(2).getNuts(), hasSize(nuts));
 	}
 
@@ -359,7 +419,9 @@ public class RandomBuilderTest {
 	@Test
 	public void canBuildARandomInstanceWithAListOfRestrictions() {
 		int nuts = aRandomInteger(6, 10);
-		List<RandomRestriction> restrictions = Arrays.asList(collectionSizeForPath("car.wheels", 4), collectionSizeForPath("car.wheels[2].nuts", nuts));
+		List<RandomRestriction> restrictions = Arrays.asList(
+				collectionSizeForPath("car.wheels", 4),
+					collectionSizeForPath("car.wheels[2].nuts", nuts));
 		Car car = aRandomInstanceOf(Car.class, restrictions);
 		assertThat(car.getWheels().get(2).getNuts(), hasSize(nuts));
 	}
@@ -378,6 +440,12 @@ public class RandomBuilderTest {
 	public void canReturnOneOfASingleItem() {
 		String value1 = aRandomString();
 		assertThat(RandomBuilder.oneOf(value1), equalTo(value1));
+	}
+
+	@Test
+	public void canBuildACollectionOfGenerics() {
+		CollectionOfGenerics result = RandomBuilder.aRandomInstanceOf(CollectionOfGenerics.class);
+		assertThat(result.getValues(), not(empty()));
 	}
 
 }
