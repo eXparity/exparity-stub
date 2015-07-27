@@ -1,20 +1,24 @@
 
 package org.exparity.stub.core;
 
+import static org.exparity.stub.core.ValueFactories.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Date;
-import org.exparity.stub.core.ValueFactory;
-import org.exparity.stub.core.ValueFactoryException;
+
 import org.exparity.stub.testutils.BeanBuilderTestTypes.Car;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.EmptyEnum;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.FuelType;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.NoDefaultConstructor;
 import org.hamcrest.Matcher;
 import org.junit.Test;
-import static org.exparity.stub.core.ValueFactories.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 
 /**
  * Unit test for the {@link ValueFactories} class
@@ -69,6 +73,26 @@ public class ValueFactoriesTest {
 	@Test
 	public void canCreateARandomDate() {
 		checkResult(aRandomDate(), any(Date.class));
+	}
+
+	@Test
+	public void canCreateARandomLocalDate() {
+		checkResult(aRandomLocalDate(), any(LocalDate.class));
+	}
+
+	@Test
+	public void canCreateARandomLocalDateTime() {
+		checkResult(aRandomLocalDateTime(), any(LocalDateTime.class));
+	}
+	
+	@Test
+	public void canCreateARandomZonedDateTime() {
+		checkResult(aRandomZonedDateTime(), any(ZonedDateTime.class));
+	}
+
+	@Test
+	public void canCreateARandomInstant() {
+		checkResult(aRandomInstant(), any(Instant.class));
 	}
 
 	@Test

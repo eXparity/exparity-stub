@@ -1,15 +1,22 @@
 
 package org.exparity.stub.core;
 
+import static org.apache.commons.lang.math.RandomUtils.nextInt;
+
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
+import org.exparity.stub.bean.BeanBuilder;
 import org.exparity.stub.random.RandomBuilder;
-import static org.apache.commons.lang.math.RandomUtils.nextInt;
 
 /**
  * Static factory for creating instances of {@link ValueFactory} and {@link ArrayFactory} for use in the {@link BeanBuilder} and {@link RandomBuilder}
@@ -24,12 +31,7 @@ public abstract class ValueFactories {
 	 * @return an {@link ValueFactory} which returns the supplied value
 	 */
 	public static <T> ValueFactory<T> theValue(final T value) {
-		return new ValueFactory<T>() {
-
-			public T createValue() {
-				return value;
-			}
-		};
+		return () -> value;
 	}
 
 	/**
@@ -37,12 +39,7 @@ public abstract class ValueFactories {
 	 * @return an {@link ValueFactory} which returns a null value.
 	 */
 	public static ValueFactory<Object> aNullValue() {
-		return new ValueFactory<Object>() {
-
-			public Object createValue() {
-				return null;
-			}
-		};
+		return () -> null;
 	}
 
 	/**
@@ -50,12 +47,7 @@ public abstract class ValueFactories {
 	 * @return an {@link ValueFactory} which returns a random {@link String}.
 	 */
 	public static ValueFactory<String> aRandomString() {
-		return new ValueFactory<String>() {
-
-			public String createValue() {
-				return RandomBuilder.aRandomString();
-			}
-		};
+		return () -> RandomBuilder.aRandomString();
 	}
 
 	/**
@@ -63,12 +55,7 @@ public abstract class ValueFactories {
 	 * @return an {@link ValueFactory} which returns a random {@link Integer}.
 	 */
 	public static ValueFactory<Integer> aRandomInteger() {
-		return new ValueFactory<Integer>() {
-
-			public Integer createValue() {
-				return RandomBuilder.aRandomInteger();
-			}
-		};
+		return () -> RandomBuilder.aRandomInteger();
 	}
 
 	/**
@@ -76,12 +63,7 @@ public abstract class ValueFactories {
 	 * @return an {@link ValueFactory} which returns a random {@link Short}.
 	 */
 	public static ValueFactory<Short> aRandomShort() {
-		return new ValueFactory<Short>() {
-
-			public Short createValue() {
-				return RandomBuilder.aRandomShort();
-			}
-		};
+		return () -> RandomBuilder.aRandomShort();
 	}
 
 	/**
@@ -89,12 +71,7 @@ public abstract class ValueFactories {
 	 * @return an {@link ValueFactory} which returns a random {@link Long}.
 	 */
 	public static ValueFactory<Long> aRandomLong() {
-		return new ValueFactory<Long>() {
-
-			public Long createValue() {
-				return RandomBuilder.aRandomLong();
-			}
-		};
+		return () -> RandomBuilder.aRandomLong();
 	}
 
 	/**
@@ -102,12 +79,7 @@ public abstract class ValueFactories {
 	 * @return an {@link ValueFactory} which returns a random {@link Double}.
 	 */
 	public static ValueFactory<Double> aRandomDouble() {
-		return new ValueFactory<Double>() {
-
-			public Double createValue() {
-				return RandomBuilder.aRandomDouble();
-			}
-		};
+		return () -> RandomBuilder.aRandomDouble();
 	}
 
 	/**
@@ -115,12 +87,7 @@ public abstract class ValueFactories {
 	 * @return an {@link ValueFactory} which returns a random {@link Float}.
 	 */
 	public static ValueFactory<Float> aRandomFloat() {
-		return new ValueFactory<Float>() {
-
-			public Float createValue() {
-				return RandomBuilder.aRandomFloat();
-			}
-		};
+		return () -> RandomBuilder.aRandomFloat();
 	}
 
 	/**
@@ -128,12 +95,7 @@ public abstract class ValueFactories {
 	 * @return an {@link ValueFactory} which returns a random {@link Boolean}.
 	 */
 	public static ValueFactory<Boolean> aRandomBoolean() {
-		return new ValueFactory<Boolean>() {
-
-			public Boolean createValue() {
-				return RandomBuilder.aRandomBoolean();
-			}
-		};
+		return () -> RandomBuilder.aRandomBoolean();
 	}
 
 	/**
@@ -141,12 +103,39 @@ public abstract class ValueFactories {
 	 * @return an {@link ValueFactory} which returns a random {@link Date}.
 	 */
 	public static ValueFactory<Date> aRandomDate() {
-		return new ValueFactory<Date>() {
+		return () -> RandomBuilder.aRandomDate();
+	}
 
-			public Date createValue() {
-				return RandomBuilder.aRandomDate();
-			}
-		};
+	/**
+	 * Creates an {@link ValueFactory} which returns a random {@link LocalDate}.
+	 * @return an {@link ValueFactory} which returns a random {@link LocalDate}.
+	 */
+	public static ValueFactory<LocalDate> aRandomLocalDate() {
+		return () -> RandomBuilder.aRandomLocalDate();
+	}
+
+	/**
+	 * Creates an {@link ValueFactory} which returns a random {@link LocalDateTime}.
+	 * @return an {@link ValueFactory} which returns a random {@link LocalDateTime}.
+	 */
+	public static ValueFactory<LocalDateTime> aRandomLocalDateTime() {
+		return () -> RandomBuilder.aRandomLocalDateTime();
+	}
+
+	/**
+	 * Creates an {@link ValueFactory} which returns a random {@link ZonedDateTime}.
+	 * @return an {@link ValueFactory} which returns a random {@link ZonedDateTime}.
+	 */
+	public static ValueFactory<ZonedDateTime> aRandomZonedDateTime() {
+		return () -> RandomBuilder.aRandomZonedDateTime();
+	}
+
+	/**
+	 * Creates an {@link ValueFactory} which returns a random {@link Instant}.
+	 * @return an {@link ValueFactory} which returns a random {@link Instant}.
+	 */
+	public static ValueFactory<Instant> aRandomInstant() {
+		return () -> RandomBuilder.aRandomInstant();
 	}
 
 	/**
@@ -154,12 +143,7 @@ public abstract class ValueFactories {
 	 * @return an {@link ValueFactory} which returns a random {@link BigDecimal}.
 	 */
 	public static ValueFactory<BigDecimal> aRandomDecimal() {
-		return new ValueFactory<BigDecimal>() {
-
-			public BigDecimal createValue() {
-				return RandomBuilder.aRandomDecimal();
-			}
-		};
+		return () -> RandomBuilder.aRandomDecimal();
 	}
 
 	/**
@@ -167,12 +151,7 @@ public abstract class ValueFactories {
 	 * @return an {@link ValueFactory} which returns a random {@link Byte}.
 	 */
 	public static ValueFactory<Byte> aRandomByte() {
-		return new ValueFactory<Byte>() {
-
-			public Byte createValue() {
-				return (byte) nextInt(Byte.MAX_VALUE);
-			}
-		};
+		return () -> RandomBuilder.aRandomByte();
 	}
 
 	/**
@@ -180,12 +159,7 @@ public abstract class ValueFactories {
 	 * @return an {@link ValueFactory} which returns a random array of bytes.
 	 */
 	public static ValueFactory<byte[]> aRandomByteArray() {
-		return new ValueFactory<byte[]>() {
-
-			public byte[] createValue() {
-				return RandomBuilder.aRandomByteArray();
-			}
-		};
+		return () -> RandomBuilder.aRandomByteArray();
 	}
 
 	/**
@@ -193,12 +167,7 @@ public abstract class ValueFactories {
 	 * @return an {@link ValueFactory} which returns a random {@link Character}.
 	 */
 	public static ValueFactory<Character> aRandomChar() {
-		return new ValueFactory<Character>() {
-
-			public Character createValue() {
-				return RandomBuilder.aRandomChar();
-			}
-		};
+		return () -> RandomBuilder.aRandomChar();
 	}
 
 	/**
@@ -207,15 +176,12 @@ public abstract class ValueFactories {
 	 * @return an {@link ValueFactory} which returns a random enum from the supplied {@link Enum} type
 	 */
 	public static <E> ValueFactory<E> aRandomEnum(final Class<E> enumType) {
-		return new ValueFactory<E>() {
-
-			public E createValue() {
-				E[] enumerationValues = enumType.getEnumConstants();
-				if (enumerationValues.length == 0) {
-					throw new ValueFactoryException("Enumeration " + enumType.getName() + "has no values");
-				} else {
-					return enumerationValues[nextInt(enumerationValues.length)];
-				}
+		return () -> {
+			E[] enumerationValues = enumType.getEnumConstants();
+			if (enumerationValues.length == 0) {
+				throw new ValueFactoryException("Enumeration " + enumType.getName() + "has no values");
+			} else {
+				return enumerationValues[nextInt(enumerationValues.length)];
 			}
 		};
 	}
@@ -225,17 +191,14 @@ public abstract class ValueFactories {
 	 * @param typeFactory the {@link ValueFactory} to use to create each instance in the random array
 	 * @return an {@link ArrayFactory} which returns a random array of the given type.
 	 */
+	@SuppressWarnings("unchecked")
 	public static <A> ArrayFactory<A> aRandomArrayOf(final ValueFactory<A> typeFactory) {
-		return new ArrayFactory<A>() {
-
-			@SuppressWarnings("unchecked")
-			public A[] createValue(final Class<A> type, final int size) {
+		return (type,size) -> {
 				Object array = Array.newInstance(type, size);
 				for (int i = 0; i < size; ++i) {
 					Array.set(array, i, typeFactory.createValue());
 				}
 				return (A[]) array;
-			}
 		};
 	}
 
@@ -245,14 +208,13 @@ public abstract class ValueFactories {
 	 * @return an {@link ArrayFactory} which returns a new unpopulated instance of the given type.
 	 */
 	public static <T> ValueFactory<T> aNewInstanceOf(final Class<T> type) {
-		return new ValueFactory<T>() {
-
-			public T createValue() {
-				try {
-					return type.newInstance();
-				} catch (Exception e) {
-					throw new ValueFactoryException("Failed to instantiate instance of '" + type.getCanonicalName() + "'", e);
-				}
+		return () -> {
+			try {
+				return type.newInstance();
+			} catch (Exception e) {
+				throw new ValueFactoryException(
+						"Failed to instantiate instance of '" + type.getCanonicalName() + "'",
+							e);
 			}
 		};
 	}
@@ -273,16 +235,18 @@ public abstract class ValueFactories {
 	 * @return an {@link ValueFactory} which returns a random instance of the given type by using one of the supplied {@link ValueFactory} instances.
 	 */
 	public static <T> ValueFactory<T> oneOf(final Collection<ValueFactory<T>> factories) {
-		return new ValueFactory<T>() {
-
-			private final List<ValueFactory<T>> candidates = new ArrayList<ValueFactory<T>>(factories);
-
-			public T createValue() {
-				return candidates.get(nextInt(candidates.size())).createValue();
-			}
-		};
+		return () -> new ArrayList<ValueFactory<T>>(factories).get(nextInt(factories.size())).createValue();
 	}
 
+	/**
+	 * Creates an {@link ValueFactory} which returns a random instance of the given type by using one of the supplied {@link ValueFactory} instances.
+	 * @param factories the factories to select from when creating the random value
+	 * @return an {@link ValueFactory} which returns a random instance of the given type by using one of the supplied {@link ValueFactory} instances.
+	 */
+	public static <T> ValueFactory<T> oneOf(final List<ValueFactory<T>> factories) {
+		return () -> factories.get(nextInt(factories.size())).createValue();
+	}
+	
 	/**
 	 * Creates an {@link ValueFactory} which randomly returns one of the supplied instances.
 	 * @param instances the instances to select from when creating the random value
@@ -290,12 +254,6 @@ public abstract class ValueFactories {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> ValueFactory<T> oneOf(final T... instances) {
-		return new ValueFactory<T>() {
-
-			public T createValue() {
-				return instances[nextInt(instances.length)];
-			}
-		};
+		return () -> instances[nextInt(instances.length)];
 	}
-
 }

@@ -8,6 +8,7 @@ package org.exparity.stub.core;
  * 
  * @author Stewart Bissett
  */
+@FunctionalInterface
 public interface ValueFactory<T> {
 
 	/**

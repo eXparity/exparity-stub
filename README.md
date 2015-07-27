@@ -13,12 +13,12 @@ A maven project
     <dependency>
         <groupId>org.exparity</groupId>
         <artifactId>exparity-stub</artifactId>
-        <version>1.1.3</version>
+        <version>2.0.0</version>
     </dependency>
 
 A project which uses ivy for dependency management
 
-    <dependency org="org.exparity" name="exparity-stub" rev="1.1.3"/>
+    <dependency org="org.exparity" name="exparity-stub" rev="2.0.0"/>
             
 Usage
 -------------
@@ -65,7 +65,11 @@ The RandomBuilder class includes includes factory methods for:
 * __aRandomByteArray__ - Create a random byte[]
 * __aRandomChar__ - Create a random Character
 * __aRandomCollectionOf__ - Create a random collection of a class which implements the Java Beans getters and setters
-* __aRandomDate__ - Create a random Boolean
+* __aRandomDate__ - Create a random Date
+* __aRandomLocalDate__ - Create a random LocalDate
+* __aRandomLocalDateTime__ - Create a random LocalDateTime
+* __aRandomZonedDateTime__ - Create a random ZonedDateTime
+* __aRandomInstant__ - Create a random Instant
 * __aRandomEnum__ - Create a random instance of an Enum
 * __aRandomDecimal__ - Create a random Boolean
 * __aRandomDouble__ - Create a random Double
@@ -101,6 +105,9 @@ The source includes a pom.xml for building with Maven
 
 Release Notes
 -------------
+Changes 1.1.6 -> 2.0.0
+  * Updates for Java 8. Add java.time.* types and annotate with @FunctionalInterface
+  
 Changes 1.1.2 -> 1.1.3
   * Bump version of exparity-bean to 1.0.3
 
