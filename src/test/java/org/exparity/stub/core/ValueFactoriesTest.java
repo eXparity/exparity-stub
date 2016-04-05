@@ -16,7 +16,7 @@ import java.util.Date;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.Car;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.EmptyEnum;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.FuelType;
-import org.exparity.stub.testutils.BeanBuilderTestTypes.NoDefaultConstructor;
+import org.exparity.stub.testutils.NoDefaultConstructor;
 import org.hamcrest.Matcher;
 import org.junit.Test;
 

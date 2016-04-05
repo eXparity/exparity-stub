@@ -26,12 +26,12 @@ import org.exparity.stub.testutils.BeanBuilderTestTypes.EmptyEnum;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.Engine;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.FuelType;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.Manager;
-import org.exparity.stub.testutils.BeanBuilderTestTypes.NoDefaultConstructor;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.Person;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.Shape;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.ShapeSorter;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.Square;
 import org.exparity.stub.testutils.CollectionOfGenerics;
+import org.exparity.stub.testutils.NoDefaultConstructor;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
@@ -437,5 +437,6 @@ public class RandomBuilderTest {
         CollectionOfGenerics result = RandomBuilder.aRandomInstanceOf(CollectionOfGenerics.class);
         assertThat(result.getValues(), not(empty()));
     }
+
 
 }
