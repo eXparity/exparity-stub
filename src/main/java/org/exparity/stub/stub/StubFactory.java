@@ -1,18 +1,15 @@
 package org.exparity.stub.stub;
 
-import static java.lang.reflect.Modifier.isFinal;
-
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.exparity.stub.core.ValueFactory;
-import org.exparity.stub.random.RandomBuilder;
-import org.exparity.stub.stub.Stub.CollectionSize;
+import org.apache.commons.lang.ArrayUtils;
+import org.objenesis.Objenesis;
+import org.objenesis.ObjenesisStd;
+import org.objenesis.instantiator.ObjectInstantiator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import net.sf.cglib.proxy.Callback;
+import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.MethodInterceptor;
 
 /**
  * @author Stewart Bissett
@@ -21,67 +18,49 @@ public class StubFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(StubFactory.class);
 
-    private final ProxyFactory proxyFactory = new ProxyFactory();
-
-    @SuppressWarnings("rawtypes")
-    public <T> T createPrototype(final Class<T> type,
-            final Map<Class<?>, ValueFactory> types,
-            final CollectionSize collectionSize) {
-        if (type.isEnum()) {
-            return RandomBuilder.aRandomInstanceOf(type);
-        } else if (isFinal(type.getModifiers())) {
+    public <T> T createPrototype(final StubDefinition definition) {
+        if (definition.isFinal()) {
             throw new IllegalArgumentException("Final classes cannot be prototyped");
-        } else if (isGenericType(type)) {
-            throw new IllegalArgumentException(
-                    "Use Expectamundo.prototype(final TypeReference<T> typeRef) method to create prototypes for generic types. See javadocs on method for example.");
         } else {
-            T proxy = createProxy(new Stub<T>(type, getGenericTypeArguments(type), this, types, collectionSize));
-            LOG.info("Proxied {} using [{}]", type.getSimpleName(), proxy);
+            T proxy = createProxy(new Stub<T>(definition, this));
+            LOG.info("Proxied {} using [{}]", definition.describe(), proxy);
             return proxy;
         }
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    public Object createPrototype(final Class<?> type,
-            final Map<Class<?>, ValueFactory> types,
-            final Map<String, Type> typeMap,
-            final CollectionSize collectionSize) {
-        if (isFinal(type.getModifiers())) {
-            throw new IllegalArgumentException("Final classes cannot be prototyped");
-        }
-        Stub prototype = new Stub(type, typeMap, this, types, collectionSize);
-        Object proxy = createProxy(prototype);
-        LOG.info("Proxied {} using [{}]", type.getSimpleName(), proxy);
-        return proxy;
+    private <T> T createProxy(final Stub<T> stub) {
+        return createProxy(stub.getRawType(), stub);
     }
 
-    private <T> T createProxy(final Stub<T> prototype) {
-        return proxyFactory.createProxy(prototype.getRawType(), prototype);
+    public <T> T createProxy(final Class<T> rawType, final MethodInterceptor callback, final Class<?>... interfaces) {
+        return createProxyInstance(createProxyType(rawType, callback, interfaces));
     }
 
-    private Map<String, Class<?>> getGenericTypeArguments(final Class<?> type) {
-        if (!isGenericType(type) && type.getGenericSuperclass() instanceof ParameterizedType) {
-            return getGenericTypeArguments(type.getGenericSuperclass());
+    private <T> T createProxyInstance(final Class<T> proxyType) {
+        Objenesis instantiatorFactory = new ObjenesisStd();
+        ObjectInstantiator<T> instanceFactory = instantiatorFactory.getInstantiatorOf(proxyType);
+        T instance = instanceFactory.newInstance();
+        LOG.debug("Produce Proxy Instance [{}] for [{}]", System.identityHashCode(instance), proxyType.getName());
+        return instance;
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> Class<T> createProxyType(final Class<T> rawType,
+            final MethodInterceptor callback,
+            final Class<?>... interfaces) {
+        Enhancer classFactory = new Enhancer();
+        if (rawType.isInterface()) {
+            classFactory.setInterfaces((Class[]) ArrayUtils.add(interfaces, rawType));
         } else {
-            return new HashMap<>();
-        }
-    }
-
-    private Map<String, Class<?>> getGenericTypeArguments(final Type genericType) {
-        Map<String, Class<?>> parameterizedTypes = new HashMap<String, Class<?>>();
-        if (genericType instanceof ParameterizedType) {
-            Type[] typeArguments = ((ParameterizedType) genericType).getActualTypeArguments();
-            TypeVariable<?>[] typeKeys = ((Class<?>) ((ParameterizedType) genericType).getRawType())
-                    .getTypeParameters();
-            for (int i = 0; i < typeKeys.length; ++i) {
-                parameterizedTypes.put(typeKeys[i].getName(), (Class<?>) typeArguments[i]);
+            classFactory.setSuperclass(rawType);
+            if (interfaces.length > 0) {
+                classFactory.setInterfaces(interfaces);
             }
-            return parameterizedTypes;
         }
-        return parameterizedTypes;
+        classFactory.setCallbackType(callback.getClass());
+        Class<T> proxyType = classFactory.createClass();
+        Enhancer.registerCallbacks(proxyType, new Callback[] { callback });
+        return proxyType;
     }
 
-    private <T> boolean isGenericType(final Class<T> type) {
-        return type.getTypeParameters() != null && type.getTypeParameters().length > 0;
-    }
 }

@@ -3,21 +3,19 @@ package org.exparity.stub.stub;
 import static org.exparity.stub.core.ValueFactories.aNewInstanceOf;
 import static org.exparity.stub.core.ValueFactories.oneOf;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.exparity.stub.core.ValueFactory;
-import org.exparity.stub.stub.Stub.CollectionSize;
 
 /**
- * Builder object for instantiating and populating objects which follow the Java
- * beans standards conventions for getter/setters
+ * Builder object for creating a stub object which returns random values for all
+ * calls
  *
  * @author Stewart Bissett
  */
-@SuppressWarnings({ "rawtypes", "unchecked" })
+@SuppressWarnings("unchecked")
 public class StubBuilder<T> {
 
     /**
@@ -25,24 +23,58 @@ public class StubBuilder<T> {
      * populated with random values. For example:
      *
      * <pre>
-     * Person aPerson = BeanBuilder.aRandomInstanceOf(Person.class)
-     * 		.path("person.firstName", "Bob")
-     * 		.build()
+     * Person aPerson = StubBuilder.aRandomInstanceOf(Person.class).build()
      * </pre>
      *
      * @param type the type to return the {@link StubBuilder} for
      */
     public static <T> StubBuilder<T> aRandomStubOf(final Class<T> type) {
+        if (isGenericType(type)) {
+            throw new IllegalArgumentException(
+                    "Use StubBuilder.aRandomStubOf(final TypeReference<T> typeRef) method to create prototypes for generic types. See javadocs on method for example.");
+        }
         return new StubBuilder<T>(type);
     }
 
-    private final Map<Class<?>, ValueFactory> types = new HashMap<Class<?>, ValueFactory>();
-    private final Class<T> type;
-    private CollectionSize collectionSize = new CollectionSize(1, 5);
+    /**
+     * Create a new prototype instance against a generic type against which
+     * expectations can be set. For example
+     * </p>
+     *
+     * <pre>
+     * List&lt;String&gt; expected = Expectamundo.prototype(new TypeReference&lt;List&lt;String&gt;&gt;(){})
+     * </pre>
+     *
+     * @param typeRef An instance of a {@link TypeReference} parameterized with
+     *            the type to prototype
+     * @param <T> The class of the prototype to create
+     * @return A new instance of the type against which expectations can be set
+     */
+
+    /**
+     * Return an instance of a {@link StubBuilder} for the given generic type
+     * which is populated with random values. For example:
+     *
+     * <pre>
+     * MyType<String> value = StubBuilder.aRandomInstanceOf(new TypeReference&lt;MyType&lt;String&gt;&gt;(){})
+     *      .build()
+     * </pre>
+     *
+     * @param type the type to return the {@link StubBuilder} for
+     */
+    public static <T> StubBuilder<T> aRandomStubOf(final TypeReference<T> type) {
+        return new StubBuilder<T>(type.getType());
+    }
+
+    private final StubDefinition definition;
     private final StubFactory factory = new StubFactory();
 
-    private StubBuilder(final Class<T> type) {
-        this.type = type;
+    private StubBuilder(final Type type) {
+        this.definition = new StubDefinition(type);
+    }
+
+    private StubBuilder(final Class<?> type) {
+        this.definition = new StubDefinition(type);
     }
 
     /**
@@ -51,7 +83,7 @@ public class StubBuilder<T> {
      * </p>
      *
      * <pre>
-     * Person aPerson = BeanBuilder.aRandomInstanceOf(Person.class)
+     * Person aPerson = StubBuilder.aRandomInstanceOf(Person.class)
      *                        .with(Date.class, ValueFactories.oneOf(APR(5,1975), APR(5,1985)))
      *                        .build()
      * </pre>
@@ -60,7 +92,7 @@ public class StubBuilder<T> {
      * @param factory the factory to use to create the value
      */
     public <V> StubBuilder<T> with(final Class<V> type, final ValueFactory<V> factory) {
-        this.types.put(type, factory);
+        definition.addOverride(type, factory);
         return this;
     }
 
@@ -70,7 +102,7 @@ public class StubBuilder<T> {
      * </p>
      *
      * <pre>
-     * Person aPerson = BeanBuilder.aRandomInstanceOf(Person.class)
+     * Person aPerson = StubBuilder.aRandomInstanceOf(Person.class)
      *                        .factory(Date.class, ValueFactories.oneOf(APR(5,1975), APR(5,1985)))
      *                        .build()
      * </pre>
@@ -79,7 +111,7 @@ public class StubBuilder<T> {
      * @param factory the factory to use to create the value
      */
     public <X> StubBuilder<T> factory(final Class<X> type, final ValueFactory<X> factory) {
-        types.put(type, factory);
+        definition.addOverride(type, factory);
         return this;
     }
 
@@ -88,7 +120,7 @@ public class StubBuilder<T> {
      * </p>
      *
      * <pre>
-     * Person aPerson = BeanBuilder.aRandomInstanceOf(Person.class)
+     * Person aPerson = StubBuilder.aRandomInstanceOf(Person.class)
      *                        .collectionSizeOf(5)
      *                        .build()
      * </pre>
@@ -105,7 +137,7 @@ public class StubBuilder<T> {
      * </p>
      *
      * <pre>
-     * Person aPerson = BeanBuilder.aRandomInstanceOf(Person.class)
+     * Person aPerson = StubBuilder.aRandomInstanceOf(Person.class)
      *                        .collectionSizeRangeOf(2,10)
      *                        .build()
      * </pre>
@@ -114,7 +146,7 @@ public class StubBuilder<T> {
      * @param max the maximum size to create the collections
      */
     public StubBuilder<T> collectionSizeRangeOf(final int min, final int max) {
-        this.collectionSize = new CollectionSize(min, max);
+        this.definition.setCollectionSizeRange(min, max);
         return this;
     }
 
@@ -124,7 +156,7 @@ public class StubBuilder<T> {
      * </p>
      *
      * <pre>
-     * ShapeSorter aSorter = BeanBuilder.aRandomInstanceOf(ShapeSorter.class)
+     * ShapeSorter aSorter = StubBuilder.aRandomInstanceOf(ShapeSorter.class)
      *                        .subtype(Shape.class, Square.class)
      *                        .build()
      * </pre>
@@ -142,7 +174,7 @@ public class StubBuilder<T> {
      * </p>
      *
      * <pre>
-     * ShapeSorter aSorter = BeanBuilder.aRandomInstanceOf(ShapeSorter.class)
+     * ShapeSorter aSorter = StubBuilder.aRandomInstanceOf(ShapeSorter.class)
      *                        .subtype(Shape.class, Square.class, Circle.class, Triangle.class)
      *                        .build()
      * </pre>
@@ -160,14 +192,11 @@ public class StubBuilder<T> {
      * </p>
      *
      * <pre>
-     * Person aPerson = BeanBuilder.aRandomInstanceOf(Person.class)
-     *                        .path("person.firstName", "Bob")
-     *                        .path("person.age", oneOf(25,35))
-     *                        .build()
+     * Person aPerson = StubBuilder.aRandomInstanceOf(Person.class).build()
      * </pre>
      */
     public T build() {
-        return factory.createPrototype(type, types, collectionSize);
+        return factory.createPrototype(definition);
     }
 
     private <X> List<ValueFactory<X>> createInstanceOfFactoriesForTypes(final Class<? extends X>... subtypes) {
@@ -177,4 +206,9 @@ public class StubBuilder<T> {
         }
         return factories;
     }
+
+    private static boolean isGenericType(final Class<?> type) {
+        return type.getTypeParameters() != null && type.getTypeParameters().length > 0;
+    }
+
 }

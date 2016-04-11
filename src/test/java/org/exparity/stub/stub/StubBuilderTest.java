@@ -20,6 +20,7 @@ import org.exparity.stub.testutils.BeanBuilderTestTypes.ShapeSorter;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.Square;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.Wheel;
 import org.exparity.stub.testutils.CollectionOfGenerics;
+import org.exparity.stub.testutils.GenericType;
 import org.exparity.stub.testutils.NoDefaultConstructor;
 import org.exparity.stub.testutils.PrivateConstructor;
 import org.hamcrest.Matchers;
@@ -80,8 +81,7 @@ public class StubBuilderTest {
     @Test
     @SuppressWarnings("unchecked")
     public void canSetOneOrMoreSubTypes() {
-        ShapeSorter shapeSorter = aRandomStubOf(ShapeSorter.class)
-                .subtype(Shape.class, Square.class, Circle.class)
+        ShapeSorter shapeSorter = aRandomStubOf(ShapeSorter.class).subtype(Shape.class, Square.class, Circle.class)
                 .build();
         assertThat(shapeSorter.getShape(), anyOf(instanceOf(Square.class), instanceOf(Circle.class)));
     }
@@ -109,6 +109,18 @@ public class StubBuilderTest {
     public void canCreateAnInstanceWithGenericTypes() {
         CollectionOfGenerics instance = aRandomStubOf(CollectionOfGenerics.class).build();
         assertThat(instance.getValues(), not(empty()));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void canFailToCreateAnInstanceOfAGenericType() {
+        GenericType instance = aRandomStubOf(GenericType.class).build();
+        assertThat(instance.getValue(), notNullValue());
+    }
+
+    @Test
+    public void canCreateAnInstanceOfAGenericTypeUsingTypeReference() {
+        GenericType<String> instance = aRandomStubOf(new TypeReference<GenericType<String>>() {}).build();
+        assertThat(instance.getValue(), notNullValue());
     }
 
 }
