@@ -13,7 +13,12 @@ import java.util.Optional;
 
 import org.exparity.stub.core.ValueFactory;
 
-public class StubDefinition {
+/**
+ * Encapsulate the definition of the stub to be created by the {@link StubFactory}
+ *
+ * @author Stewart Bissett
+ */
+class StubDefinition {
 
     private final Map<String, Type> typeParameters = new HashMap<>();
     private final Type type;
@@ -21,10 +26,12 @@ public class StubDefinition {
     private int collectionSizeMin = 1, collectionSizeMax = 5;
 
     public StubDefinition(final Type type, final StubDefinition parent) {
-        this(type);
-        overrides.putAll(parent.overrides);
-        collectionSizeMin = parent.collectionSizeMin;
-        collectionSizeMax = parent.collectionSizeMax;
+        this.type = type;
+        this.typeParameters.putAll(parent.typeParameters);
+        this.typeParameters.putAll(getTypeArguments(type));
+        this.overrides.putAll(parent.overrides);
+        this.collectionSizeMin = parent.collectionSizeMin;
+        this.collectionSizeMax = parent.collectionSizeMax;
     }
 
     public StubDefinition(final Type type) {
@@ -45,20 +52,20 @@ public class StubDefinition {
     }
 
     public Class<?> getActualType() {
-        return getActualType(type);
+        return getActualType(this.type);
     }
 
     public Type getRawType() {
-        return type;
+        return this.type;
     }
 
     public void setCollectionSizeRange(final int min, final int max) {
-        collectionSizeMin = min;
-        collectionSizeMax = max;
+        this.collectionSizeMin = min;
+        this.collectionSizeMax = max;
     }
 
     public <T> void addOverride(final Class<T> type, final ValueFactory<T> factory) {
-        overrides.put(type, factory);
+        this.overrides.put(type, factory);
     }
 
     public Class<?> getActualType(final Type type) {
@@ -74,7 +81,7 @@ public class StubDefinition {
     }
 
     public Type getTypeByParameter(final String typeVariable) {
-        Type type = typeParameters.get(typeVariable);
+        Type type = this.typeParameters.get(typeVariable);
         if (type != null) {
             return type;
         } else {
@@ -88,18 +95,6 @@ public class StubDefinition {
         } else {
             return new HashMap<>();
         }
-    }
-
-//    private static Map<String, Type> getTypeArguments(final Class<?> type) {
-//        if (isGenericType(type) && type.getGenericSuperclass() instanceof ParameterizedType) {
-//            return getTypeArguments((ParameterizedType) type.getGenericSuperclass());
-//        } else {
-//            return new HashMap<>();
-//        }
-//    }
-
-    private static <T> boolean isGenericType(final Class<T> type) {
-        return type.getTypeParameters() != null && type.getTypeParameters().length > 0;
     }
 
     private static Map<String, Type> getTypeArguments(final ParameterizedType genericType) {
@@ -118,12 +113,12 @@ public class StubDefinition {
     }
 
     public int aRandomCollectionSize() {
-        return (collectionSizeMin == collectionSizeMax) ? collectionSizeMin : aRandomInteger(collectionSizeMin,
-                collectionSizeMax);
+        return (this.collectionSizeMin == this.collectionSizeMax) ? this.collectionSizeMin : aRandomInteger(
+                this.collectionSizeMin, this.collectionSizeMax);
     }
 
     public Optional<ValueFactory<?>> getOverrideValueFactoryByType(final Class<?> type) {
-        for (Entry<Class<?>, ValueFactory<?>> keyedFactory : overrides.entrySet()) {
+        for (Entry<Class<?>, ValueFactory<?>> keyedFactory : this.overrides.entrySet()) {
             if (type.isAssignableFrom(keyedFactory.getKey())) {
                 return Optional.of(keyedFactory.getValue());
             }

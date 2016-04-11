@@ -73,8 +73,9 @@ class Stub<T> implements MethodInterceptor {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public Class<T> getRawType() {
-        return (Class<T>) definition.getActualType();
+        return (Class<T>) this.definition.getActualType();
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -106,7 +107,7 @@ class Stub<T> implements MethodInterceptor {
                 } else if (type.isEnum()) {
                     return (E) aRandomEnum(type).createValue();
                 } else {
-                    return (E) this.factory.createPrototype(definition);
+                    return (E) this.factory.createStub(definition);
                 }
             }
         }
@@ -114,9 +115,9 @@ class Stub<T> implements MethodInterceptor {
     }
 
     private <E> Object createArray(final Class<E> type) {
-        Object array = Array.newInstance(type, definition.aRandomCollectionSize());
+        Object array = Array.newInstance(type, this.definition.aRandomCollectionSize());
         for (int i = 0; i < Array.getLength(array); ++i) {
-            Array.set(array, i, createValue(new StubDefinition(type, definition)));
+            Array.set(array, i, createValue(new StubDefinition(type, this.definition)));
         }
         return array;
     }
@@ -124,7 +125,7 @@ class Stub<T> implements MethodInterceptor {
     private <E> Set<E> createSet(final Type type, final int length) {
         Set<E> set = new HashSet<E>();
         for (int i = 0; i < length; ++i) {
-            E value = createValue(new StubDefinition(type, definition));
+            E value = createValue(new StubDefinition(type, this.definition));
             if (value != null) {
                 set.add(value);
             }
@@ -135,7 +136,7 @@ class Stub<T> implements MethodInterceptor {
     private <E> List<E> createList(final Type type, final int length) {
         List<E> list = new ArrayList<E>();
         for (int i = 0; i < length; ++i) {
-            E value = createValue(new StubDefinition(type, definition));
+            E value = createValue(new StubDefinition(type, this.definition));
             if (value != null) {
                 list.add(value);
             }
@@ -146,9 +147,9 @@ class Stub<T> implements MethodInterceptor {
     private <K, V> Map<K, V> createMap(final Type keyType, final Type valueType, final int length) {
         Map<K, V> map = new HashMap<K, V>();
         for (int i = 0; i < length; ++i) {
-            K key = createValue(new StubDefinition(keyType, definition));
+            K key = createValue(new StubDefinition(keyType, this.definition));
             if (key != null) {
-                map.put(key, createValue(new StubDefinition(valueType, definition)));
+                map.put(key, createValue(new StubDefinition(valueType, this.definition)));
             }
         }
         return map;
@@ -169,6 +170,6 @@ class Stub<T> implements MethodInterceptor {
 
     @Override
     public String toString() {
-        return "Stub [" + definition.describe() + "]";
+        return "Stub [" + this.definition.describe() + "]";
     }
 }

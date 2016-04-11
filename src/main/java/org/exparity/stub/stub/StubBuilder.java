@@ -196,7 +196,7 @@ public class StubBuilder<T> {
      * </pre>
      */
     public T build() {
-        return factory.createPrototype(definition);
+        return factory.createStub(definition);
     }
 
     private <X> List<ValueFactory<X>> createInstanceOfFactoriesForTypes(final Class<? extends X>... subtypes) {

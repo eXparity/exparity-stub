@@ -14,11 +14,11 @@ import net.sf.cglib.proxy.MethodInterceptor;
 /**
  * @author Stewart Bissett
  */
-public class StubFactory {
+class StubFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(StubFactory.class);
 
-    public <T> T createPrototype(final StubDefinition definition) {
+    public <T> T createStub(final StubDefinition definition) {
         if (definition.isFinal()) {
             throw new IllegalArgumentException("Final classes cannot be prototyped");
         } else {
