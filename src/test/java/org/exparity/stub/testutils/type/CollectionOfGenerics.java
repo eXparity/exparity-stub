@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.exparity.stub.testutils;
+package org.exparity.stub.testutils.type;
 
 import java.util.ArrayList;
 import java.util.List;
