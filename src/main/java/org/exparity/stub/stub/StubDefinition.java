@@ -18,14 +18,14 @@ import org.exparity.stub.core.ValueFactory;
  *
  * @author Stewart Bissett
  */
-class StubDefinition {
+class StubDefinition<T> {
 
     private final Map<String, Type> typeParameters = new HashMap<>();
     private final Type type;
     private final Map<Class<?>, ValueFactory<?>> overrides = new HashMap<>();
     private int collectionSizeMin = 1, collectionSizeMax = 5;
 
-    public StubDefinition(final Type type, final StubDefinition parent) {
+    public StubDefinition(final Type type, final StubDefinition<?> parent) {
         this.type = type;
         this.typeParameters.putAll(parent.typeParameters);
         this.typeParameters.putAll(getTypeArguments(type));
@@ -51,7 +51,7 @@ class StubDefinition {
         return Modifier.isFinal(getActualType().getModifiers());
     }
 
-    public Class<?> getActualType() {
+    public Class<T> getActualType() {
         return getActualType(this.type);
     }
 
@@ -64,15 +64,16 @@ class StubDefinition {
         this.collectionSizeMax = max;
     }
 
-    public <T> void addOverride(final Class<T> type, final ValueFactory<T> factory) {
+    public <O> void addOverride(final Class<O> type, final ValueFactory<O> factory) {
         this.overrides.put(type, factory);
     }
 
-    public Class<?> getActualType(final Type type) {
+    @SuppressWarnings("unchecked")
+    public Class<T> getActualType(final Type type) {
         if (type instanceof Class) {
-            return (Class<?>) type;
+            return (Class<T>) type;
         } else if (type instanceof ParameterizedType) {
-            return (Class<?>) ((ParameterizedType) type).getRawType();
+            return (Class<T>) ((ParameterizedType) type).getRawType();
         } else if (type instanceof TypeVariable<?>) {
             return getActualType(getTypeByParameter(((TypeVariable<?>) type).getName()));
         } else {

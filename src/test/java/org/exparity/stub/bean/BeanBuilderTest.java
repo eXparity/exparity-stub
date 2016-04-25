@@ -6,7 +6,7 @@ import org.exparity.beans.core.BeanProperty;
 import org.exparity.beans.core.BeanPropertyException;
 import org.exparity.beans.core.BeanVisitor;
 import org.exparity.stub.core.ValueFactory;
-import org.exparity.stub.testutils.BeanBuilderTestTypes.AllTypes;
+import org.exparity.stub.testutils.AllTypes;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.Car;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.Circle;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.Employee;

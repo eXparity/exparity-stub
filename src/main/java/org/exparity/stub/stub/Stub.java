@@ -7,6 +7,11 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -24,10 +29,9 @@ import org.slf4j.LoggerFactory;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
-@SuppressWarnings("rawtypes")
 class Stub<T> implements MethodInterceptor {
 
-    @SuppressWarnings("serial")
+    @SuppressWarnings({ "serial", "rawtypes" })
     private static final Map<Class<?>, ValueFactory> RANDOM_FACTORIES = new HashMap<Class<?>, ValueFactory>() {
         {
             put(Short.class, aRandomShort());
@@ -49,15 +53,20 @@ class Stub<T> implements MethodInterceptor {
             put(String.class, aRandomString());
             put(BigDecimal.class, aRandomDecimal());
             put(Date.class, aRandomDate());
+            put(LocalDate.class, aRandomLocalDate());
+            put(LocalTime.class, aRandomLocalTime());
+            put(LocalDateTime.class, aRandomLocalDateTime());
+            put(ZonedDateTime.class, aRandomZonedDateTime());
+            put(Instant.class, aRandomInstant());
         }
     };
 
     private static final Logger LOG = LoggerFactory.getLogger(Stub.class);
 
-    private final StubDefinition definition;
+    private final StubDefinition<T> definition;
     private final StubFactory factory;
 
-    public Stub(final StubDefinition definition, final StubFactory factory) {
+    public Stub(final StubDefinition<T> definition, final StubFactory factory) {
         this.definition = definition;
         this.factory = factory;
     }
@@ -67,19 +76,18 @@ class Stub<T> implements MethodInterceptor {
             throws Throwable {
         if (isProxiableMethod(method)) {
             LOG.info("Intercept [{}]", proxy.getSignature());
-            return createValue(new StubDefinition(method.getGenericReturnType(), this.definition));
+            return createValue(new StubDefinition<>(method.getGenericReturnType(), this.definition));
         } else {
             return proxy.invokeSuper(obj, args);
         }
     }
 
-    @SuppressWarnings("unchecked")
     public Class<T> getRawType() {
-        return (Class<T>) this.definition.getActualType();
+        return this.definition.getActualType();
     }
 
     @SuppressWarnings({ "unchecked" })
-    private <E> E createValue(final StubDefinition definition) {
+    private <E> E createValue(final StubDefinition<E> definition) {
 
         Class<?> type = definition.getActualType();
         Optional<ValueFactory<?>> override = definition.getOverrideValueFactoryByType(type);
@@ -101,13 +109,13 @@ class Stub<T> implements MethodInterceptor {
                 Type elementType = definition.getTypeByParameter("E");
                 return (E) createList(elementType, definition.aRandomCollectionSize());
             } else {
-                ValueFactory factory = RANDOM_FACTORIES.get(type);
+                ValueFactory<?> factory = RANDOM_FACTORIES.get(type);
                 if (factory != null) {
                     return (E) factory.createValue();
                 } else if (type.isEnum()) {
                     return (E) aRandomEnum(type).createValue();
                 } else {
-                    return (E) this.factory.createStub(definition);
+                    return this.factory.createStub(definition);
                 }
             }
         }
@@ -117,7 +125,7 @@ class Stub<T> implements MethodInterceptor {
     private <E> Object createArray(final Class<E> type) {
         Object array = Array.newInstance(type, this.definition.aRandomCollectionSize());
         for (int i = 0; i < Array.getLength(array); ++i) {
-            Array.set(array, i, createValue(new StubDefinition(type, this.definition)));
+            Array.set(array, i, createValue(new StubDefinition<E>(type, this.definition)));
         }
         return array;
     }
@@ -125,7 +133,7 @@ class Stub<T> implements MethodInterceptor {
     private <E> Set<E> createSet(final Type type, final int length) {
         Set<E> set = new HashSet<E>();
         for (int i = 0; i < length; ++i) {
-            E value = createValue(new StubDefinition(type, this.definition));
+            E value = createValue(new StubDefinition<E>(type, this.definition));
             if (value != null) {
                 set.add(value);
             }
@@ -136,7 +144,7 @@ class Stub<T> implements MethodInterceptor {
     private <E> List<E> createList(final Type type, final int length) {
         List<E> list = new ArrayList<E>();
         for (int i = 0; i < length; ++i) {
-            E value = createValue(new StubDefinition(type, this.definition));
+            E value = createValue(new StubDefinition<E>(type, this.definition));
             if (value != null) {
                 list.add(value);
             }
@@ -147,9 +155,9 @@ class Stub<T> implements MethodInterceptor {
     private <K, V> Map<K, V> createMap(final Type keyType, final Type valueType, final int length) {
         Map<K, V> map = new HashMap<K, V>();
         for (int i = 0; i < length; ++i) {
-            K key = createValue(new StubDefinition(keyType, this.definition));
+            K key = createValue(new StubDefinition<K>(keyType, this.definition));
             if (key != null) {
-                map.put(key, createValue(new StubDefinition(valueType, this.definition)));
+                map.put(key, createValue(new StubDefinition<V>(valueType, this.definition)));
             }
         }
         return map;

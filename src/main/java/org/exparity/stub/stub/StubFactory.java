@@ -1,6 +1,5 @@
 package org.exparity.stub.stub;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 import org.objenesis.instantiator.ObjectInstantiator;
@@ -18,7 +17,7 @@ class StubFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(StubFactory.class);
 
-    public <T> T createStub(final StubDefinition definition) {
+    public <T> T createStub(final StubDefinition<T> definition) {
         if (definition.isFinal()) {
             throw new IllegalArgumentException("Final classes cannot be prototyped");
         } else {
@@ -32,8 +31,8 @@ class StubFactory {
         return createProxy(stub.getRawType(), stub);
     }
 
-    public <T> T createProxy(final Class<T> rawType, final MethodInterceptor callback, final Class<?>... interfaces) {
-        return createProxyInstance(createProxyType(rawType, callback, interfaces));
+    public <T> T createProxy(final Class<T> rawType, final MethodInterceptor callback) {
+        return createProxyInstance(createProxyType(rawType, callback));
     }
 
     private <T> T createProxyInstance(final Class<T> proxyType) {
@@ -45,17 +44,12 @@ class StubFactory {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> Class<T> createProxyType(final Class<T> rawType,
-            final MethodInterceptor callback,
-            final Class<?>... interfaces) {
+    private <T> Class<T> createProxyType(final Class<T> rawType, final MethodInterceptor callback) {
         Enhancer classFactory = new Enhancer();
         if (rawType.isInterface()) {
-            classFactory.setInterfaces((Class[]) ArrayUtils.add(interfaces, rawType));
+            classFactory.setInterfaces(new Class[] { rawType });
         } else {
             classFactory.setSuperclass(rawType);
-            if (interfaces.length > 0) {
-                classFactory.setInterfaces(interfaces);
-            }
         }
         classFactory.setCallbackType(callback.getClass());
         Class<T> proxyType = classFactory.createClass();

@@ -18,7 +18,7 @@ import java.util.Set;
 
 import org.exparity.stub.core.ValueFactories;
 import org.exparity.stub.random.RandomBuilder.RandomRestriction;
-import org.exparity.stub.testutils.BeanBuilderTestTypes.AllTypes;
+import org.exparity.stub.testutils.AllTypes;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.Car;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.Circle;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.Employee;

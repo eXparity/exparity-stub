@@ -66,15 +66,15 @@ public class StubBuilder<T> {
         return new StubBuilder<T>(type.getType());
     }
 
-    private final StubDefinition definition;
+    private final StubDefinition<T> definition;
     private final StubFactory factory = new StubFactory();
 
     private StubBuilder(final Type type) {
-        this.definition = new StubDefinition(type);
+        this.definition = new StubDefinition<T>(type);
     }
 
-    private StubBuilder(final Class<?> type) {
-        this.definition = new StubDefinition(type);
+    private StubBuilder(final Class<T> type) {
+        this.definition = new StubDefinition<T>(type);
     }
 
     /**
@@ -92,7 +92,7 @@ public class StubBuilder<T> {
      * @param factory the factory to use to create the value
      */
     public <V> StubBuilder<T> with(final Class<V> type, final ValueFactory<V> factory) {
-        definition.addOverride(type, factory);
+        this.definition.addOverride(type, factory);
         return this;
     }
 
@@ -111,7 +111,7 @@ public class StubBuilder<T> {
      * @param factory the factory to use to create the value
      */
     public <X> StubBuilder<T> factory(final Class<X> type, final ValueFactory<X> factory) {
-        definition.addOverride(type, factory);
+        this.definition.addOverride(type, factory);
         return this;
     }
 
@@ -196,7 +196,7 @@ public class StubBuilder<T> {
      * </pre>
      */
     public T build() {
-        return factory.createStub(definition);
+        return this.factory.createStub(this.definition);
     }
 
     private <X> List<ValueFactory<X>> createInstanceOfFactoriesForTypes(final Class<? extends X>... subtypes) {

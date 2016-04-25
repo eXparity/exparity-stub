@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.exparity.beans.core.BeanProperty;
 import org.exparity.beans.core.BeanVisitor;
-import org.exparity.stub.testutils.BeanBuilderTestTypes.AllTypes;
+import org.exparity.stub.testutils.AllTypes;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.Car;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.Circle;
 import org.exparity.stub.testutils.BeanBuilderTestTypes.Employee;
@@ -111,16 +111,36 @@ public class StubBuilderTest {
         assertThat(instance.getValues(), not(empty()));
     }
 
+    @SuppressWarnings("rawtypes")
     @Test(expected = IllegalArgumentException.class)
     public void canFailToCreateAnInstanceOfAGenericType() {
         GenericType instance = aRandomStubOf(GenericType.class).build();
         assertThat(instance.getValue(), notNullValue());
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void canFailToCreateAnInstanceOfAFinalType() {
+        String instance = aRandomStubOf(String.class).build();
+        assertThat(instance.toString(), notNullValue());
+    }
+
     @Test
     public void canCreateAnInstanceOfAGenericTypeUsingTypeReference() {
         GenericType<String> instance = aRandomStubOf(new TypeReference<GenericType<String>>() {}).build();
         assertThat(instance.getValue(), notNullValue());
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Test(expected = IllegalArgumentException.class)
+    public void canFailIfTypeNotSuppliedToTypeReference() {
+        GenericType instance = aRandomStubOf(new TypeReference<GenericType>() {}).build();
+        assertThat(instance.getValue(), notNullValue());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void canFailIfNonGenericTypeSuppliedToTypeReference() {
+        String instance = aRandomStubOf(new TypeReference<String>() {}).build();
+        assertThat(instance.toString(), notNullValue());
     }
 
 }

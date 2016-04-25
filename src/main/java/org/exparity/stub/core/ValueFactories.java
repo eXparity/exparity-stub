@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +21,7 @@ import org.exparity.stub.random.RandomBuilder;
 
 /**
  * Static factory for creating instances of {@link ValueFactory} and {@link ArrayFactory} for use in the {@link BeanBuilder} and {@link RandomBuilder}
- * 
+ *
  * @author Stewart Bissett
  */
 public abstract class ValueFactories {
@@ -121,6 +122,14 @@ public abstract class ValueFactories {
 	public static ValueFactory<LocalDateTime> aRandomLocalDateTime() {
 		return () -> RandomBuilder.aRandomLocalDateTime();
 	}
+
+	   /**
+     * Creates an {@link ValueFactory} which returns a random {@link LocalTime}.
+     * @return an {@link ValueFactory} which returns a random {@link LocalTime}.
+     */
+    public static ValueFactory<LocalTime> aRandomLocalTime() {
+        return () -> RandomBuilder.aRandomLocalTime();
+    }
 
 	/**
 	 * Creates an {@link ValueFactory} which returns a random {@link ZonedDateTime}.
@@ -246,7 +255,7 @@ public abstract class ValueFactories {
 	public static <T> ValueFactory<T> oneOf(final List<ValueFactory<T>> factories) {
 		return () -> factories.get(nextInt(factories.size())).createValue();
 	}
-	
+
 	/**
 	 * Creates an {@link ValueFactory} which randomly returns one of the supplied instances.
 	 * @param instances the instances to select from when creating the random value
