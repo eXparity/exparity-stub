@@ -88,7 +88,7 @@ The RandomBuilder class includes includes factory methods for:
 * __aRandomLong__ - Create a random Long
 * __aRandomShort__ - Create a random Short
 * __aRandomString__ - Create a random String
-* __aRandomStubOf__ - Create a random interface of an interface or non-bean class
+* __aRandomStubOf__ - Create a random instance or non-bean class
 
 It also includes factory methods for the restrictions to be applied when building an instance of an object:
 
@@ -108,9 +108,18 @@ How To Create Random Stub Interfaces
 
 If you are creating tests where you would like an interface or a non-bean class to return random values then the StubBuilder class can do this for you. It is ideal for unit testing where you are less concerned about the responses from the objects, and more that they respond with non null values.
 
+	Person aPerson = StubBuilder.aRandomStubOf(Person.class).build();
+	MyInterface service = StubBuilder.aRandomStubOf(MyInterface.class).with(mockService);
+
+You can override the instance returned by the stub for a given method by using the .with() method.
+
+    MyService mockService = Mockito.mock(MyService.class);
+    MyInterface service = StubBuilder.aRandomStubOf(MyInterface.class).with(mockService).build()
+
+A Stub can also be created using the RandomBuilder; 
+
 	MyInterface service = RandomBuilder.aRandomStubOf(MyInterface.class);
 	Person aPerson = RandomBuilder.aRandomStubOf(Person.class);
-
 
 Source
 ------
@@ -123,6 +132,12 @@ The source includes a pom.xml for building with Maven
 
 Release Notes
 -------------
+Changes 2.0.1 -> 2.0.2
+  * Add LocalTime support and implement with overrides for instance
+  
+Changes 2.0.0 -> 2.0.1
+  * Add StubBuilder
+  
 Changes 1.1.5 -> 2.0.0
   * Updates for Java 8. Add java.time.* types and annotate with @FunctionalInterface
   
