@@ -6,6 +6,8 @@ import static org.exparity.beans.Type.type;
 import static org.exparity.stub.core.ValueFactories.*;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -16,6 +18,8 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -61,7 +65,7 @@ public class BeanBuilder<T> {
      * @param type the type to return the {@link BeanBuilder} for
      */
     public static <T> BeanBuilder<T> anInstanceOf(final Class<T> type) {
-        return new BeanBuilder<T>(type, BeanBuilderType.NULL, new LowerCaseNamingStrategy());
+        return new BeanBuilder<>(type, BeanBuilderType.NULL, new LowerCaseNamingStrategy());
     }
 
     /**
@@ -78,7 +82,8 @@ public class BeanBuilder<T> {
      * @param rootName the name give to the root entity when referencing paths
      */
     public static <T> BeanBuilder<T> anInstanceOf(final Class<T> type, final String rootName) {
-        return new BeanBuilder<T>(type, BeanBuilderType.NULL,
+        return new BeanBuilder<>(type,
+                BeanBuilderType.NULL,
                 new ForceRootNameNamingStrategy(new LowerCaseNamingStrategy(), rootName));
     }
 
@@ -94,7 +99,7 @@ public class BeanBuilder<T> {
      * @param type the type to return the {@link BeanBuilder} for
      */
     public static <T> BeanBuilder<T> anEmptyInstanceOf(final Class<T> type) {
-        return new BeanBuilder<T>(type, BeanBuilderType.EMPTY, new LowerCaseNamingStrategy());
+        return new BeanBuilder<>(type, BeanBuilderType.EMPTY, new LowerCaseNamingStrategy());
     }
 
     /**
@@ -111,7 +116,8 @@ public class BeanBuilder<T> {
      * @param rootName the name give to the root entity when referencing paths
      */
     public static <T> BeanBuilder<T> anEmptyInstanceOf(final Class<T> type, final String rootName) {
-        return new BeanBuilder<T>(type, BeanBuilderType.EMPTY,
+        return new BeanBuilder<>(type,
+                BeanBuilderType.EMPTY,
                 new ForceRootNameNamingStrategy(new LowerCaseNamingStrategy(), rootName));
     }
 
@@ -128,7 +134,7 @@ public class BeanBuilder<T> {
      * @param type the type to return the {@link BeanBuilder} for
      */
     public static <T> BeanBuilder<T> aRandomInstanceOf(final Class<T> type) {
-        return new BeanBuilder<T>(type, BeanBuilderType.RANDOM, new LowerCaseNamingStrategy());
+        return new BeanBuilder<>(type, BeanBuilderType.RANDOM, new LowerCaseNamingStrategy());
     }
 
     /**
@@ -144,21 +150,22 @@ public class BeanBuilder<T> {
      * @param type the type to return the {@link BeanBuilder} for
      */
     public static <T> BeanBuilder<T> aRandomInstanceOf(final Class<T> type, final String rootName) {
-        return new BeanBuilder<T>(type, BeanBuilderType.RANDOM,
+        return new BeanBuilder<>(type,
+                BeanBuilderType.RANDOM,
                 new ForceRootNameNamingStrategy(new LowerCaseNamingStrategy(), rootName));
     }
 
-    private final Set<String> excludedProperties = new HashSet<String>();
-    private final Set<String> excludedPaths = new HashSet<String>();
-    private final Map<String, ValueFactory> paths = new HashMap<String, ValueFactory>();
-    private final Map<String, ValueFactory> properties = new HashMap<String, ValueFactory>();
-    private final Map<Class<?>, ValueFactory> types = new HashMap<Class<?>, ValueFactory>();
+    private final Set<String> excludedProperties = new HashSet<>();
+    private final Set<String> excludedPaths = new HashSet<>();
+    private final Map<String, ValueFactory> paths = new HashMap<>();
+    private final Map<String, ValueFactory> properties = new HashMap<>();
+    private final Map<Class<?>, ValueFactory> types = new HashMap<>();
     private final Class<T> type;
     private final BeanBuilderType builderType;
     private final BeanNamingStrategy naming;;
     private CollectionSize defaultCollectionSize = new CollectionSize(1, 5);
-    private final Map<String, CollectionSize> collectionSizeForPaths = new HashMap<String, CollectionSize>();
-    private final Map<String, CollectionSize> collectionSizeForProperties = new HashMap<String, CollectionSize>();
+    private final Map<String, CollectionSize> collectionSizeForPaths = new HashMap<>();
+    private final Map<String, CollectionSize> collectionSizeForProperties = new HashMap<>();
 
     private BeanBuilder(final Class<T> type, final BeanBuilderType builderType, final BeanNamingStrategy naming) {
         this.type = type;
@@ -498,7 +505,9 @@ public class BeanBuilder<T> {
      * </pre>
      */
     public T build() {
-        return populate(createNewInstance(), new BeanPropertyPath(this.naming.describeRoot(this.type)), new Stack(type(this.type)));
+        return populate(createNewInstance(),
+                new BeanPropertyPath(this.naming.describeRoot(this.type)),
+                new Stack(type(this.type)));
     }
 
     private <I> I populate(final I instance, final BeanPropertyPath path, final Stack stack) {
@@ -537,7 +546,7 @@ public class BeanBuilder<T> {
         } else {
             java.lang.reflect.Type[] params = property.getMutator().getGenericParameterTypes();
             java.lang.reflect.Type firstParam = params[0];
-            Class<?> typeParameter = getActualType(firstParam);
+            Class<?> typeParameter = getActualType(firstParam, 0);
             if (property.isMap()) {
                 property.setValue(instance,
                         createMap(typeParameter, property.getTypeParameter(1), collectionSize(path), path, stack));
@@ -551,11 +560,32 @@ public class BeanBuilder<T> {
         }
     }
 
-    private Class<? extends Object> getActualType(final java.lang.reflect.Type type) {
+    private Object[] createArguments(final java.lang.reflect.Type[] types) {
+        if (types.length == 0) {
+            return new Object[0];
+        } else {
+            Object[] args = new Object[types.length];
+            for (int i = 0; i < types.length; ++i) {
+                Type type = Type.type(getActualType(types[i], 0));
+                if (type.is(Map.class)) {
+                    args[i] = Collections.emptyMap();
+                } else if (type.is(Set.class)) {
+                    args[i] = Collections.emptySet();
+                } else if (type.is(List.class) || type.is(Collection.class)) {
+                    args[i] = Collections.emptyList();
+                } else {
+                    args[i] = createValue(getActualType(types[i], 0));
+                }
+            }
+            return args;
+        }
+    }
+
+    private Class<? extends Object> getActualType(final java.lang.reflect.Type type, final int typeOrdinal) {
         if (type instanceof Class) {
             return (Class<? extends Object>) type;
         } else if (type instanceof ParameterizedType) {
-            return getActualType(((ParameterizedType) type).getActualTypeArguments()[0]);
+            return getActualType(((ParameterizedType) type).getActualTypeArguments()[typeOrdinal], 0);
         } else {
             throw new IllegalArgumentException("Unknown type subclass '" + type.getClass());
         }
@@ -589,7 +619,8 @@ public class BeanBuilder<T> {
     }
 
     private ValueFactory factoryForPath(final TypeProperty property, final BeanPropertyPath path) {
-        return selectNotNull(this.paths.get(path.fullPath()), this.paths.get(path.fullPathWithNoIndexes()),
+        return selectNotNull(this.paths.get(path.fullPath()),
+                this.paths.get(path.fullPathWithNoIndexes()),
                 this.properties.get(property.getName()));
     }
 
@@ -598,7 +629,8 @@ public class BeanBuilder<T> {
     }
 
     private boolean isExcludedPath(final BeanPropertyPath path) {
-        return this.excludedPaths.contains(path.fullPath()) || this.excludedPaths.contains(path.fullPathWithNoIndexes());
+        return this.excludedPaths.contains(path.fullPath()) || this.excludedPaths.contains(path
+                .fullPathWithNoIndexes());
     }
 
     private boolean isChildOfAssignedPath(final BeanPropertyPath path) {
@@ -687,7 +719,7 @@ public class BeanBuilder<T> {
         switch (this.builderType) {
         case EMPTY:
         case RANDOM:
-            Set<E> set = new HashSet<E>();
+            Set<E> set = new HashSet<>();
             for (int i = 0; i < length; ++i) {
                 E value = populate(createValue(type), path.appendIndex(i), stack.append(type));
                 if (value != null) {
@@ -707,7 +739,7 @@ public class BeanBuilder<T> {
         switch (this.builderType) {
         case EMPTY:
         case RANDOM:
-            List<E> list = new ArrayList<E>();
+            List<E> list = new ArrayList<>();
             for (int i = 0; i < length; ++i) {
                 E value = populate(createValue(type), path.appendIndex(i), stack.append(type));
                 if (value != null) {
@@ -728,7 +760,7 @@ public class BeanBuilder<T> {
         switch (this.builderType) {
         case EMPTY:
         case RANDOM:
-            Map<K, V> map = new HashMap<K, V>();
+            Map<K, V> map = new HashMap<>();
             for (int i = 0; i < length; ++i) {
                 K key = populate(createValue(keyType), path.appendIndex(i), stack.append(keyType).append(valueType));
                 if (key != null) {
@@ -743,18 +775,33 @@ public class BeanBuilder<T> {
 
     private T createNewInstance() {
         try {
-            return this.type.newInstance();
-        } catch (InstantiationException e) {
-            throw new BeanBuilderException("Failed to instantiate '" + this.type + "'. Error [" + e.getMessage() + "]", e);
-        } catch (IllegalAccessException e) {
-            throw new BeanBuilderException("Failed to instantiate '" + this.type + "'. Error [" + e.getMessage() + "]", e);
+            Constructor<T> constructor = findConstructor();
+            java.lang.reflect.Type[] params = constructor.getGenericParameterTypes();
+            Object[] initargs = createArguments(params);
+            return constructor.newInstance(initargs);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new BeanBuilderException("Failed to instantiate '" + this.type + "'. Error [" + e.getMessage() + "]",
+                    e);
         }
+    }
+
+    private Constructor<T> findConstructor() {
+        List<Constructor<T>> constructors = Arrays.asList((Constructor<T>[]) this.type.getConstructors());
+        Collections.sort(constructors, new Comparator<Constructor<T>>() {
+
+            @Override
+            public int compare(final Constructor<T> o1, final Constructor<T> o2) {
+                return Integer.valueOf(o1.getParameterCount()).compareTo(o2.getParameterCount());
+            }
+        });
+        return constructors.get(0);
     }
 
     private int collectionSize(final BeanPropertyPath path) {
         return selectNotNull(this.collectionSizeForPaths.get(path.fullPath()),
                 this.collectionSizeForPaths.get(path.fullPathWithNoIndexes()),
-                this.collectionSizeForProperties.get(propertyName(path)), this.defaultCollectionSize).aRandomSize();
+                this.collectionSizeForProperties.get(propertyName(path)),
+                this.defaultCollectionSize).aRandomSize();
     }
 
     private String propertyName(final BeanPropertyPath path) {
@@ -762,7 +809,7 @@ public class BeanBuilder<T> {
     }
 
     private <X> List<ValueFactory<X>> createInstanceOfFactoriesForTypes(final Class<? extends X>... subtypes) {
-        List<ValueFactory<X>> factories = new ArrayList<ValueFactory<X>>();
+        List<ValueFactory<X>> factories = new ArrayList<>();
         for (Class<? extends X> subtype : subtypes) {
             factories.add((ValueFactory<X>) aNewInstanceOf(subtype));
         }

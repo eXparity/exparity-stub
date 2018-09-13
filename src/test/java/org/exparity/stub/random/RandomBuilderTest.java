@@ -26,6 +26,7 @@ import org.exparity.stub.testutils.type.Employee;
 import org.exparity.stub.testutils.type.EmptyEnum;
 import org.exparity.stub.testutils.type.Engine;
 import org.exparity.stub.testutils.type.FuelType;
+import org.exparity.stub.testutils.type.Immutable;
 import org.exparity.stub.testutils.type.Manager;
 import org.exparity.stub.testutils.type.NoDefaultConstructor;
 import org.exparity.stub.testutils.type.Person;
@@ -165,9 +166,8 @@ public class RandomBuilderTest {
 
     @Test
     public void canBuildARandomArrayOfEnums() {
-        assertThat(
-                aRandomArrayOfEnum(FuelType.class),
-                    hasItemInArray(isOneOf(FuelType.DIESEL, FuelType.PETROL, FuelType.LPG)));
+        assertThat(aRandomArrayOfEnum(FuelType.class),
+                hasItemInArray(isOneOf(FuelType.DIESEL, FuelType.PETROL, FuelType.LPG)));
     }
 
     @Test
@@ -237,9 +237,18 @@ public class RandomBuilderTest {
         assertThat(aRandomInstanceOf(AllTypes.class), any(AllTypes.class));
     }
 
-    @Test(expected = RandomBuilderException.class)
-    public void canBuildARandomInstanceOfAndFailIfNotDefaultConstructor() {
-        assertThat(aRandomInstanceOf(NoDefaultConstructor.class), any(NoDefaultConstructor.class));
+    @Test
+    public void canBuildARandomInstanceWithNoDefaultConstructor() {
+        NoDefaultConstructor instance = aRandomInstanceOf(NoDefaultConstructor.class);
+        assertThat(instance, any(NoDefaultConstructor.class));
+        assertThat(instance.getValue(), notNullValue());
+    }
+
+    @Test
+    public void canBuildARandomInstanceOfImmutableType() {
+        Immutable instance = aRandomInstanceOf(Immutable.class);
+        assertThat(instance, any(Immutable.class));
+        assertThat(instance.getValue(), notNullValue());
     }
 
     @Test
@@ -259,9 +268,8 @@ public class RandomBuilderTest {
     @Test
     public void canBuildARandomInstanceAndSetPropertyMixedCase() {
         BigDecimal capacity = new BigDecimal("1.8");
-        assertThat(
-                aRandomInstanceOf(Car.class, property("Capacity", capacity)).getEngine().getCapacity(),
-                    Matchers.equalTo(capacity));
+        assertThat(aRandomInstanceOf(Car.class, property("Capacity", capacity)).getEngine().getCapacity(),
+                Matchers.equalTo(capacity));
     }
 
     @Test
@@ -291,37 +299,33 @@ public class RandomBuilderTest {
     @Test
     public void canBuildARandomInstanceAndSetPathMixedCase() {
         BigDecimal capacity = new BigDecimal("1.8");
-        assertThat(
-                aRandomInstanceOf(Car.class, path("Car.Engine.Capacity", capacity)).getEngine().getCapacity(),
-                    Matchers.equalTo(capacity));
+        assertThat(aRandomInstanceOf(Car.class, path("Car.Engine.Capacity", capacity)).getEngine().getCapacity(),
+                Matchers.equalTo(capacity));
     }
 
     @Test
     public void canBuildARandomInstanceAndExcludePath() {
-        assertThat(
-                aRandomInstanceOf(Car.class, excludePath("car.engine.capacity")).getEngine().getCapacity(),
-                    nullValue());
+        assertThat(aRandomInstanceOf(Car.class, excludePath("car.engine.capacity")).getEngine().getCapacity(),
+                nullValue());
     }
 
     @Test
     public void canBuildARandomInstanceAndExcludePathMixedCase() {
-        assertThat(
-                aRandomInstanceOf(Car.class, excludePath("Car.Engine.Capacity")).getEngine().getCapacity(),
-                    nullValue());
+        assertThat(aRandomInstanceOf(Car.class, excludePath("Car.Engine.Capacity")).getEngine().getCapacity(),
+                nullValue());
     }
 
     @Test
     public void canBuildARandomInstanceSpecifySubType() {
-        assertThat(
-                aRandomInstanceOf(Employee.class, subtype(Person.class, Manager.class)).getManager(),
-                    instanceOf(Manager.class));
+        assertThat(aRandomInstanceOf(Employee.class, subtype(Person.class, Manager.class)).getManager(),
+                instanceOf(Manager.class));
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void canBuildARandomInstanceSpecifyTwoOrMoreSubType() {
-        ShapeSorter shapeSorter =
-                aRandomInstanceOf(ShapeSorter.class, subtype(Shape.class, Square.class, Circle.class));
+        ShapeSorter shapeSorter = aRandomInstanceOf(ShapeSorter.class,
+                subtype(Shape.class, Square.class, Circle.class));
         assertThat(shapeSorter.getShape(), anyOf(instanceOf(Square.class), instanceOf(Circle.class)));
     }
 
@@ -376,20 +380,18 @@ public class RandomBuilderTest {
     @Test
     public void canBuildARandomInstanceAndSetPathWithIndex() {
         Integer diameter = aRandomInteger();
-        Car car = aRandomInstanceOf(
-                Car.class,
-                    collectionSizeForPath("car.wheels", 4),
-                    path("car.wheels[3].diameter", diameter));
+        Car car = aRandomInstanceOf(Car.class,
+                collectionSizeForPath("car.wheels", 4),
+                path("car.wheels[3].diameter", diameter));
         assertThat(car.getWheels().get(3).getDiameter(), equalTo(diameter));
     }
 
     @Test
     public void canBuildARandomInstanceAndLimitCollectionSizeForPathWithIndex() {
         int nuts = aRandomInteger(6, 10);
-        Car car = aRandomInstanceOf(
-                Car.class,
-                    collectionSizeForPath("car.wheels", 4),
-                    collectionSizeForPath("car.wheels[2].nuts", nuts));
+        Car car = aRandomInstanceOf(Car.class,
+                collectionSizeForPath("car.wheels", 4),
+                collectionSizeForPath("car.wheels[2].nuts", nuts));
         assertThat(car.getWheels().get(2).getNuts(), hasSize(nuts));
     }
 
@@ -410,8 +412,8 @@ public class RandomBuilderTest {
     @Test
     public void canBuildARandomInstanceWithAListOfRestrictions() {
         int nuts = aRandomInteger(6, 10);
-        List<RandomRestriction> restrictions = Arrays
-                .asList(collectionSizeForPath("car.wheels", 4), collectionSizeForPath("car.wheels[2].nuts", nuts));
+        List<RandomRestriction> restrictions = Arrays.asList(collectionSizeForPath("car.wheels", 4),
+                collectionSizeForPath("car.wheels[2].nuts", nuts));
         Car car = aRandomInstanceOf(Car.class, restrictions);
         assertThat(car.getWheels().get(2).getNuts(), hasSize(nuts));
     }
@@ -437,6 +439,5 @@ public class RandomBuilderTest {
         CollectionOfGenerics result = RandomBuilder.aRandomInstanceOf(CollectionOfGenerics.class);
         assertThat(result.getValues(), not(empty()));
     }
-
 
 }

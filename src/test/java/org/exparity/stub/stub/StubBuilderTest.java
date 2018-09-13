@@ -92,6 +92,7 @@ public class StubBuilderTest {
         assertThat(instance.getValue(), notNullValue());
     }
 
+
     @Test
     @Ignore
     public void canCreateAnInstanceWithPrivateConstructor() {

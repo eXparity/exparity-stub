@@ -1,7 +1,15 @@
 package org.exparity.stub.bean;
 
+import static org.exparity.beans.Bean.bean;
+import static org.exparity.stub.bean.BeanBuilder.aRandomInstanceOf;
+import static org.exparity.stub.bean.BeanBuilder.anEmptyInstanceOf;
+import static org.exparity.stub.bean.BeanBuilder.anInstanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+
 import java.math.BigDecimal;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.exparity.beans.core.BeanProperty;
 import org.exparity.beans.core.BeanPropertyException;
 import org.exparity.beans.core.BeanVisitor;
@@ -11,6 +19,7 @@ import org.exparity.stub.testutils.type.Car;
 import org.exparity.stub.testutils.type.Circle;
 import org.exparity.stub.testutils.type.Employee;
 import org.exparity.stub.testutils.type.Engine;
+import org.exparity.stub.testutils.type.Immutable;
 import org.exparity.stub.testutils.type.Manager;
 import org.exparity.stub.testutils.type.NoDefaultConstructor;
 import org.exparity.stub.testutils.type.Person;
@@ -20,12 +29,6 @@ import org.exparity.stub.testutils.type.Square;
 import org.exparity.stub.testutils.type.Wheel;
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import static org.exparity.beans.Bean.bean;
-import static org.exparity.stub.bean.BeanBuilder.aRandomInstanceOf;
-import static org.exparity.stub.bean.BeanBuilder.anEmptyInstanceOf;
-import static org.exparity.stub.bean.BeanBuilder.anInstanceOf;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 
 /**
  * @author Stewart.Bissett
@@ -53,7 +56,8 @@ public class BeanBuilderTest {
 		AllTypes allTypes = aRandomInstanceOf(AllTypes.class).build();
 		bean(allTypes).visit(new BeanVisitor() {
 
-			public void visit(final BeanProperty property, final Object current, final Object[] stack, final AtomicBoolean stop) {
+			@Override
+            public void visit(final BeanProperty property, final Object current, final Object[] stack, final AtomicBoolean stop) {
 				assertThat("Expected " + property + " to not be null", property.getValue(), notNullValue());
 			}
 		});
@@ -64,7 +68,8 @@ public class BeanBuilderTest {
 		AllTypes allTypes = anInstanceOf(AllTypes.class).build();
 		bean(allTypes).visit(new BeanVisitor() {
 
-			public void visit(final BeanProperty property, final Object current, final Object[] stack, final AtomicBoolean stop) {
+			@Override
+            public void visit(final BeanProperty property, final Object current, final Object[] stack, final AtomicBoolean stop) {
 				if (!property.isPrimitive()) {
 					assertThat("Expected " + property + " to not be null", property.getValue(), nullValue());
 				}
@@ -77,7 +82,8 @@ public class BeanBuilderTest {
 		AllTypes allTypes = anEmptyInstanceOf(AllTypes.class).build();
 		bean(allTypes).visit(new BeanVisitor() {
 
-			public void visit(final BeanProperty property, final Object current, final Object[] stack, final AtomicBoolean stop) {
+			@Override
+            public void visit(final BeanProperty property, final Object current, final Object[] stack, final AtomicBoolean stop) {
 				if (!property.isCollection() && !property.isMap() && !property.isPrimitive() && !property.isArray() && !property.isEnum()) {
 					assertThat("Expected " + property + " to not be null", property.getValue(), nullValue());
 				}
@@ -124,7 +130,8 @@ public class BeanBuilderTest {
 		BigDecimal overrideValue = new BigDecimal("4.0");
 		Car car = aRandomInstanceOf(Car.class).with("engine", new ValueFactory<Engine>() {
 
-			public Engine createValue() {
+			@Override
+            public Engine createValue() {
 				return new Engine(new BigDecimal("4.0"));
 			}
 		}).build();
@@ -136,7 +143,8 @@ public class BeanBuilderTest {
 		final Integer overrideValue = 12345;
 		Car car = aRandomInstanceOf(Car.class).with(Wheel.class, new ValueFactory<Wheel>() {
 
-			public Wheel createValue() {
+			@Override
+            public Wheel createValue() {
 				return new Wheel(overrideValue);
 			}
 		}).build();
@@ -251,10 +259,19 @@ public class BeanBuilderTest {
 		assertThat(shapeSorter.getShape(), anyOf(instanceOf(Square.class), instanceOf(Circle.class)));
 	}
 
-	@Test(expected = BeanBuilderException.class)
-	public void canNotCreateAnInstanceWithNoDefaultConstructor() {
-		aRandomInstanceOf(NoDefaultConstructor.class).build();
-	}
+    @Test
+    public void canBuildARandomInstanceWithNoDefaultConstructor() {
+        NoDefaultConstructor instance = aRandomInstanceOf(NoDefaultConstructor.class).build();
+        assertThat(instance, any(NoDefaultConstructor.class));
+        assertThat(instance.getValue(), notNullValue());
+    }
+
+    @Test
+    public void canBuildARandomInstanceOfImmutableType() {
+        Immutable instance = aRandomInstanceOf(Immutable.class).build();
+        assertThat(instance, any(Immutable.class));
+        assertThat(instance.getValue(), notNullValue());
+    }
 
 	@Test
 	public void canCreateBigDecimalsWithAPrecisionLessThan10() {
