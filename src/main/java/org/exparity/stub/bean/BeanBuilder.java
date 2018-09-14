@@ -6,8 +6,6 @@ import static org.exparity.beans.Type.type;
 import static org.exparity.stub.core.ValueFactories.*;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -18,8 +16,6 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,6 +31,8 @@ import org.exparity.beans.core.BeanPropertyPath;
 import org.exparity.beans.core.TypeProperty;
 import org.exparity.beans.core.naming.ForceRootNameNamingStrategy;
 import org.exparity.beans.core.naming.LowerCaseNamingStrategy;
+import org.exparity.stub.core.NoDefaultConstructorException;
+import org.exparity.stub.core.ValueFactories;
 import org.exparity.stub.core.ValueFactory;
 import org.exparity.stub.random.RandomBuilder;
 import org.slf4j.Logger;
@@ -560,27 +558,6 @@ public class BeanBuilder<T> {
         }
     }
 
-    private Object[] createArguments(final java.lang.reflect.Type[] types) {
-        if (types.length == 0) {
-            return new Object[0];
-        } else {
-            Object[] args = new Object[types.length];
-            for (int i = 0; i < types.length; ++i) {
-                Type type = Type.type(getActualType(types[i], 0));
-                if (type.is(Map.class)) {
-                    args[i] = Collections.emptyMap();
-                } else if (type.is(Set.class)) {
-                    args[i] = Collections.emptySet();
-                } else if (type.is(List.class) || type.is(Collection.class)) {
-                    args[i] = Collections.emptyList();
-                } else {
-                    args[i] = createValue(getActualType(types[i], 0));
-                }
-            }
-            return args;
-        }
-    }
-
     private Class<? extends Object> getActualType(final java.lang.reflect.Type type, final int typeOrdinal) {
         if (type instanceof Class) {
             return (Class<? extends Object>) type;
@@ -674,7 +651,7 @@ public class BeanBuilder<T> {
             } else if (type.isEnum()) {
                 return createValue(aRandomEnum(type), type);
             } else {
-                return createValue(aNewInstanceOf(type), type);
+                return createValue(ValueFactories.anEmptyInstanceOf(type), type);
             }
         }
         case EMPTY: {
@@ -684,7 +661,7 @@ public class BeanBuilder<T> {
             } else if (type.isEnum()) {
                 return null;
             } else {
-                return createValue(aNewInstanceOf(type), type);
+                return createValue(ValueFactories.anEmptyInstanceOf(type), type);
             }
         }
         default:
@@ -775,26 +752,13 @@ public class BeanBuilder<T> {
 
     private T createNewInstance() {
         try {
-            Constructor<T> constructor = findConstructor();
-            java.lang.reflect.Type[] params = constructor.getGenericParameterTypes();
-            Object[] initargs = createArguments(params);
-            return constructor.newInstance(initargs);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            return ValueFactories.anEmptyInstanceOf(type).createValue();
+        } catch (NoDefaultConstructorException e) {
+            throw e;
+        } catch (Exception e) {
             throw new BeanBuilderException("Failed to instantiate '" + this.type + "'. Error [" + e.getMessage() + "]",
                     e);
         }
-    }
-
-    private Constructor<T> findConstructor() {
-        List<Constructor<T>> constructors = Arrays.asList((Constructor<T>[]) this.type.getConstructors());
-        Collections.sort(constructors, new Comparator<Constructor<T>>() {
-
-            @Override
-            public int compare(final Constructor<T> o1, final Constructor<T> o2) {
-                return Integer.valueOf(o1.getParameterCount()).compareTo(o2.getParameterCount());
-            }
-        });
-        return constructors.get(0);
     }
 
     private int collectionSize(final BeanPropertyPath path) {
@@ -811,7 +775,7 @@ public class BeanBuilder<T> {
     private <X> List<ValueFactory<X>> createInstanceOfFactoriesForTypes(final Class<? extends X>... subtypes) {
         List<ValueFactory<X>> factories = new ArrayList<>();
         for (Class<? extends X> subtype : subtypes) {
-            factories.add((ValueFactory<X>) aNewInstanceOf(subtype));
+            factories.add((ValueFactory<X>) ValueFactories.anEmptyInstanceOf(subtype));
         }
         return factories;
     }

@@ -1,10 +1,20 @@
 package org.exparity.stub.random;
 
+import static java.util.Collections.singleton;
+import static java.util.Collections.singletonList;
+import static java.util.Collections.singletonMap;
+import static java.util.Comparator.comparing;
 import static org.apache.commons.lang.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang.RandomStringUtils.randomAlphanumeric;
 import static org.apache.commons.lang.math.RandomUtils.*;
 import static org.apache.commons.lang.time.DateUtils.addSeconds;
+import static org.exparity.stub.core.ValueFactories.anEmptyInstanceOf;
+import static org.exparity.stub.core.ValueFactories.theValue;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -20,7 +30,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Stream;
 
+import org.exparity.beans.Type;
 import org.exparity.stub.bean.BeanBuilder;
 import org.exparity.stub.bean.BeanBuilderException;
 import org.exparity.stub.core.ValueFactories;
@@ -72,6 +86,12 @@ public abstract class RandomBuilder {
             put(String.class, ValueFactories.aRandomString());
             put(BigDecimal.class, ValueFactories.aRandomDecimal());
             put(Date.class, ValueFactories.aRandomDate());
+            put(Date.class, ValueFactories.aRandomDate());
+            put(LocalDate.class, ValueFactories.aRandomLocalDate());
+            put(LocalTime.class, ValueFactories.aRandomLocalTime());
+            put(LocalDateTime.class, ValueFactories.aRandomLocalDateTime());
+            put(ZonedDateTime.class, ValueFactories.aRandomZonedDateTime());
+            put(Instant.class, ValueFactories.aRandomInstant());
         }
     };
 
@@ -802,14 +822,105 @@ public abstract class RandomBuilder {
     private static <T> ValueFactory<T> instanceFactoryFor(final Class<T> type,
             final RandomRestriction... restrictions) {
         ValueFactory<T> factory = RANDOM_FACTORIES.get(type);
-        if (factory == null) {
+        if (factory != null) {
+            return factory;
+        } else if (type.isEnum()) {
+            return ValueFactories.aRandomEnum(type);
+        } else if (isBean(type)) {
             BeanBuilder<T> builder = BeanBuilder.aRandomInstanceOf(type);
             for (RandomRestriction restriction : restrictions) {
                 restriction.applyTo(builder);
             }
-            factory = ValueFactories.theValue(builder.build());
+            return ValueFactories.theValue(builder.build());
+        } else {
+            Optional<Constructor<T>> constructor = findConstructor(type);
+            if (constructor.isPresent()) {
+                return theValue(createInstance(constructor.get()));
+            } else {
+                return theValue(anEmptyInstanceOf(type).createValue());
+            }
         }
-        return factory;
+    }
+
+    private static boolean isBean(final Class<?> type) {
+        // TODO Look for default constructor and get/set of properties
+        return hasDefaultConstructor(type);
+    }
+
+    private static boolean hasDefaultConstructor(final Class<?> type) {
+        return Stream.of(type.getConstructors()).map(Constructor::getParameterCount).anyMatch(count -> count == 0);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> Optional<Constructor<T>> findConstructor(final Class<T> type) {
+        return Stream.of((Constructor<T>[]) type.getConstructors()).min(comparing(Constructor::getParameterCount));
+    }
+
+    private static <T> T createInstance(final Constructor<T> constructor) {
+        try {
+            java.lang.reflect.Type[] params = constructor.getGenericParameterTypes();
+            Object[] initargs = createArguments(params);
+            return constructor.newInstance(initargs);
+        } catch (InstantiationException
+                | IllegalAccessException
+                | IllegalArgumentException
+                | InvocationTargetException e) {
+            throw new RandomBuilderException("Could not instantiate type " + constructor.getDeclaringClass().getName()
+                    + " using "
+                    + constructor, e);
+        }
+    }
+
+    private static Object[] createArguments(final java.lang.reflect.Type[] types) {
+        if (types.length == 0) {
+            return new Object[0];
+        } else {
+            Object[] args = new Object[types.length];
+            for (int i = 0; i < types.length; ++i) {
+                Class<? extends Object> rawType = getRawType(types[i]);
+                Type type = Type.type(rawType);
+                if (type.isArray()) {
+                    // TODO use size restrictions to populate correct size
+                    Class<?> arrayType = rawType.getComponentType();
+                    Object value = Array.newInstance(arrayType, 0);
+                    args[i] = value;
+                } else if (type.is(Map.class)) {
+                    // TODO use size restrictions to populate correct size
+                    args[i] = singletonMap(getActualType(types[i], 0), getActualType(types[i], 1));
+                } else if (type.is(Set.class)) {
+                    // TODO use size restrictions to populate correct size
+                    args[i] = singleton(aRandomInstanceOf(getActualType(types[i], 0)));
+                } else if (type.is(List.class) || type.is(Collection.class)) {
+                    // TODO use size restrictions to populate correct size
+                    args[i] = singletonList(aRandomInstanceOf(getActualType(types[i], 0)));
+                } else {
+                    args[i] = aRandomInstanceOf(rawType);
+                }
+            }
+            return args;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Class<? extends Object> getActualType(final java.lang.reflect.Type type, final int typeOrdinal) {
+        if (type instanceof Class) {
+            return (Class<? extends Object>) type;
+        } else if (type instanceof ParameterizedType) {
+            return getActualType(((ParameterizedType) type).getActualTypeArguments()[typeOrdinal], 0);
+        } else {
+            throw new IllegalArgumentException("Unknown type subclass '" + type.getClass());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Class<? extends Object> getRawType(final java.lang.reflect.Type type) {
+        if (type instanceof Class) {
+            return (Class<? extends Object>) type;
+        } else if (type instanceof ParameterizedType) {
+            return getRawType(((ParameterizedType) type).getRawType());
+        } else {
+            throw new IllegalArgumentException("Unknown type subclass '" + type.getClass());
+        }
     }
 
 }

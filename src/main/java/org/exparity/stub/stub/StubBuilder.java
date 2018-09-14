@@ -1,6 +1,6 @@
 package org.exparity.stub.stub;
 
-import static org.exparity.stub.core.ValueFactories.aNewInstanceOf;
+import static org.exparity.stub.core.ValueFactories.anEmptyInstanceOf;
 import static org.exparity.stub.core.ValueFactories.oneOf;
 
 import java.lang.reflect.Type;
@@ -33,7 +33,7 @@ public class StubBuilder<T> {
             throw new IllegalArgumentException(
                     "Use StubBuilder.aRandomStubOf(final TypeReference<T> typeRef) method to create prototypes for generic types. See javadocs on method for example.");
         }
-        return new StubBuilder<T>(type);
+        return new StubBuilder<>(type);
     }
 
     /**
@@ -63,18 +63,18 @@ public class StubBuilder<T> {
      * @param type the type to return the {@link StubBuilder} for
      */
     public static <T> StubBuilder<T> aRandomStubOf(final TypeReference<T> type) {
-        return new StubBuilder<T>(type.getType());
+        return new StubBuilder<>(type.getType());
     }
 
     private final StubDefinition<T> definition;
     private final StubFactory factory = new StubFactory();
 
     private StubBuilder(final Type type) {
-        this.definition = new StubDefinition<T>(type);
+        this.definition = new StubDefinition<>(type);
     }
 
     private StubBuilder(final Class<T> type) {
-        this.definition = new StubDefinition<T>(type);
+        this.definition = new StubDefinition<>(type);
     }
 
     /**
@@ -200,9 +200,9 @@ public class StubBuilder<T> {
     }
 
     private <X> List<ValueFactory<X>> createInstanceOfFactoriesForTypes(final Class<? extends X>... subtypes) {
-        List<ValueFactory<X>> factories = new ArrayList<ValueFactory<X>>();
+        List<ValueFactory<X>> factories = new ArrayList<>();
         for (Class<? extends X> subtype : subtypes) {
-            factories.add((ValueFactory<X>) aNewInstanceOf(subtype));
+            factories.add((ValueFactory<X>) anEmptyInstanceOf(subtype));
         }
         return factories;
     }

@@ -13,13 +13,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.exparity.beans.core.BeanProperty;
 import org.exparity.beans.core.BeanPropertyException;
 import org.exparity.beans.core.BeanVisitor;
+import org.exparity.stub.core.NoDefaultConstructorException;
 import org.exparity.stub.core.ValueFactory;
 import org.exparity.stub.testutils.type.AllTypes;
 import org.exparity.stub.testutils.type.Car;
 import org.exparity.stub.testutils.type.Circle;
 import org.exparity.stub.testutils.type.Employee;
 import org.exparity.stub.testutils.type.Engine;
-import org.exparity.stub.testutils.type.Immutable;
 import org.exparity.stub.testutils.type.Manager;
 import org.exparity.stub.testutils.type.NoDefaultConstructor;
 import org.exparity.stub.testutils.type.Person;
@@ -259,19 +259,10 @@ public class BeanBuilderTest {
 		assertThat(shapeSorter.getShape(), anyOf(instanceOf(Square.class), instanceOf(Circle.class)));
 	}
 
-    @Test
-    public void canBuildARandomInstanceWithNoDefaultConstructor() {
-        NoDefaultConstructor instance = aRandomInstanceOf(NoDefaultConstructor.class).build();
-        assertThat(instance, any(NoDefaultConstructor.class));
-        assertThat(instance.getValue(), notNullValue());
-    }
-
-    @Test
-    public void canBuildARandomInstanceOfImmutableType() {
-        Immutable instance = aRandomInstanceOf(Immutable.class).build();
-        assertThat(instance, any(Immutable.class));
-        assertThat(instance.getValue(), notNullValue());
-    }
+	@Test(expected = NoDefaultConstructorException.class)
+	public void canNotCreateAnInstanceWithNoDefaultConstructor() {
+		aRandomInstanceOf(NoDefaultConstructor.class).build();
+	}
 
 	@Test
 	public void canCreateBigDecimalsWithAPrecisionLessThan10() {

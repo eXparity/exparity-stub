@@ -16,11 +16,11 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import org.exparity.stub.bean.BeanBuilder;
 import org.exparity.stub.random.RandomBuilder;
 
+
 /**
- * Static factory for creating instances of {@link ValueFactory} and {@link ArrayFactory} for use in the {@link BeanBuilder} and {@link RandomBuilder}
+ * Static factory for creating instances of {@link ValueFactory} and {@link ArrayFactory} for use in the {@link org.exparity.stub.bean.BeanBuilder} and {@link RandomBuilder}
  *
  * @author Stewart Bissett
  */
@@ -216,10 +216,12 @@ public abstract class ValueFactories {
 	 * @param type the type to create a new instance of
 	 * @return an {@link ArrayFactory} which returns a new unpopulated instance of the given type.
 	 */
-	public static <T> ValueFactory<T> aNewInstanceOf(final Class<T> type) {
+	public static <T> ValueFactory<T> anEmptyInstanceOf(final Class<T> type) {
 		return () -> {
 			try {
 				return type.newInstance();
+			} catch (InstantiationException e) {
+			    throw new NoDefaultConstructorException(type, e);
 			} catch (Exception e) {
 				throw new ValueFactoryException(
 						"Failed to instantiate instance of '" + type.getCanonicalName() + "'",
@@ -244,7 +246,7 @@ public abstract class ValueFactories {
 	 * @return an {@link ValueFactory} which returns a random instance of the given type by using one of the supplied {@link ValueFactory} instances.
 	 */
 	public static <T> ValueFactory<T> oneOf(final Collection<ValueFactory<T>> factories) {
-		return () -> new ArrayList<ValueFactory<T>>(factories).get(nextInt(factories.size())).createValue();
+		return () -> new ArrayList<>(factories).get(nextInt(factories.size())).createValue();
 	}
 
 	/**

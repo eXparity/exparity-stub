@@ -22,6 +22,12 @@ import org.exparity.stub.testutils.type.AllTypes;
 import org.exparity.stub.testutils.type.Car;
 import org.exparity.stub.testutils.type.Circle;
 import org.exparity.stub.testutils.type.CollectionOfGenerics;
+import org.exparity.stub.testutils.type.ConstructorOnlyAllTypes;
+import org.exparity.stub.testutils.type.ConstructorOnlyCollectionTypes;
+import org.exparity.stub.testutils.type.ConstructorOnlyEnumTypes;
+import org.exparity.stub.testutils.type.ConstructorOnlyNested;
+import org.exparity.stub.testutils.type.ConstructorOnlyObjectTypes;
+import org.exparity.stub.testutils.type.ConstructorOnlyPrimitiveTypes;
 import org.exparity.stub.testutils.type.Employee;
 import org.exparity.stub.testutils.type.EmptyEnum;
 import org.exparity.stub.testutils.type.Engine;
@@ -249,6 +255,43 @@ public class RandomBuilderTest {
         Immutable instance = aRandomInstanceOf(Immutable.class);
         assertThat(instance, any(Immutable.class));
         assertThat(instance.getValue(), notNullValue());
+    }
+
+    @Test
+    public void canBuildARandomInstanceOfAllTypesViaConstructor() {
+        ConstructorOnlyAllTypes instance = aRandomInstanceOf(ConstructorOnlyAllTypes.class);
+        assertThat(instance, any(ConstructorOnlyAllTypes.class));
+    }
+
+    @Test
+    public void canBuildARandomInstanceOfNestedViaConstructor() {
+        ConstructorOnlyNested instance = aRandomInstanceOf(ConstructorOnlyNested.class);
+        assertThat(instance, any(ConstructorOnlyNested.class));
+        assertThat(instance.getNested().getValue(), notNullValue());
+    }
+
+    @Test
+    public void canBuildARandomInstanceOfPrimitivesViaConstructor() {
+        ConstructorOnlyPrimitiveTypes instance = aRandomInstanceOf(ConstructorOnlyPrimitiveTypes.class);
+        assertThat(instance, any(ConstructorOnlyPrimitiveTypes.class));
+    }
+
+    @Test
+    public void canBuildARandomInstanceOfEnumsViaConstructor() {
+        ConstructorOnlyEnumTypes instance = aRandomInstanceOf(ConstructorOnlyEnumTypes.class);
+        assertThat(instance, any(ConstructorOnlyEnumTypes.class));
+    }
+
+    @Test
+    public void canBuildARandomInstanceOfCollectionsViaConstructor() {
+        ConstructorOnlyCollectionTypes instance = aRandomInstanceOf(ConstructorOnlyCollectionTypes.class);
+        assertThat(instance, any(ConstructorOnlyCollectionTypes.class));
+    }
+
+    @Test
+    public void canBuildARandomInstanceOfObjectsViaConstructor() {
+        ConstructorOnlyObjectTypes instance = aRandomInstanceOf(ConstructorOnlyObjectTypes.class);
+        assertThat(instance, any(ConstructorOnlyObjectTypes.class));
     }
 
     @Test

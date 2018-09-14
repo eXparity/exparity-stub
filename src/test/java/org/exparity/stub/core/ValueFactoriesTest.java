@@ -22,20 +22,20 @@ import org.junit.Test;
 
 /**
  * Unit test for the {@link ValueFactories} class
- * 
+ *
  * @author Stewart Bissett
  */
 @SuppressWarnings("unchecked")
 public class ValueFactoriesTest {
 
 	@Test
-	public void canCreateANewInstanceOf() {
-		checkResult(aNewInstanceOf(Car.class), any(Car.class));
+	public void canCreateAnEmptyInstanceOf() {
+		checkResult(anEmptyInstanceOf(Car.class), any(Car.class));
 	}
 
-	@Test(expected = ValueFactoryException.class)
-	public void canFailToCreateANewInstanceOfWithNoDefaultConstructir() {
-		checkResult(aNewInstanceOf(NoDefaultConstructor.class), any(NoDefaultConstructor.class));
+	@Test(expected = NoDefaultConstructorException.class)
+	public void canFailToCreateANewInstanceOfWithNoDefaultConstructor() {
+		checkResult(anEmptyInstanceOf(NoDefaultConstructor.class), any(NoDefaultConstructor.class));
 	}
 
 	@Test
@@ -84,7 +84,7 @@ public class ValueFactoriesTest {
 	public void canCreateARandomLocalDateTime() {
 		checkResult(aRandomLocalDateTime(), any(LocalDateTime.class));
 	}
-	
+
 	@Test
 	public void canCreateARandomZonedDateTime() {
 		checkResult(aRandomZonedDateTime(), any(ZonedDateTime.class));
