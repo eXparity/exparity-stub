@@ -1,6 +1,7 @@
 
 package org.exparity.stub.stub;
 
+import static java.lang.System.identityHashCode;
 import static org.exparity.stub.core.ValueFactories.*;
 
 import java.lang.reflect.Array;
@@ -21,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.exparity.stub.core.ValueFactory;
 import org.slf4j.Logger;
@@ -33,6 +36,7 @@ class Stub<T> implements MethodInterceptor {
 
     @SuppressWarnings({ "serial", "rawtypes" })
     private static final Map<Class<?>, ValueFactory> RANDOM_FACTORIES = new HashMap<Class<?>, ValueFactory>() {
+
         {
             put(Short.class, aRandomShort());
             put(short.class, aRandomShort());
@@ -71,12 +75,30 @@ class Stub<T> implements MethodInterceptor {
         this.factory = factory;
     }
 
+    private final ConcurrentMap<Integer, ConcurrentMap<Method, Object>> cache = new ConcurrentHashMap<>();
+
     @Override
     public Object intercept(final Object obj, final Method method, final Object[] args, final MethodProxy proxy)
             throws Throwable {
-        if (isProxiableMethod(method)) {
-            LOG.info("Intercept [{}]", proxy.getSignature());
-            return createValue(new StubDefinition<>(method.getGenericReturnType(), this.definition));
+        if (isEquals(method)) {
+            // equals cannot reliably be ignored or proxied. If ignored then an implementation
+            // which relies on local variables will throw NPE whereas if returning a random boolean
+            // then the stub can't function in data structures which require equals to function
+            // The compromise is to to use the default equals method where the objects are the same instance
+            return args.length == 1 && obj == args[0];
+        } else if (isHashCode(method)) {
+            // Hashcode cannot reliably be ignored or proxied. If ignored then an implementation
+            // which relies on local variables will throw NPE whereas if returning a random number
+            // then the stub can't function in data structures which require consistent hashcodes
+            // The compromise is to to use the identity hashcode
+            return System.identityHashCode(obj);
+        } else if (isProxiableMethod(method)) {
+            LOG.debug("Proxy method [{}]", proxy.getSignature());
+            cache.putIfAbsent(identityHashCode(obj), new ConcurrentHashMap<Method, Object>());
+            ConcurrentMap<Method, Object> cachedMethod = cache.get(identityHashCode(obj));
+            cachedMethod.computeIfAbsent(method,
+                    (m) -> createValue(new StubDefinition<>(m.getGenericReturnType(), this.definition)));
+            return cachedMethod.get(method);
         } else {
             return proxy.invokeSuper(obj, args);
         }
@@ -131,7 +153,7 @@ class Stub<T> implements MethodInterceptor {
     }
 
     private <E> Set<E> createSet(final Type type, final int length) {
-        Set<E> set = new HashSet<E>();
+        Set<E> set = new HashSet<>();
         for (int i = 0; i < length; ++i) {
             E value = createValue(new StubDefinition<E>(type, this.definition));
             if (value != null) {
@@ -142,7 +164,7 @@ class Stub<T> implements MethodInterceptor {
     }
 
     private <E> List<E> createList(final Type type, final int length) {
-        List<E> list = new ArrayList<E>();
+        List<E> list = new ArrayList<>();
         for (int i = 0; i < length; ++i) {
             E value = createValue(new StubDefinition<E>(type, this.definition));
             if (value != null) {
@@ -153,7 +175,7 @@ class Stub<T> implements MethodInterceptor {
     }
 
     private <K, V> Map<K, V> createMap(final Type keyType, final Type valueType, final int length) {
-        Map<K, V> map = new HashMap<K, V>();
+        Map<K, V> map = new HashMap<>();
         for (int i = 0; i < length; ++i) {
             K key = createValue(new StubDefinition<K>(keyType, this.definition));
             if (key != null) {
@@ -163,13 +185,18 @@ class Stub<T> implements MethodInterceptor {
         return map;
     }
 
+    private boolean isEquals(final Method method) {
+        return "equals".equals(method.getName());
+    }
+
+    private boolean isHashCode(final Method method) {
+        return "hashcode".equals(method.getName());
+    }
+
     private boolean isProxiableMethod(final Method method) {
         switch (method.getName()) {
-        case "equals":
         case "iterator":
         case "finalize":
-        case "hashCode":
-        case "toString":
             return false;
         default:
             return method.getReturnType() != null;

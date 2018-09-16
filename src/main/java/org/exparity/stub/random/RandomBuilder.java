@@ -40,6 +40,8 @@ import org.exparity.stub.bean.BeanBuilderException;
 import org.exparity.stub.core.ValueFactories;
 import org.exparity.stub.core.ValueFactory;
 import org.exparity.stub.core.ValueFactoryException;
+import org.exparity.stub.stub.StubBuilder;
+import org.exparity.stub.stub.TypeReference;
 
 /**
  * Builder object for instantiating and populating random instances of Java types.
@@ -556,6 +558,36 @@ public abstract class RandomBuilder {
     }
 
     /**
+     * Build a random stub (see {@link StubBuilder}) of the supplied type. For example
+     * <p/>
+     * <code>
+     * Person aRandomPerson = RandomBuilder.aRandomStubOf(Person.class);
+     * </code>
+     * </p>
+     *
+     * @param type the type to create a random stub of
+     * @return a random stub of the supplied type
+     */
+    public static <T> T aRandomStubOf(final Class<T> type) {
+        return StubBuilder.aRandomStubOf(type).build();
+    }
+
+    /**
+     * Build a random stub (see {@link StubBuilder}) of the supplied type. For example
+     * <p/>
+     * <code>
+     * Person aRandomPerson = RandomBuilder.aRandomStubOf(Person.class);
+     * </code>
+     * </p>
+     *
+     * @param type the type to create a random stub of
+     * @return a random stub of the supplied type
+     */
+    public static <T> T aRandomStubOf(final TypeReference<T> type) {
+        return StubBuilder.aRandomStubOf(type).build();
+    }
+
+    /**
      * Build a random instance of the supplied type. For example
      * <p/>
      * <code>
@@ -608,7 +640,6 @@ public abstract class RandomBuilder {
         } catch (ValueFactoryException e) {
             throw new RandomBuilderException("Failed to create a random instance of " + type.getName(), e);
         }
-
     }
 
     /**

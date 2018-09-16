@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Collection;
@@ -274,24 +275,108 @@ public class RandomBuilderTest {
     public void canBuildARandomInstanceOfPrimitivesViaConstructor() {
         ConstructorOnlyPrimitiveTypes instance = aRandomInstanceOf(ConstructorOnlyPrimitiveTypes.class);
         assertThat(instance, any(ConstructorOnlyPrimitiveTypes.class));
+        assertThat(instance.getByteValue(), instanceOf(byte.class));
+        assertThat(instance.getCharValue(), instanceOf(char.class));
+        assertThat(instance.getDoubleValue(), instanceOf(double.class));
+        assertThat(instance.getFloatValue(), instanceOf(float.class));
+        assertThat(instance.getIntegerValue(), instanceOf(int.class));
+        assertThat(instance.getLongValue(), instanceOf(long.class));
+        assertThat(instance.getShortValue(), instanceOf(short.class));
     }
 
     @Test
     public void canBuildARandomInstanceOfEnumsViaConstructor() {
         ConstructorOnlyEnumTypes instance = aRandomInstanceOf(ConstructorOnlyEnumTypes.class);
         assertThat(instance, any(ConstructorOnlyEnumTypes.class));
+        assertThat(instance.getEnumValue(), instanceOf(ConstructorOnlyEnumTypes.EnumValues.class));
     }
 
     @Test
     public void canBuildARandomInstanceOfCollectionsViaConstructor() {
         ConstructorOnlyCollectionTypes instance = aRandomInstanceOf(ConstructorOnlyCollectionTypes.class);
         assertThat(instance, any(ConstructorOnlyCollectionTypes.class));
+        assertThat(instance.getArray(), instanceOf(int[].class));
+        assertThat(instance.getStringArray(), instanceOf(String[].class));
+        assertThat(instance.getCollection(), not(empty()));
+        assertThat(instance.getList(), not(empty()));
+        assertThat(instance.getMap().size(), not(equalTo(0)));
+        assertThat(instance.getSet(), not(empty()));
     }
 
     @Test
     public void canBuildARandomInstanceOfObjectsViaConstructor() {
         ConstructorOnlyObjectTypes instance = aRandomInstanceOf(ConstructorOnlyObjectTypes.class);
         assertThat(instance, any(ConstructorOnlyObjectTypes.class));
+        assertThat(instance.getBigDecimalValue(), instanceOf(BigDecimal.class));
+        assertThat(instance.getBooleanObjectValue(), instanceOf(Boolean.class));
+        assertThat(instance.getByteObjectValue(), instanceOf(Byte.class));
+        assertThat(instance.getCharObjectValue(), instanceOf(Character.class));
+        assertThat(instance.getDateValue(), instanceOf(Date.class));
+        assertThat(instance.getDoubleObjectValue(), instanceOf(Double.class));
+        assertThat(instance.getFloatObjectValue(), instanceOf(Float.class));
+        assertThat(instance.getInstantValue(), instanceOf(Instant.class));
+        assertThat(instance.getIntegerObjectValue(), instanceOf(Integer.class));
+        assertThat(instance.getLocalDateTimeValue(), instanceOf(LocalDateTime.class));
+        assertThat(instance.getLocalDateValue(), instanceOf(LocalDate.class));
+        assertThat(instance.getLocalTimeValue(), instanceOf(LocalTime.class));
+        assertThat(instance.getLongObjectValue(), instanceOf(Long.class));
+        assertThat(instance.getShortObjectValue(), instanceOf(Short.class));
+        assertThat(instance.getStringValue(), instanceOf(String.class));
+        assertThat(instance.getZonedlDateTimeValue(), instanceOf(ZonedDateTime.class));
+    }
+
+    @Test
+    public void canBuildARandomStubOfPrimitivesViaConstructor() {
+        ConstructorOnlyPrimitiveTypes instance = aRandomStubOf(ConstructorOnlyPrimitiveTypes.class);
+        assertThat(instance, any(ConstructorOnlyPrimitiveTypes.class));
+        assertThat(instance.getByteValue(), instanceOf(byte.class));
+        assertThat(instance.getCharValue(), instanceOf(char.class));
+        assertThat(instance.getDoubleValue(), instanceOf(double.class));
+        assertThat(instance.getFloatValue(), instanceOf(float.class));
+        assertThat(instance.getIntegerValue(), instanceOf(int.class));
+        assertThat(instance.getLongValue(), instanceOf(long.class));
+        assertThat(instance.getShortValue(), instanceOf(short.class));
+    }
+
+    @Test
+    public void canBuildARandomStubOfEnumsViaConstructor() {
+        ConstructorOnlyEnumTypes instance = aRandomStubOf(ConstructorOnlyEnumTypes.class);
+        assertThat(instance, any(ConstructorOnlyEnumTypes.class));
+        assertThat(instance.getEnumValue(), instanceOf(ConstructorOnlyEnumTypes.EnumValues.class));
+    }
+
+    @Test
+    public void canBuildARandomStubOfObjectsViaConstructor() {
+        ConstructorOnlyObjectTypes instance = aRandomStubOf(ConstructorOnlyObjectTypes.class);
+        assertThat(instance, any(ConstructorOnlyObjectTypes.class));
+        assertThat(instance.getBigDecimalValue(), instanceOf(BigDecimal.class));
+        assertThat(instance.getBooleanObjectValue(), instanceOf(Boolean.class));
+        assertThat(instance.getByteObjectValue(), instanceOf(Byte.class));
+        assertThat(instance.getCharObjectValue(), instanceOf(Character.class));
+        assertThat(instance.getDateValue(), instanceOf(Date.class));
+        assertThat(instance.getDoubleObjectValue(), instanceOf(Double.class));
+        assertThat(instance.getFloatObjectValue(), instanceOf(Float.class));
+        assertThat(instance.getInstantValue(), instanceOf(Instant.class));
+        assertThat(instance.getIntegerObjectValue(), instanceOf(Integer.class));
+        assertThat(instance.getLocalDateTimeValue(), instanceOf(LocalDateTime.class));
+        assertThat(instance.getLocalDateValue(), instanceOf(LocalDate.class));
+        assertThat(instance.getLocalTimeValue(), instanceOf(LocalTime.class));
+        assertThat(instance.getLongObjectValue(), instanceOf(Long.class));
+        assertThat(instance.getShortObjectValue(), instanceOf(Short.class));
+        assertThat(instance.getStringValue(), instanceOf(String.class));
+        assertThat(instance.getZonedlDateTimeValue(), instanceOf(ZonedDateTime.class));
+    }
+
+    @Test
+    public void canBuildARandomStubOfCollectionsViaConstructor() {
+        ConstructorOnlyCollectionTypes instance = aRandomStubOf(ConstructorOnlyCollectionTypes.class);
+        assertThat(instance, any(ConstructorOnlyCollectionTypes.class));
+        assertThat(instance.getArray(), instanceOf(int[].class));
+        assertThat(instance.getStringArray(), instanceOf(String[].class));
+        assertThat(instance.getCollection(), not(empty()));
+        assertThat(instance.getList(), not(empty()));
+        assertThat(instance.getMap().size(), not(equalTo(0)));
+        assertThat(instance.getSet(), not(empty()));
     }
 
     @Test

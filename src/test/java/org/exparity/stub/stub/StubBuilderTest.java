@@ -5,6 +5,10 @@ import static org.exparity.stub.stub.StubBuilder.aRandomStubOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.exparity.beans.core.BeanProperty;
@@ -17,6 +21,7 @@ import org.exparity.stub.testutils.type.Employee;
 import org.exparity.stub.testutils.type.GenericType;
 import org.exparity.stub.testutils.type.Manager;
 import org.exparity.stub.testutils.type.NoDefaultConstructor;
+import org.exparity.stub.testutils.type.OverrideHashcodeEquals;
 import org.exparity.stub.testutils.type.Person;
 import org.exparity.stub.testutils.type.PrivateConstructor;
 import org.exparity.stub.testutils.type.Shape;
@@ -92,7 +97,6 @@ public class StubBuilderTest {
         assertThat(instance.getValue(), notNullValue());
     }
 
-
     @Test
     @Ignore
     public void canCreateAnInstanceWithPrivateConstructor() {
@@ -112,6 +116,31 @@ public class StubBuilderTest {
         assertThat(instance.getValues(), not(empty()));
     }
 
+    @Test
+    public void canCreateAnInstanceWithOverridenHashcodeEquals() {
+        OverrideHashcodeEquals instance = aRandomStubOf(OverrideHashcodeEquals.class).build();
+        assertThat(instance.getValue(), instanceOf(String.class));
+    }
+
+    @Test
+    public void canUseStubInASet() {
+        OverrideHashcodeEquals instance = aRandomStubOf(OverrideHashcodeEquals.class).build();
+        Set<OverrideHashcodeEquals> instances = new HashSet<>();
+        instances.add(instance);
+        instances.add(instance);
+        assertThat(instances, hasSize(1));
+        assertThat(instances, hasItem(instance));
+    }
+
+    @Test
+    public void canUseStubInAMap() {
+        OverrideHashcodeEquals instance = aRandomStubOf(OverrideHashcodeEquals.class).build();
+        Map<String, OverrideHashcodeEquals> instances = new HashMap<>();
+        instances.put(instance.getValue(), instance);
+        instances.put(instance.getValue(), instance);
+        assertThat(instances, hasKey(instance.getValue()));
+    }
+
     @SuppressWarnings("rawtypes")
     @Test(expected = IllegalArgumentException.class)
     public void canFailToCreateAnInstanceOfAGenericType() {
@@ -119,7 +148,7 @@ public class StubBuilderTest {
         assertThat(instance.getValue(), notNullValue());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = FinalClassException.class)
     public void canFailToCreateAnInstanceOfAFinalType() {
         String instance = aRandomStubOf(String.class).build();
         assertThat(instance.toString(), notNullValue());

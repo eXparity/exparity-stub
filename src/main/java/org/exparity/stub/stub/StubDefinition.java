@@ -110,7 +110,7 @@ class StubDefinition<T> {
     }
 
     public String describe() {
-        return getActualType().getSimpleName();
+        return getActualType().getName();
     }
 
     public int aRandomCollectionSize() {

@@ -19,10 +19,10 @@ class StubFactory {
 
     public <T> T createStub(final StubDefinition<T> definition) {
         if (definition.isFinal()) {
-            throw new IllegalArgumentException("Final classes cannot be prototyped");
+            throw new FinalClassException(definition.getActualType());
         } else {
-            T proxy = createProxy(new Stub<T>(definition, this));
-            LOG.info("Proxied {} using [{}]", definition.describe(), proxy);
+            T proxy = createProxy(new Stub<>(definition, this));
+            LOG.debug("Create Proxy [{}] for [{}]", proxy, definition.describe());
             return proxy;
         }
     }

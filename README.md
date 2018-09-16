@@ -13,7 +13,7 @@ A maven project
     <dependency>
         <groupId>org.exparity</groupId>
         <artifactId>exparity-stub</artifactId>
-        <version>2.0.2</version>
+        <version>2.0.4</version>
     </dependency>
 
 Versions 2.x.x onwards require Java 8. If you are using an earlier version of Java 8 then include version
@@ -132,6 +132,9 @@ The source includes a pom.xml for building with Maven
 
 Release Notes
 -------------
+Changes 2.0.4 -> 2.0.2
+  * Add Support for building random types and objects without default constructors
+  
 Changes 2.0.1 -> 2.0.2
   * Add LocalTime support and implement with overrides for instance
   
