@@ -13,10 +13,10 @@ A maven project
     <dependency>
         <groupId>org.exparity</groupId>
         <artifactId>exparity-stub</artifactId>
-        <version>2.0.4</version>
+        <version>2.0.5</version>
     </dependency>
 
-Versions 2.x.x onwards require Java 8. If you are using an earlier version of Java 8 then include version
+Versions 2.x.x onwards require Java 8. If you are using an earlier version of Java 8 then include version although this does not contain all the up-to-date features
 
     <dependency>
         <groupId>org.exparity</groupId>
@@ -30,7 +30,7 @@ Usage
 How To Create Random Types, Collections, and Beans
 --------------------------------------------------
 
-The RandomBuilder class will create random instances of java primitive and native types and fully populate Java Beans with random data. It is ideal for testing persistence, marshaling, and for unit and integration testing. Random objects can be created using the static methods exposed on either the RandomBuilder class or the BeanBuilder class. The preferred approach is to use the RandomBuilder class is it provides a terser interface, however when applying multiple overrides to the builder the BeanBuilder may be better.
+The RandomBuilder class will create random instances of java primitive and native types and fully populate Java types with random data. It is ideal for testing persistence, marshaling, and for unit and integration testing. Random objects can be created using the static methods exposed on either the RandomBuilder class or the BeanBuilder class. The preferred approach is to use the RandomBuilder class is it provides a terser interface, however when applying multiple overrides to the builder the BeanBuilder may be better.
 
 The RandomBuilder can be used to create random values for primitives, for arrays, and for complete object graphs where the classes follow the Java Beans naming standard for getters and settter. For example
 
@@ -88,7 +88,7 @@ The RandomBuilder class includes includes factory methods for:
 * __aRandomLong__ - Create a random Long
 * __aRandomShort__ - Create a random Short
 * __aRandomString__ - Create a random String
-* __aRandomStubOf__ - Create a random instance or non-bean class
+* __aRandomStubOf__ - Create a random stub instance (See below section on StubBuilder)
 
 It also includes factory methods for the restrictions to be applied when building an instance of an object:
 
@@ -106,7 +106,7 @@ The Javadocs include examples on all methods so you can look there for examples 
 How To Create Random Stub Interfaces 
 ------------------------------------
 
-If you are creating tests where you would like an interface or a non-bean class to return random values then the StubBuilder class can do this for you. It is ideal for unit testing where you are less concerned about the responses from the objects, and more that they respond with non null values.
+If you are creating tests where you would like an interface or any java class to return random values then the StubBuilder class can do this for you. It is ideal for unit testing where you are less concerned about the responses from the objects, and more that they respond with non null values.
 
 	Person aPerson = StubBuilder.aRandomStubOf(Person.class).build();
 	MyInterface service = StubBuilder.aRandomStubOf(MyInterface.class).with(mockService);
@@ -132,7 +132,10 @@ The source includes a pom.xml for building with Maven
 
 Release Notes
 -------------
-Changes 2.0.4 -> 2.0.2
+Changes 2.0.4 -> 2.0.5
+  * Fix inconsistent handling of hashcode and equals on stubs
+  
+Changes 2.0.2 -> 2.0.4
   * Add Support for building random types and objects without default constructors
   
 Changes 2.0.1 -> 2.0.2
