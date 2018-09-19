@@ -6,6 +6,7 @@ import static java.util.Collections.singletonMap;
 import static java.util.Comparator.comparing;
 import static org.apache.commons.lang.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang.RandomStringUtils.randomAlphanumeric;
+import static org.apache.commons.lang.RandomStringUtils.randomNumeric;
 import static org.apache.commons.lang.math.RandomUtils.*;
 import static org.apache.commons.lang.time.DateUtils.addSeconds;
 import static org.exparity.stub.core.ValueFactories.anEmptyInstanceOf;
@@ -34,6 +35,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.exparity.beans.Type;
 import org.exparity.stub.bean.BeanBuilder;
 import org.exparity.stub.bean.BeanBuilderException;
@@ -99,7 +101,7 @@ public abstract class RandomBuilder {
 
     private static final int DEFAULT_MAX_ARRAY_SIZE = 10;
     private static final int DEFAULT_MIN_ARRAY_SIZE = 2;
-    private static final int MAX_STRING_LENGTH = 50;
+    private static final int MAX_STRING_LENGTH = 10;
     private static final int MINUTES_PER_HOUR = 60;
     private static final int HOURS_PER_DAY = 24;
     private static final int DAYS_PER_YEAR = 365;
@@ -130,6 +132,84 @@ public abstract class RandomBuilder {
      */
     public static String aRandomString(final int length) {
         return randomAlphanumeric(length);
+    }
+
+    /**
+     * Build a random {@link String} containing ascii characters. For example
+     * <p/>
+     * <code>
+     * String aRandomName = RandomBuilder.aRandomAscii();
+     * </code>
+     *
+     * @return a random {@link String}.
+     */
+    public static String aRandomAscii() {
+        return aRandomAscii(MAX_STRING_LENGTH);
+    }
+
+    /**
+     * Build a random {@link String} containing ascii characters of the specfied size. For example
+     * <p/>
+     * <code>
+     * String aRandomName = RandomBuilder.aRandomAscii(10);
+     * </code>
+     *
+     * @return a random {@link String}.
+     */
+    public static String aRandomAscii(final int length) {
+        return RandomStringUtils.randomAscii(length);
+    }
+
+    /**
+     * Build a random {@link String} containing alphabetic characters. For example
+     * <p/>
+     * <code>
+     * String aRandomName = RandomBuilder.aRandomAlphabetic();
+     * </code>
+     *
+     * @return a random {@link String}.
+     */
+    public static String aRandomAlphabetic() {
+        return aRandomAlphabetic(MAX_STRING_LENGTH);
+    }
+
+    /**
+     * Build a random {@link String} containing alphabetic characters of the specfied size. For example
+     * <p/>
+     * <code>
+     * String aRandomName = RandomBuilder.aRandomAlphabetic(10);
+     * </code>
+     *
+     * @return a random {@link String}.
+     */
+    public static String aRandomAlphabetic(final int length) {
+        return randomAlphabetic(length);
+    }
+
+    /**
+     * Build a random {@link String} containing numeric characters. For example
+     * <p/>
+     * <code>
+     * String aRandomName = RandomBuilder.aRandomNumeric();
+     * </code>
+     *
+     * @return a random {@link String}.
+     */
+    public static String aRandomNumeric() {
+        return aRandomNumeric(MAX_STRING_LENGTH);
+    }
+
+    /**
+     * Build a random {@link String} containing numeric characters of the specfied size. For example
+     * <p/>
+     * <code>
+     * String aRandomName = RandomBuilder.aRandomNumeric(10);
+     * </code>
+     *
+     * @return a random {@link String}.
+     */
+    public static String aRandomNumeric(final int length) {
+        return randomNumeric(length);
     }
 
     /**

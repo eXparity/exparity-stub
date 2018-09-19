@@ -1,6 +1,8 @@
 package org.exparity.stub.stub;
 
 import static org.exparity.beans.Bean.bean;
+import static org.exparity.stub.random.RandomBuilder.aRandomInstanceOf;
+import static org.exparity.stub.random.RandomBuilder.aRandomString;
 import static org.exparity.stub.stub.StubBuilder.aRandomStubOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -17,6 +19,7 @@ import org.exparity.stub.testutils.type.AllTypes;
 import org.exparity.stub.testutils.type.Car;
 import org.exparity.stub.testutils.type.Circle;
 import org.exparity.stub.testutils.type.CollectionOfGenerics;
+import org.exparity.stub.testutils.type.ConstructorOnlyNested;
 import org.exparity.stub.testutils.type.Employee;
 import org.exparity.stub.testutils.type.GenericType;
 import org.exparity.stub.testutils.type.Manager;
@@ -24,6 +27,7 @@ import org.exparity.stub.testutils.type.NoDefaultConstructor;
 import org.exparity.stub.testutils.type.OverrideHashcodeEquals;
 import org.exparity.stub.testutils.type.Person;
 import org.exparity.stub.testutils.type.PrivateConstructor;
+import org.exparity.stub.testutils.type.Service;
 import org.exparity.stub.testutils.type.Shape;
 import org.exparity.stub.testutils.type.ShapeSorter;
 import org.exparity.stub.testutils.type.Square;
@@ -108,6 +112,15 @@ public class StubBuilderTest {
     public void canCreateAnInstanceOfAnInterface() {
         Shape instance = aRandomStubOf(Shape.class).build();
         assertThat(instance.numberOfSides(), notNullValue());
+    }
+
+    @Test
+    public void canCreateAnInstanceOfAServiceInterface() {
+        Service service = aRandomStubOf(Service.class).build();
+        assertThat(service.getCarByMake(aRandomString()), not(empty()));
+        assertThat(service.createCar(), instanceOf(Car.class));
+        assertThat(service.createConstructorOnlyNested(), instanceOf(ConstructorOnlyNested.class));
+        service.addCar(aRandomInstanceOf(Car.class)); // Check invoking void method
     }
 
     @Test

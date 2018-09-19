@@ -97,7 +97,8 @@ class Stub<T> implements MethodInterceptor {
             cache.putIfAbsent(identityHashCode(obj), new ConcurrentHashMap<Method, Object>());
             ConcurrentMap<Method, Object> cachedMethod = cache.get(identityHashCode(obj));
             cachedMethod.computeIfAbsent(method,
-                    (m) -> createValue(new StubDefinition<>(m.getGenericReturnType(), this.definition)));
+                    (m) -> createValue(new StubDefinition<>(m.getGenericReturnType(),
+                            this.definition)));
             return cachedMethod.get(method);
         } else {
             return proxy.invokeSuper(obj, args);
@@ -136,6 +137,8 @@ class Stub<T> implements MethodInterceptor {
                     return (E) factory.createValue();
                 } else if (type.isEnum()) {
                     return (E) aRandomEnum(type).createValue();
+                } else if (type == Void.TYPE) {
+                    return (E) Void.TYPE;
                 } else {
                     return this.factory.createStub(definition);
                 }
@@ -147,7 +150,10 @@ class Stub<T> implements MethodInterceptor {
     private <E> Object createArray(final Class<E> type) {
         Object array = Array.newInstance(type, this.definition.aRandomCollectionSize());
         for (int i = 0; i < Array.getLength(array); ++i) {
-            Array.set(array, i, createValue(new StubDefinition<E>(type, this.definition)));
+            Array.set(array,
+                    i,
+                    createValue(new StubDefinition<E>(type,
+                            this.definition)));
         }
         return array;
     }
@@ -155,7 +161,8 @@ class Stub<T> implements MethodInterceptor {
     private <E> Set<E> createSet(final Type type, final int length) {
         Set<E> set = new HashSet<>();
         for (int i = 0; i < length; ++i) {
-            E value = createValue(new StubDefinition<E>(type, this.definition));
+            E value = createValue(new StubDefinition<E>(type,
+                    this.definition));
             if (value != null) {
                 set.add(value);
             }
@@ -166,7 +173,8 @@ class Stub<T> implements MethodInterceptor {
     private <E> List<E> createList(final Type type, final int length) {
         List<E> list = new ArrayList<>();
         for (int i = 0; i < length; ++i) {
-            E value = createValue(new StubDefinition<E>(type, this.definition));
+            E value = createValue(new StubDefinition<E>(type,
+                    this.definition));
             if (value != null) {
                 list.add(value);
             }
@@ -177,9 +185,12 @@ class Stub<T> implements MethodInterceptor {
     private <K, V> Map<K, V> createMap(final Type keyType, final Type valueType, final int length) {
         Map<K, V> map = new HashMap<>();
         for (int i = 0; i < length; ++i) {
-            K key = createValue(new StubDefinition<K>(keyType, this.definition));
+            K key = createValue(new StubDefinition<K>(keyType,
+                    this.definition));
             if (key != null) {
-                map.put(key, createValue(new StubDefinition<V>(valueType, this.definition)));
+                map.put(key,
+                        createValue(new StubDefinition<V>(valueType,
+                                this.definition)));
             }
         }
         return map;
