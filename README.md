@@ -13,7 +13,7 @@ A maven project
     <dependency>
         <groupId>org.exparity</groupId>
         <artifactId>exparity-stub</artifactId>
-        <version>2.0.5</version>
+        <version>2.0.6</version>
     </dependency>
 
 Versions 2.x.x onwards require Java 8. If you are using an earlier version of Java 8 then include version although this does not contain all the up-to-date features
@@ -87,7 +87,10 @@ The RandomBuilder class includes includes factory methods for:
 * __aRandomListOf__ - Create a random list of a class which implements the Java Beans getters and setters
 * __aRandomLong__ - Create a random Long
 * __aRandomShort__ - Create a random Short
-* __aRandomString__ - Create a random String
+* __aRandomString__ - Create a random alphanumeric String
+* __aRandomAsciiString__ - Create a random ascii String
+* __aRandomAlphabeticString__ - Create a random alphabetic String
+* __aRandomNumericString__ - Create a random numeric String
 * __aRandomStubOf__ - Create a random stub instance (See below section on StubBuilder)
 
 It also includes factory methods for the restrictions to be applied when building an instance of an object:
@@ -132,6 +135,13 @@ The source includes a pom.xml for building with Maven
 
 Release Notes
 -------------
+Changes 2.0.5 -> 2.0.6
+  * Fix stub void handling
+  * Reduce default random string length to 10
+  * Add aRandomAlphabetic
+  * Add aRandomAscii
+  * Add aRandomNumeric
+  
 Changes 2.0.4 -> 2.0.5
   * Fix inconsistent handling of hashcode and equals on stubs
   
