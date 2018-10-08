@@ -13,19 +13,22 @@ public class ConstructorOnlyCollectionTypes {
     private final List<String> list;
     private final Set<String> set;
     private final Map<Long, String> map;
+    private final Map<String, String[]> arrayMap;
 
     public ConstructorOnlyCollectionTypes(final int[] array,
             final String[] stringArray,
             final Collection<String> collection,
             final List<String> list,
             final Set<String> set,
-            final Map<Long, String> map) {
+            final Map<Long, String> map,
+            final Map<String, String[]> arrayMap) {
         this.array = array;
         this.stringArray = stringArray;
         this.collection = collection;
         this.list = list;
         this.set = set;
         this.map = map;
+        this.arrayMap = arrayMap;
     }
 
     public int[] getArray() {
@@ -50,6 +53,10 @@ public class ConstructorOnlyCollectionTypes {
 
     public Map<Long, String> getMap() {
         return map;
+    }
+    
+    public Map<String, String[]> getArrayMap() {
+        return arrayMap;
     }
 
 }
