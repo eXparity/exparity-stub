@@ -19,6 +19,7 @@ import java.util.Set;
 
 import org.exparity.stub.core.ValueFactories;
 import org.exparity.stub.random.RandomBuilder.RandomRestriction;
+import org.exparity.stub.testutils.type.AbstractOfAllTypes;
 import org.exparity.stub.testutils.type.AllTypes;
 import org.exparity.stub.testutils.type.Car;
 import org.exparity.stub.testutils.type.Circle;
@@ -34,6 +35,7 @@ import org.exparity.stub.testutils.type.EmptyEnum;
 import org.exparity.stub.testutils.type.Engine;
 import org.exparity.stub.testutils.type.FuelType;
 import org.exparity.stub.testutils.type.Immutable;
+import org.exparity.stub.testutils.type.InterfaceOfAllTypes;
 import org.exparity.stub.testutils.type.Manager;
 import org.exparity.stub.testutils.type.NoDefaultConstructor;
 import org.exparity.stub.testutils.type.Person;
@@ -251,7 +253,37 @@ public class RandomBuilderTest {
 
     @Test
     public void canBuildARandomInstanceOf() {
-        assertThat(aRandomInstanceOf(AllTypes.class), any(AllTypes.class));
+        AllTypes instance = aRandomInstanceOf(AllTypes.class);
+        assertThat(instance, any(AllTypes.class));
+        assertThat(instance.getByteValue(), instanceOf(byte.class));
+        assertThat(instance.getCharValue(), instanceOf(char.class));
+        assertThat(instance.getDoubleValue(), instanceOf(double.class));
+        assertThat(instance.getFloatValue(), instanceOf(float.class));
+        assertThat(instance.getIntegerValue(), instanceOf(int.class));
+        assertThat(instance.getLongValue(), instanceOf(long.class));
+        assertThat(instance.getShortValue(), instanceOf(short.class));
+        assertThat(instance.getArray(), instanceOf(int[].class));
+        assertThat(instance.getStringArray(), instanceOf(String[].class));
+        assertThat(instance.getCollection(), not(empty()));
+        assertThat(instance.getList(), not(empty()));
+        assertThat(instance.getMap().size(), not(equalTo(0)));
+        assertThat(instance.getSet(), not(empty()));
+        assertThat(instance.getBigDecimalValue(), instanceOf(BigDecimal.class));
+        assertThat(instance.getBooleanObjectValue(), instanceOf(Boolean.class));
+        assertThat(instance.getByteObjectValue(), instanceOf(Byte.class));
+        assertThat(instance.getCharObjectValue(), instanceOf(Character.class));
+        assertThat(instance.getDateValue(), instanceOf(Date.class));
+        assertThat(instance.getDoubleObjectValue(), instanceOf(Double.class));
+        assertThat(instance.getFloatObjectValue(), instanceOf(Float.class));
+        assertThat(instance.getInstantValue(), instanceOf(Instant.class));
+        assertThat(instance.getIntegerObjectValue(), instanceOf(Integer.class));
+        assertThat(instance.getLocalDateTimeValue(), instanceOf(LocalDateTime.class));
+        assertThat(instance.getLocalDateValue(), instanceOf(LocalDate.class));
+        assertThat(instance.getLocalTimeValue(), instanceOf(LocalTime.class));
+        assertThat(instance.getLongObjectValue(), instanceOf(Long.class));
+        assertThat(instance.getShortObjectValue(), instanceOf(Short.class));
+        assertThat(instance.getStringValue(), instanceOf(String.class));
+        assertThat(instance.getZonedlDateTimeValue(), instanceOf(ZonedDateTime.class));
     }
 
     @Test
@@ -272,6 +304,34 @@ public class RandomBuilderTest {
     public void canBuildARandomInstanceOfAllTypesViaConstructor() {
         ConstructorOnlyAllTypes instance = aRandomInstanceOf(ConstructorOnlyAllTypes.class);
         assertThat(instance, any(ConstructorOnlyAllTypes.class));
+        assertThat(instance.getByteValue(), instanceOf(byte.class));
+        assertThat(instance.getCharValue(), instanceOf(char.class));
+        assertThat(instance.getDoubleValue(), instanceOf(double.class));
+        assertThat(instance.getFloatValue(), instanceOf(float.class));
+        assertThat(instance.getIntegerValue(), instanceOf(int.class));
+        assertThat(instance.getLongValue(), instanceOf(long.class));
+        assertThat(instance.getShortValue(), instanceOf(short.class));
+        assertThat(instance.getArray(), instanceOf(int[].class));
+        assertThat(instance.getCollection(), not(empty()));
+        assertThat(instance.getList(), not(empty()));
+        assertThat(instance.getMap().size(), not(equalTo(0)));
+        assertThat(instance.getSet(), not(empty()));
+        assertThat(instance.getBigDecimalValue(), instanceOf(BigDecimal.class));
+        assertThat(instance.getBooleanObjectValue(), instanceOf(Boolean.class));
+        assertThat(instance.getByteObjectValue(), instanceOf(Byte.class));
+        assertThat(instance.getCharObjectValue(), instanceOf(Character.class));
+        assertThat(instance.getDateValue(), instanceOf(Date.class));
+        assertThat(instance.getDoubleObjectValue(), instanceOf(Double.class));
+        assertThat(instance.getFloatObjectValue(), instanceOf(Float.class));
+        assertThat(instance.getInstantValue(), instanceOf(Instant.class));
+        assertThat(instance.getIntegerObjectValue(), instanceOf(Integer.class));
+        assertThat(instance.getLocalDateTimeValue(), instanceOf(LocalDateTime.class));
+        assertThat(instance.getLocalDateValue(), instanceOf(LocalDate.class));
+        assertThat(instance.getLocalTimeValue(), instanceOf(LocalTime.class));
+        assertThat(instance.getLongObjectValue(), instanceOf(Long.class));
+        assertThat(instance.getShortObjectValue(), instanceOf(Short.class));
+        assertThat(instance.getStringValue(), instanceOf(String.class));
+        assertThat(instance.getZonedlDateTimeValue(), instanceOf(ZonedDateTime.class));
     }
 
     @Test
@@ -387,6 +447,76 @@ public class RandomBuilderTest {
         assertThat(instance.getList(), not(empty()));
         assertThat(instance.getMap().size(), not(equalTo(0)));
         assertThat(instance.getSet(), not(empty()));
+    }
+
+    @Test
+    public void canBuildARandomInstanceOfInterface() {
+        InterfaceOfAllTypes instance = aRandomInstanceOf(InterfaceOfAllTypes.class);
+        assertThat(instance, any(InterfaceOfAllTypes.class));
+        assertThat(instance.getByteValue(), instanceOf(byte.class));
+        assertThat(instance.getCharValue(), instanceOf(char.class));
+        assertThat(instance.getDoubleValue(), instanceOf(double.class));
+        assertThat(instance.getFloatValue(), instanceOf(float.class));
+        assertThat(instance.getIntegerValue(), instanceOf(int.class));
+        assertThat(instance.getLongValue(), instanceOf(long.class));
+        assertThat(instance.getShortValue(), instanceOf(short.class));
+        assertThat(instance.getArray(), instanceOf(int[].class));
+        assertThat(instance.getStringArray(), instanceOf(String[].class));
+        assertThat(instance.getCollection(), not(empty()));
+        assertThat(instance.getList(), not(empty()));
+        assertThat(instance.getMap().size(), not(equalTo(0)));
+        assertThat(instance.getSet(), not(empty()));
+        assertThat(instance.getBigDecimalValue(), instanceOf(BigDecimal.class));
+        assertThat(instance.getBooleanObjectValue(), instanceOf(Boolean.class));
+        assertThat(instance.getByteObjectValue(), instanceOf(Byte.class));
+        assertThat(instance.getCharObjectValue(), instanceOf(Character.class));
+        assertThat(instance.getDateValue(), instanceOf(Date.class));
+        assertThat(instance.getDoubleObjectValue(), instanceOf(Double.class));
+        assertThat(instance.getFloatObjectValue(), instanceOf(Float.class));
+        assertThat(instance.getInstantValue(), instanceOf(Instant.class));
+        assertThat(instance.getIntegerObjectValue(), instanceOf(Integer.class));
+        assertThat(instance.getLocalDateTimeValue(), instanceOf(LocalDateTime.class));
+        assertThat(instance.getLocalDateValue(), instanceOf(LocalDate.class));
+        assertThat(instance.getLocalTimeValue(), instanceOf(LocalTime.class));
+        assertThat(instance.getLongObjectValue(), instanceOf(Long.class));
+        assertThat(instance.getShortObjectValue(), instanceOf(Short.class));
+        assertThat(instance.getStringValue(), instanceOf(String.class));
+        assertThat(instance.getZonedlDateTimeValue(), instanceOf(ZonedDateTime.class));
+    }
+
+    @Test
+    public void canBuildARandomInstanceOfAbstractClass() {
+        AbstractOfAllTypes instance = aRandomInstanceOf(AbstractOfAllTypes.class);
+        assertThat(instance, any(AbstractOfAllTypes.class));
+        assertThat(instance.getByteValue(), instanceOf(byte.class));
+        assertThat(instance.getCharValue(), instanceOf(char.class));
+        assertThat(instance.getDoubleValue(), instanceOf(double.class));
+        assertThat(instance.getFloatValue(), instanceOf(float.class));
+        assertThat(instance.getIntegerValue(), instanceOf(int.class));
+        assertThat(instance.getLongValue(), instanceOf(long.class));
+        assertThat(instance.getShortValue(), instanceOf(short.class));
+        assertThat(instance.getArray(), instanceOf(int[].class));
+        assertThat(instance.getStringArray(), instanceOf(String[].class));
+        assertThat(instance.getCollection(), not(empty()));
+        assertThat(instance.getList(), not(empty()));
+        assertThat(instance.getMap().size(), not(equalTo(0)));
+        assertThat(instance.getSet(), not(empty()));
+        assertThat(instance.getBigDecimalValue(), instanceOf(BigDecimal.class));
+        assertThat(instance.getBooleanObjectValue(), instanceOf(Boolean.class));
+        assertThat(instance.getByteObjectValue(), instanceOf(Byte.class));
+        assertThat(instance.getCharObjectValue(), instanceOf(Character.class));
+        assertThat(instance.getDateValue(), instanceOf(Date.class));
+        assertThat(instance.getDoubleObjectValue(), instanceOf(Double.class));
+        assertThat(instance.getFloatObjectValue(), instanceOf(Float.class));
+        assertThat(instance.getInstantValue(), instanceOf(Instant.class));
+        assertThat(instance.getIntegerObjectValue(), instanceOf(Integer.class));
+        assertThat(instance.getLocalDateTimeValue(), instanceOf(LocalDateTime.class));
+        assertThat(instance.getLocalDateValue(), instanceOf(LocalDate.class));
+        assertThat(instance.getLocalTimeValue(), instanceOf(LocalTime.class));
+        assertThat(instance.getLongObjectValue(), instanceOf(Long.class));
+        assertThat(instance.getShortObjectValue(), instanceOf(Short.class));
+        assertThat(instance.getStringValue(), instanceOf(String.class));
+        assertThat(instance.getZonedlDateTimeValue(), instanceOf(ZonedDateTime.class));
     }
 
     @Test
