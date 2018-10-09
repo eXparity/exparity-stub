@@ -242,6 +242,21 @@ public class RandomBuilderTest {
     }
 
     @Test
+    public void canBuildARandomInstanceOfPrimitive() {
+        assertThat(aRandomInstanceOf(int.class), any(int.class));
+    }
+
+    @Test
+    public void canBuildARandomInstanceOfBoxedPrimitve() {
+        assertThat(aRandomInstanceOf(Integer.class), any(Integer.class));
+    }
+
+    @Test
+    public void canBuildARandomInstanceOfString() {
+        assertThat(aRandomInstanceOf(String.class), any(String.class));
+    }
+
+    @Test
     public void canBuildARandomInstanceOfAnArray() {
         assertThat(aRandomInstanceOf(String[].class), any(String[].class));
     }

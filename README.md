@@ -13,7 +13,7 @@ A maven project
     <dependency>
         <groupId>org.exparity</groupId>
         <artifactId>exparity-stub</artifactId>
-        <version>2.0.6</version>
+        <version>2.0.7</version>
     </dependency>
 
 Versions 2.x.x onwards require Java 8. If you are using an earlier version of Java 8 then include version although this does not contain all the up-to-date features
@@ -30,9 +30,9 @@ Usage
 How To Create Random Types, Collections, and Beans
 --------------------------------------------------
 
-The RandomBuilder class will create random instances of java primitive and native types and fully populate Java types with random data. It is ideal for testing persistence, marshaling, and for unit and integration testing. Random objects can be created using the static methods exposed on either the RandomBuilder class or the BeanBuilder class. The preferred approach is to use the RandomBuilder class is it provides a terser interface, however when applying multiple overrides to the builder the BeanBuilder may be better.
+The RandomBuilder class will create random instances of java primitive and native types and fully populate Java classes with random data. It is ideal for testing persistence, marshaling, and for unit and integration testing. Random objects can be created using the static methods exposed on either the RandomBuilder class, the BeanBuilder class, or the StubBuilder. The preferred approach is to use the RandomBuilder class as it provides a terser interface, however when applying multiple overrides to the builder the BeanBuilder or StubBuilder may be better. The BeanBuilder is for use on classes which implement the Java Beans standard whereas the StubBuilder will support interfaces and abstract classes.
 
-The RandomBuilder can be used to create random values for primitives, for arrays, and for complete object graphs where the classes follow the Java Beans naming standard for getters and settter. For example
+The RandomBuilder can be used to create random values for primitives, for arrays, and for complete object graphs including classes, interfaces, and abstract classes. For example
 
 	String randomName = RandomBuilder.aRandomString();
 	Gender raGender = RandomBuilder.aRandomEnum(Gender.class);
@@ -65,13 +65,13 @@ Multiple restrictions can be applied at the same time. For example
 
 The RandomBuilder class includes includes factory methods for:
 
-* __aRandomArrayOf__ - Create a random array of an class which implements the Java Beans getters and setters
+* __aRandomArrayOf__ - Create a random array of a class, interface, or abstract class
 * __aRandomArrayOfEnum__ - Create a random array of an Enum
 * __aRandomBoolean__ - Create a random Boolean
 * __aRandomByte__ - Create a random Byte
 * __aRandomByteArray__ - Create a random byte[]
 * __aRandomChar__ - Create a random Character
-* __aRandomCollectionOf__ - Create a random collection of a class which implements the Java Beans getters and setters
+* __aRandomCollectionOf__ - Create a random collection of a class, interface, or abstract class
 * __aRandomDate__ - Create a random Date
 * __aRandomLocalDate__ - Create a random LocalDate
 * __aRandomLocalDateTime__ - Create a random LocalDateTime
@@ -83,8 +83,8 @@ The RandomBuilder class includes includes factory methods for:
 * __aRandomDouble__ - Create a random Double
 * __aRandomFloat__ - Create a random Float
 * __aRandomInteger__ - Create a random Integer
-* __aRandomInstanceOf__ - Create a random instance of class which implements the Java Beans getters and setters
-* __aRandomListOf__ - Create a random list of a class which implements the Java Beans getters and setters
+* __aRandomInstanceOf__ - Create a random instance of class, interface, or abstract class
+* __aRandomListOf__ - Create a random list of a class, interface, or abstract class
 * __aRandomLong__ - Create a random Long
 * __aRandomShort__ - Create a random Short
 * __aRandomString__ - Create a random alphanumeric String
@@ -135,6 +135,12 @@ The source includes a pom.xml for building with Maven
 
 Release Notes
 -------------
+Changes 2.0.6 -> 2.0.7
+  * Fix building of map properties containing arrays
+  * Add support for creating arrays via aRandomInstanceOf
+  * Add support for creating interfaces via aRandomInstanceOf 
+  * Add support for creating abstract classes via aRandomInstanceOf 
+
 Changes 2.0.5 -> 2.0.6
   * Fix stub void handling
   * Reduce default random string length to 10
