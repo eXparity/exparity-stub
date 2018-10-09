@@ -45,10 +45,16 @@ public class ValueFactoriesTest {
 
 	@Test
 	public void canCreateARandomArrayOf() {
-		Boolean[] array = aRandomArrayOf(aRandomBoolean()).createValue(Boolean.class, 5);
+		Boolean[] array = aRandomArrayOf(aRandomBoolean(), 5).createValue();
 		assertThat(array, arrayWithSize(5));
 		assertThat(array, hasItemInArray(any(Boolean.class)));
 	}
+
+    @Test
+    public void canCreateARandomEmptyArrayOf() {
+        Boolean[] array = aRandomArrayOf(aRandomBoolean(), 0).createValue();
+        assertThat(array, arrayWithSize(0));
+    }
 
 	@Test
 	public void canCreateARandomBoolean() {

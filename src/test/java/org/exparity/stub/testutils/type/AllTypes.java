@@ -19,6 +19,8 @@ public class AllTypes {
     };
 
     private AllTypes.EnumValues enumValue;
+    private boolean booleanValue;
+    private Boolean booleanObjectValue;
     private String stringValue;
     private Integer integerObjectValue;
     private int integerValue;
@@ -46,7 +48,16 @@ public class AllTypes {
     private List<String> list;
     private Set<String> set;
     private Map<Long, String> map;
+    private Map<String, String[]> arrayMap;
 
+    public Map<String, String[]> getArrayMap() {
+        return arrayMap;
+    }
+    
+    public void setArrayMap(Map<String, String[]> arrayMap) {
+        this.arrayMap = arrayMap;
+    }
+    
     public AllTypes.EnumValues getEnumValue() {
         return this.enumValue;
     }
@@ -110,9 +121,6 @@ public class AllTypes {
     public void setBooleanObjectValue(final Boolean booleanObjectValue) {
         this.booleanObjectValue = booleanObjectValue;
     }
-
-    private boolean booleanValue;
-    private Boolean booleanObjectValue;
 
     public String getStringValue() {
         return this.stringValue;

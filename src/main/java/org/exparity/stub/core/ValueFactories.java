@@ -198,16 +198,21 @@ public abstract class ValueFactories {
 	/**
 	 * Creates an {@link ArrayFactory} which returns a random array of the given type.
 	 * @param typeFactory the {@link ValueFactory} to use to create each instance in the random array
+	 * @param size the size of the array
 	 * @return an {@link ArrayFactory} which returns a random array of the given type.
 	 */
 	@SuppressWarnings("unchecked")
-	public static <A> ArrayFactory<A> aRandomArrayOf(final ValueFactory<A> typeFactory) {
-		return (type,size) -> {
-				Object array = Array.newInstance(type, size);
-				for (int i = 0; i < size; ++i) {
-					Array.set(array, i, typeFactory.createValue());
-				}
-				return (A[]) array;
+	public static <A> ValueFactory<A[]> aRandomArrayOf(final ValueFactory<A> typeFactory, final int size) {
+		return () -> {
+		    A instance = typeFactory.createValue();
+		    Object array = Array.newInstance(instance.getClass(), size);
+		    if ( size > 0 ) {
+                Array.set(array, 0, instance);
+    			for (int i = 1; i < size; ++i) {
+    				Array.set(array, i, typeFactory.createValue());
+    			}
+		    }
+			return (A[]) array;
 		};
 	}
 

@@ -240,6 +240,16 @@ public class RandomBuilderTest {
     }
 
     @Test
+    public void canBuildARandomInstanceOfAnArray() {
+        assertThat(aRandomInstanceOf(String[].class), any(String[].class));
+    }
+
+    @Test
+    public void canBuildARandomInstanceOfAnArrayOfObjects() {
+        assertThat(aRandomInstanceOf(AllTypes[].class), any(AllTypes[].class));
+    }
+
+    @Test
     public void canBuildARandomInstanceOf() {
         assertThat(aRandomInstanceOf(AllTypes.class), any(AllTypes.class));
     }

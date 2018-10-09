@@ -543,8 +543,8 @@ public abstract class RandomBuilder {
      * @return an array of random values from the supplied enumeration.
      */
     public static <E extends Enum<E>> E[] aRandomArrayOfEnum(final Class<E> enumType, final int min, final int max) {
-        return ValueFactories.aRandomArrayOf(ValueFactories.aRandomEnum(enumType)).createValue(enumType,
-                aRandomInteger(min, max));
+        return ValueFactories.aRandomArrayOf(ValueFactories.aRandomEnum(enumType), aRandomInteger(min, max))
+                .createValue();
     }
 
     /**
@@ -574,7 +574,7 @@ public abstract class RandomBuilder {
      * @return an array of randomly populated instances of the supplied type
      */
     public static <T> T[] aRandomArrayOf(final Class<T> type, final int min, final int max) {
-        return ValueFactories.aRandomArrayOf(instanceFactoryFor(type)).createValue(type, aRandomInteger(min, max));
+        return ValueFactories.aRandomArrayOf(instanceFactoryFor(type), aRandomInteger(min, max)).createValue();
     }
 
     /**
@@ -937,6 +937,10 @@ public abstract class RandomBuilder {
             return factory;
         } else if (type.isEnum()) {
             return ValueFactories.aRandomEnum(type);
+        } else if (type.isArray()) {
+            Class<?> componentType = type.getComponentType();
+            ValueFactory<?> componentTypeValueFactory = instanceFactoryFor(componentType, restrictions);
+            return (ValueFactory<T>) ValueFactories.aRandomArrayOf(componentTypeValueFactory, 1);
         } else if (isBean(type)) {
             BeanBuilder<T> builder = BeanBuilder.aRandomInstanceOf(type);
             for (RandomRestriction restriction : restrictions) {
