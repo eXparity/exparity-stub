@@ -15,6 +15,7 @@ import static org.exparity.stub.core.ValueFactories.theValue;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -941,6 +942,8 @@ public abstract class RandomBuilder {
             Class<?> componentType = type.getComponentType();
             ValueFactory<?> componentTypeValueFactory = instanceFactoryFor(componentType, restrictions);
             return (ValueFactory<T>) ValueFactories.aRandomArrayOf(componentTypeValueFactory, 1);
+        } else if (type.isInterface() || Modifier.isAbstract(type.getModifiers())) {
+            return theValue(aRandomStubOf(type));
         } else if (isBean(type)) {
             BeanBuilder<T> builder = BeanBuilder.aRandomInstanceOf(type);
             for (RandomRestriction restriction : restrictions) {

@@ -49,15 +49,16 @@ public class AllTypes {
     private Set<String> set;
     private Map<Long, String> map;
     private Map<String, String[]> arrayMap;
+    private String[] stringArray;
 
     public Map<String, String[]> getArrayMap() {
         return arrayMap;
     }
-    
-    public void setArrayMap(Map<String, String[]> arrayMap) {
+
+    public void setArrayMap(final Map<String, String[]> arrayMap) {
         this.arrayMap = arrayMap;
     }
-    
+
     public AllTypes.EnumValues getEnumValue() {
         return this.enumValue;
     }
@@ -296,6 +297,14 @@ public class AllTypes {
 
     public void setZonedlDateTimeValue(final ZonedDateTime zonedlDateTimeValue) {
         this.zonedlDateTimeValue = zonedlDateTimeValue;
+    }
+
+    public String[] getStringArray() {
+        return stringArray;
+    }
+
+    public void setStringArray(final String[] stringArray) {
+        this.stringArray = stringArray;
     }
 
 }
