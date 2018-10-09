@@ -741,7 +741,7 @@ public class BeanBuilder<T> {
             for (int i = 0; i < length; ++i) {
                 K key = populate(createValue(keyType), path.appendIndex(i), stack.append(keyType).append(valueType));
                 if (key != null) {
-                    map.put(key, createValue(valueType));
+                    map.put(key, RandomBuilder.aRandomInstanceOf(valueType));
                 }
             }
             return map;
