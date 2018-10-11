@@ -20,6 +20,7 @@ import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -96,6 +97,7 @@ public abstract class RandomBuilder {
             put(LocalTime.class, ValueFactories.aRandomLocalTime());
             put(LocalDateTime.class, ValueFactories.aRandomLocalDateTime());
             put(ZonedDateTime.class, ValueFactories.aRandomZonedDateTime());
+            put(Duration.class, ValueFactories.aRandomDuration());
             put(Instant.class, ValueFactories.aRandomInstant());
         }
     };
@@ -388,6 +390,19 @@ public abstract class RandomBuilder {
      */
     public static LocalDate aRandomLocalDate() {
         return LocalDate.now().plus(nextInt(DAYS_PER_YEAR), ChronoUnit.DAYS);
+    }
+
+    /**
+     * Build a random {@link Duration} between 1 and 60 seconds. For example
+     * <p/>
+     * <code>
+     * Duration aRandomBirthday = RandomBuilder.Duration();
+     * </code>
+     *
+     * @return a random {@link Duration} between 1 and 60 seconds.
+     */
+    public static Duration aRandomDuration() {
+        return Duration.of(aRandomInteger(1, 60), ChronoUnit.SECONDS);
     }
 
     /**

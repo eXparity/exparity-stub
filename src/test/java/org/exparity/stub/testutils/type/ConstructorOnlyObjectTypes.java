@@ -1,6 +1,7 @@
 package org.exparity.stub.testutils.type;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,7 +27,8 @@ public class ConstructorOnlyObjectTypes {
     private final LocalDate localDateValue;
     private final LocalTime localTimeValue;
     private final LocalDateTime localDateTimeValue;
-    private final ZonedDateTime zonedlDateTimeValue;
+    private final ZonedDateTime zonedDateTimeValue;
+    private final Duration duration;
     private final Instant instantValue;
     private final BigDecimal bigDecimalValue;
     private final Boolean booleanObjectValue;
@@ -46,7 +48,9 @@ public class ConstructorOnlyObjectTypes {
             final ZonedDateTime zonedlDateTimeValue,
             final Instant instantValue,
             final BigDecimal bigDecimalValue,
-            final Boolean booleanObjectValue) {
+            final Boolean booleanObjectValue,
+            final Duration duration) {
+        this.duration = duration;
         this.stringValue = stringValue;
         this.integerObjectValue = integerObjectValue;
         this.longObjectValue = longObjectValue;
@@ -59,10 +63,14 @@ public class ConstructorOnlyObjectTypes {
         this.localDateValue = localDateValue;
         this.localTimeValue = localTimeValue;
         this.localDateTimeValue = localDateTimeValue;
-        this.zonedlDateTimeValue = zonedlDateTimeValue;
+        this.zonedDateTimeValue = zonedlDateTimeValue;
         this.instantValue = instantValue;
         this.bigDecimalValue = bigDecimalValue;
         this.booleanObjectValue = booleanObjectValue;
+    }
+
+    public Duration getDuration() {
+        return duration;
     }
 
     public String getStringValue() {
@@ -113,8 +121,8 @@ public class ConstructorOnlyObjectTypes {
         return localDateTimeValue;
     }
 
-    public ZonedDateTime getZonedlDateTimeValue() {
-        return zonedlDateTimeValue;
+    public ZonedDateTime getZonedDateTimeValue() {
+        return zonedDateTimeValue;
     }
 
     public Instant getInstantValue() {

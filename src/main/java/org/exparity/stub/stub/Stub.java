@@ -8,6 +8,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -61,6 +62,7 @@ class Stub<T> implements MethodInterceptor {
             put(LocalTime.class, aRandomLocalTime());
             put(LocalDateTime.class, aRandomLocalDateTime());
             put(ZonedDateTime.class, aRandomZonedDateTime());
+            put(Duration.class, aRandomDuration());
             put(Instant.class, aRandomInstant());
         }
     };

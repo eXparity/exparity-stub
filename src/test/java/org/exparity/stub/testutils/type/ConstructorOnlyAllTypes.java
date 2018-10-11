@@ -1,6 +1,7 @@
 package org.exparity.stub.testutils.type;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -40,6 +41,7 @@ public class ConstructorOnlyAllTypes {
     private final LocalDateTime localDateTimeValue;
     private final ZonedDateTime zonedlDateTimeValue;
     private final Instant instantValue;
+    private final Duration durationValue;
     private final BigDecimal bigDecimalValue;
     private final int[] array;
     private final Collection<String> collection;
@@ -78,7 +80,8 @@ public class ConstructorOnlyAllTypes {
             final Set<String> set,
             final Map<Long, String> map,
             final boolean booleanValue,
-            final Boolean booleanObjectValue) {
+            final Boolean booleanObjectValue,
+            final Duration durationValue) {
         this.enumValue = enumValue;
         this.stringValue = stringValue;
         this.integerObjectValue = integerObjectValue;
@@ -109,6 +112,11 @@ public class ConstructorOnlyAllTypes {
         this.map = map;
         this.booleanValue = booleanValue;
         this.booleanObjectValue = booleanObjectValue;
+        this.durationValue = durationValue;
+    }
+
+    public Duration getDurationValue() {
+        return durationValue;
     }
 
     public ConstructorOnlyAllTypes.EnumValues getEnumValue() {

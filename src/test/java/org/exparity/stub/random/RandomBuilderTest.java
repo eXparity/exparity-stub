@@ -5,6 +5,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -126,6 +127,11 @@ public class RandomBuilderTest {
     @Test
     public void canBuildARandomLocalDate() {
         assertThat(aRandomLocalDate(), isA(LocalDate.class));
+    }
+
+    @Test
+    public void canBuildARandomDuration() {
+        assertThat(aRandomDuration(), isA(Duration.class));
     }
 
     @Test
@@ -295,6 +301,7 @@ public class RandomBuilderTest {
         assertThat(instance.getLocalDateTimeValue(), instanceOf(LocalDateTime.class));
         assertThat(instance.getLocalDateValue(), instanceOf(LocalDate.class));
         assertThat(instance.getLocalTimeValue(), instanceOf(LocalTime.class));
+        assertThat(instance.getDurationValue(), instanceOf(Duration.class));
         assertThat(instance.getLongObjectValue(), instanceOf(Long.class));
         assertThat(instance.getShortObjectValue(), instanceOf(Short.class));
         assertThat(instance.getStringValue(), instanceOf(String.class));
@@ -347,6 +354,7 @@ public class RandomBuilderTest {
         assertThat(instance.getShortObjectValue(), instanceOf(Short.class));
         assertThat(instance.getStringValue(), instanceOf(String.class));
         assertThat(instance.getZonedlDateTimeValue(), instanceOf(ZonedDateTime.class));
+        assertThat(instance.getDurationValue(), instanceOf(Duration.class));
     }
 
     @Test
@@ -407,7 +415,8 @@ public class RandomBuilderTest {
         assertThat(instance.getLongObjectValue(), instanceOf(Long.class));
         assertThat(instance.getShortObjectValue(), instanceOf(Short.class));
         assertThat(instance.getStringValue(), instanceOf(String.class));
-        assertThat(instance.getZonedlDateTimeValue(), instanceOf(ZonedDateTime.class));
+        assertThat(instance.getZonedDateTimeValue(), instanceOf(ZonedDateTime.class));
+        assertThat(instance.getDuration(), instanceOf(Duration.class));
     }
 
     @Test
@@ -449,7 +458,8 @@ public class RandomBuilderTest {
         assertThat(instance.getLongObjectValue(), instanceOf(Long.class));
         assertThat(instance.getShortObjectValue(), instanceOf(Short.class));
         assertThat(instance.getStringValue(), instanceOf(String.class));
-        assertThat(instance.getZonedlDateTimeValue(), instanceOf(ZonedDateTime.class));
+        assertThat(instance.getZonedDateTimeValue(), instanceOf(ZonedDateTime.class));
+        assertThat(instance.getDuration(), instanceOf(Duration.class));
     }
 
     @Test

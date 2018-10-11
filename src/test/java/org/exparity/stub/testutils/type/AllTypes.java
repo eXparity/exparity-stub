@@ -1,6 +1,7 @@
 package org.exparity.stub.testutils.type;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -42,6 +43,7 @@ public class AllTypes {
     private LocalDateTime localDateTimeValue;
     private ZonedDateTime zonedlDateTimeValue;
     private Instant instantValue;
+    private Duration durationValue;
     private BigDecimal bigDecimalValue;
     private int[] array;
     private Collection<String> collection;
@@ -305,6 +307,14 @@ public class AllTypes {
 
     public void setStringArray(final String[] stringArray) {
         this.stringArray = stringArray;
+    }
+
+    public Duration getDurationValue() {
+        return durationValue;
+    }
+
+    public void setDurationValue(final Duration durationValue) {
+        this.durationValue = durationValue;
     }
 
 }

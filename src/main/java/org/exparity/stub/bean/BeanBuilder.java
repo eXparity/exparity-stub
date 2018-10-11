@@ -8,6 +8,7 @@ import static org.exparity.stub.core.ValueFactories.*;
 import java.lang.reflect.Array;
 import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -860,6 +861,7 @@ public class BeanBuilder<T> {
             put(LocalTime.class, aRandomLocalTime());
             put(LocalDateTime.class, aRandomLocalDateTime());
             put(ZonedDateTime.class, aRandomZonedDateTime());
+            put(Duration.class, aRandomDuration());
             put(Instant.class, aRandomInstant());
         }
     };
@@ -892,6 +894,7 @@ public class BeanBuilder<T> {
             put(LocalTime.class, aNullValue());
             put(LocalDateTime.class, aNullValue());
             put(ZonedDateTime.class, aNullValue());
+            put(Duration.class, aNullValue());
             put(Instant.class, aNullValue());
         }
     };

@@ -5,6 +5,7 @@ import static org.apache.commons.lang.math.RandomUtils.nextInt;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -138,6 +139,14 @@ public abstract class ValueFactories {
 	public static ValueFactory<ZonedDateTime> aRandomZonedDateTime() {
 		return () -> RandomBuilder.aRandomZonedDateTime();
 	}
+
+    /**
+     * Creates an {@link ValueFactory} which returns a random {@link Duration}.
+     * @return an {@link ValueFactory} which returns a random {@link Duration}.
+     */
+    public static ValueFactory<Duration> aRandomDuration() {
+        return () -> RandomBuilder.aRandomDuration();
+    }
 
 	/**
 	 * Creates an {@link ValueFactory} which returns a random {@link Instant}.
